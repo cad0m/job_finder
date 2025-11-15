@@ -1,6 +1,7 @@
 from selectolax.parser import HTMLParser
 from typing import Dict, Optional
 from core.base import BaseJob 
+from datetime import datetime, timedelta
 import re
 
 class LinkedInJobParser:
@@ -21,7 +22,7 @@ class LinkedInJobParser:
             'seniority_level': self._get_criteria('Seniority level'),
             'employment_type': self._get_criteria('Employment type'),
             'job_function': self._get_criteria('Job function'),
-            'industries': [self._get_criteria('Industries')] if self._get_criteria('Industries') else None,
+            'industries': [industry.strip() for industry in self._get_criteria('Industries').split(',')] if self._get_criteria('Industries') else None,
             'job_url': self._get_job_url(),
             'company_url': self._get_company_url(),
             'source': 'linkedin',
@@ -57,7 +58,18 @@ class LinkedInJobParser:
     def _get_posted_date(self) -> Optional[str]:
         date = self.tree.css_first('span.posted-time-ago__text')
         if date:
-            return date.text(strip=True)
+            ago = date.text(strip=True)
+            if 'day' in ago or 'days' in ago:
+                days = int(ago.split()[0])
+                return (datetime.now() - timedelta(days=days)).strftime('%d-%m-%Y')
+            elif 'week' in ago or 'weeks' in ago:
+                weeks = int(ago.split()[0])
+                return (datetime.now() - timedelta(weeks=weeks)).strftime('%d-%m-%Y')
+            elif 'month' in ago or 'months' in ago:
+                months = int(ago.split()[0])
+                return (datetime.now() - timedelta(days=months*30)).strftime('%d-%m-%Y')
+            else:
+                return datetime.now().strftime('%d-%m-%Y')
         return None
     
     def _get_num_applicants(self) -> Optional[str]:

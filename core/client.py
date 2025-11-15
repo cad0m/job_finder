@@ -21,15 +21,20 @@ class CurlClient:
         }
         self.session = requests.AsyncSession()  
     
-    async def get(self, url: str, params: dict):
-        response = await self.session.get(
-            url,
-            params=params,
-            headers=self.header,
-            cookies=self.cookies,
-            proxies=self.proxy,
-            impersonate="chrome110"
-        )
+    async def get(self, url: str, params: dict, with_proxy: bool = True, more_attributes = None):
+
+        get_param = {
+            'url': url,
+            'params': params,
+            'headers': self.header,
+            'cookies': self.cookies,
+            #'impersonate': "chrome110",
+            **(more_attributes or {})
+        }
+        if with_proxy:
+            get_param['proxies'] = self.proxy
+            
+        response = await self.session.get(**get_param)
         print(f"Request status: {response.status_code}")
         return response.text  
     

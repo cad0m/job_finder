@@ -6,7 +6,7 @@ import os
 
 class LinkedInScraper:
     BASE_URL = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
-    BASE_RAW_FOLDER = os.path.join("raw_data", "linkedin")  
+    BASE_RAW_FOLDER = os.path.join("data/raw", "linkedin")  
 
     # Create the raw data folder if it doesn't exist
     os.makedirs(BASE_RAW_FOLDER, exist_ok=True)
@@ -34,7 +34,7 @@ class LinkedInScraper:
         return response
     
     async def save_job_data(self, data: str, filename: str):
-        test= Filesaver("raw_data", "linkedin", filename, data)
+        test= Filesaver("data/raw", "linkedin", filename, data)
         test.save()
 
     

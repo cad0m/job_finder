@@ -4,7 +4,7 @@ from core.utils import Filesaver, FileLoader
 from scrapers.linkedin_scraper import LinkedInScraper
 from parsers.linkedin_parser import LinkedInJobParser
 from rich import print
-import os
+import json
 
 LOCATION = "Morocco"
 GEO_ID = "103478259"     
@@ -42,13 +42,13 @@ async def main():
                 print(f"Error: {e}")
         
         try:
-            html_to_parse = FileLoader("raw_data", "linkedin", "*.html").load()
+            html_to_parse = FileLoader("data/raw", "linkedin", "*.html").load()
             for html in html_to_parse:
                 with open(html, 'r', encoding='utf-8') as f:
                     html_content = f.read()
                     parser = LinkedInJobParser(html_content)
                     job = parser.parse()
-                    Filesaver("parsed_data", "linkedin", f"{job.job_id}.json", str(job.model_dump())).save()
+                    Filesaver("data/parsed", "linkedin", f"{job.job_id}.json", json.dumps(job.model_dump(), ensure_ascii=False)).save()
         except Exception as e:
             print(f"Error: {e}")
 
