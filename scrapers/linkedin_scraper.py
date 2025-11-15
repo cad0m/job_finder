@@ -22,6 +22,7 @@ class LinkedInScraper:
             'trk': 'public_jobs_jobs-search-bar_search-submit',
             "start": str(start)
         }
+        print(params)
         response = await self.client.get(self.BASE_URL, params=params)
         return response  
     

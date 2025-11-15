@@ -1,4 +1,6 @@
 import os
+import asyncio
+import random
 
 #save the the raw and cleaned data into a folders
 class Filesaver:
@@ -28,3 +30,14 @@ class FileLoader:
     def load(self):
         files_path = os.path.join(self.type, self.source)
         return [os.path.join(files_path, f) for f in os.listdir(files_path)]
+
+
+# time sleep using asyncio for to avoid 429 error
+class Sleeper:
+    def __init__(self, seconds: int):
+        self.min = seconds
+        self.max = seconds + 2
+        self.seconds = random.randint(self.min, self.max)
+    
+    async def sleep(self):
+        await asyncio.sleep(self.seconds)

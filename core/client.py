@@ -2,7 +2,7 @@ import os
 from curl_cffi import requests
 from typing import Optional, Dict
 from dotenv import load_dotenv
-
+from core.utils import Sleeper
 load_dotenv()
 
 PROXY_HOST = os.getenv('PROXY_HOST')
@@ -20,7 +20,8 @@ class CurlClient:
             'https': f'http://{PROXY_USER}:{PROXY_PASSWORD}@{PROXY_HOST}:{PROXY_PORT}'
         }
         self.session = requests.AsyncSession()  
-    
+        self.sleeper = Sleeper(1) #sleepr for 1-3 second to avoid many requests
+
     async def get(self, url: str, params: dict, with_proxy: bool = True, more_attributes = None):
 
         get_param = {
@@ -31,12 +32,24 @@ class CurlClient:
             #'impersonate': "chrome110",
             **(more_attributes or {})
         }
+
+        #some websites block the request if it's from a proxy
         if with_proxy:
             get_param['proxies'] = self.proxy
-            
+
         response = await self.session.get(**get_param)
-        print(f"Request status: {response.status_code}")
-        return response.text  
+
+        #check if the request is successful
+        if response.status_code == 200:
+            print(f" Got it! Request status code: {response.status_code}")
+        elif response.status_code == 429:
+            await self.sleeper.sleep()
+            print(f"Too many requests! Request status code sleeped for {self.sleeper.seconds} seconds and retrying...")
+            return await self.get(url, params, with_proxy, more_attributes)
+        else:
+            print(f"Error: Request status code: {response.status_code}")
+
+        return response
     
     async def close(self):
         await self.session.close()  

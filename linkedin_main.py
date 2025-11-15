@@ -6,9 +6,10 @@ from parsers.linkedin_parser import LinkedInJobParser
 from rich import print
 import json
 
-LOCATION = "Morocco"
-GEO_ID = "103478259"     
+LOCATION = "morocco"
+GEO_ID = ""
 START = 0                
+MAX_CONCURRENT_REQUESTS = 10
 
 headers = {
     'accept': '*/*',
@@ -23,23 +24,39 @@ headers = {
 
 async def main():
     
+    #create the client that will be used to make the requests
     client = CurlClient(header=headers)
-    
+
+    #create a semaphore to limit the number of concurrent requests
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
+
     try:
         scraper = LinkedInScraper(client)
 
-        print("🔎 Fetching LinkedIn jobs page...")
-        html = await scraper.scrape_page(LOCATION, GEO_ID, START)
 
-        
-        links = await scraper.extract_links(html)
+        #count the errors to break the loop
+        count_errors = 0
+    
+        for start in range(0, 10):
+            #scrape the page
+            html = await scraper.scrape_page(LOCATION, GEO_ID, start*25)
 
-        for count, link in enumerate(links):
-            try:
-                job_data = await scraper.get_job_data(link)
-                await scraper.save_job_data(job_data, f"{count}.html")
-            except Exception as e:
-                print(f"Error: {e}")
+            #check if the request is successful
+            if html.status_code != 200:
+                count_errors += 1
+                continue
+            
+            #extract the links of jobs
+            links = await scraper.extract_links(html.text)
+            
+            #extracting and saving job data for each link
+            for count, link in enumerate(links):
+                async with semaphore:        
+                    try:
+                        job_data = await scraper.get_job_data(link)
+                        await scraper.save_job_data(job_data.text, f"{start}_{count}.html")
+                    except Exception as e:
+                        print(f"Error: {e}")
         
         try:
             html_to_parse = FileLoader("data/raw", "linkedin", "*.html").load()

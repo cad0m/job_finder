@@ -99,7 +99,7 @@ class AnapecJobParser:
             if match:
                 try:
                     date_obj = datetime.strptime(match.group(1), '%d/%m/%Y')
-                    return date_obj.isoformat()
+                    return date_obj.strftime('%d-%m-%Y')
                 except ValueError:
                     return match.group(1)
         return None
