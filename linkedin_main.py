@@ -37,7 +37,7 @@ async def main():
         #count the errors to break the loop
         count_errors = 0
     
-        for start in range(0, 10):
+        for start in range(0, 1):
             #scrape the page
             html = await scraper.scrape_page(LOCATION, GEO_ID, start*25)
 
