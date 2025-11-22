@@ -19,10 +19,11 @@ class LinkedInJobParser:
             'posted_date': self._get_posted_date(),
             'num_applicants': int(self._get_num_applicants().split()[0]) if self._get_num_applicants() else None,
             'job_description': self._get_job_description(),
-            'seniority_level': self._get_criteria('Seniority level'),
-            'employment_type': self._get_criteria('Employment type'),
-            'job_function': self._get_criteria('Job function'),
-            'industries': [industry.strip() for industry in self._get_criteria('Industries').split(',')] if self._get_criteria('Industries') else None,
+            'seniority_level': self._normalize_seniority_level(self._get_criteria('Niveau hiérarchique')),
+            'employment_type': self._normalize_employment_type(self._get_criteria('Type d’emploi')),
+            'job_function': self._get_criteria('Fonction'),
+            'industries': [industry.strip() for industry in self._get_criteria('Secteurs').split(',')] if self._get_criteria('Secteurs') else None,
+            'salary': self._get_salary(),
             'job_url': self._get_job_url(),
             'company_url': self._get_company_url(),
             'source': 'linkedin',
@@ -31,7 +32,6 @@ class LinkedInJobParser:
         return BaseJob(**job_data)
     
     def _get_job_title(self) -> Optional[str]:
-        """Extract job title"""
         title = self.tree.css_first('h1.top-card-layout__title')
         if title:
             return title.text(strip=True)
@@ -95,6 +95,97 @@ class LinkedInJobParser:
                     return text.text(strip=True)
         return None
     
+    def _normalize_seniority_level(self, seniority_level: Optional[str]) -> Optional[str]:
+    
+        if not seniority_level:
+            return None
+        
+        seniority_lower = seniority_level.lower().strip()
+        
+        # Mapping des niveaux hiérarchiques vers des plages numériques
+        seniority_mapping = {
+            # 0-2 ans: Débutants, Stagiaires
+            '0 - 1': [
+                'stagiaire', 'alternant', 'intern', 'internship', 
+                'entry level', 'débutant', 'junior', 'apprenti',
+                'graduate', 'trainee'
+            ],
+            
+            # 3-5 ans: Cadres confirmés
+            '2 - 5': [
+                'cadre', 'associate', 'confirmé', 'confirmed',
+                'mid-level', 'mid level', 'niveau intermédiaire'
+            ],
+            
+            # 5-10 ans: Seniors
+            '5 - 10': [
+                'premier emploi', 'senior', 'expérimenté', 
+                'experienced', 'lead', 'principal'
+            ],
+            
+            # 10+ ans: Direction
+            '10+': [
+                'directeur', 'director', 'executive', 'manager',
+                'cadre supérieur', 'cadre sup', 'head of', 'vp',
+                'vice president', 'c-level', 'non pertinent'
+            ]
+        }
+        
+        # Chercher une correspondance
+        for numeric_range, keywords in seniority_mapping.items():
+            for keyword in keywords:
+                if keyword in seniority_lower:
+                    return numeric_range
+        
+        # Si aucune correspondance, retourner le niveau original
+        return seniority_level
+
+
+    def _normalize_employment_type(self, employment_type: Optional[str]) -> Optional[str]:
+       
+        if not employment_type:
+            return None
+        
+        employment_type_lower = employment_type.lower().strip()
+        
+        # Mapping des types d'emploi LinkedIn vers les catégories standardisées
+        employment_mapping = {
+            # CDI - Permanent positions
+            'temps plein': 'CDI',
+            'full-time': 'CDI',
+            'full time': 'CDI',
+            'plein temps': 'CDI',
+            
+            
+            # CDD - Temporary/Contract positions
+            'temps partiel': 'CDD',
+            'part-time': 'CDD',
+            'part time': 'CDD',
+            'partiel': 'CDD',
+            'temporaire': 'CDD',
+            'temporary': 'CDD',
+            'contract': 'CDD',
+            'contrat': 'CDD',
+            'cdd': 'CDD',
+            
+            # Stage - Internship/Alternance
+            'stage': 'Stage',
+            'internship': 'Stage',
+            'alternance': 'Stage',
+            'stagiaire': 'Stage',
+            
+            # Freelance - Independent contractor
+            'freelance': 'Freelance',
+        }
+        
+        # Chercher une correspondance exacte ou partielle
+        for key, value in employment_mapping.items():
+            if key in employment_type_lower:
+                return value
+        
+        # Si aucune correspondance, retourner le type original
+        return employment_type
+    
     def _get_job_url(self) -> Optional[str]:
         canonical = self.tree.css_first('link[rel="canonical"]')
         if canonical:
@@ -126,5 +217,23 @@ class LinkedInJobParser:
             match = re.search(r'jobPosting:(\d+)', urn)
             if match:
                 return match.group(1)
+        
+        return None
+    
+    def _get_salary(self) -> Optional[str]:
+        salary = self._get_criteria('Salary')
+        if salary:
+            return salary
+        
+        pay_range = self._get_criteria('Pay range')
+        if pay_range:
+            return pay_range
+        
+        compensation = self._get_criteria('Compensation')
+        return compensation
+
+        salary_info = self.tree.css_first('span.main-job-card__salary-info')
+        if salary_info:
+            return salary_info.text(strip=True)
         
         return None

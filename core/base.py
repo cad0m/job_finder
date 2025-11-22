@@ -15,6 +15,7 @@ class BaseJob(BaseModel):
     employment_type: str | None = None
     job_function: str | None = None
     industries: list[str] | None = None
+    salary: str | None = None
     job_url: str | None = None
     company_url: str | None = None
     source: str | None = None

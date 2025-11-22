@@ -23,6 +23,7 @@ class AnapecJobParser:
                 'employment_type': self._get_employment_type(),
                 'job_function': self._get_job_function(),
                 'industries': self._get_industries(),
+                'salary': self._get_salary(),
                 'job_url': self._get_job_url(),
                 'company_url': None,
                 'source': 'anapec.org',
@@ -152,23 +153,120 @@ class AnapecJobParser:
         return ', '.join(langs) if langs else None
 
     def _get_employment_type(self) -> str | None:
-        """Extract contract type and salary"""
-        contract = self._get_field_value("Type de contrat")
-        salary = self._get_field_value("Salaire mensuel")
-
-        if contract and salary:
-            return f"{contract} - {salary}"
-        return contract or salary
+        """Extract and clean contract type.
+        
+        Handles cases like:
+        - "Choix Multiple: (5) CDD, (5) CDI – Non Diplômé" -> "CDD, CDI"
+        - "CDI – Non Diplômé" -> "CDI"
+        - "CDD" -> "CDD"
+        - "CI" -> "CDI" (fixes typo)
+        """
+        employment_type = self._get_field_value("Type de contrat")
+        if not employment_type:
+            return None
+        
+        employment_type = employment_type.strip()
+        
+        # If it contains "Choix Multiple:", extract the contract types
+        if "Choix Multiple:" in employment_type:
+            matches = re.findall(r'\([^)]+\)\s*([A-Z]+)', employment_type)
+            if matches:
+                # Replace CI with CDI in matches
+                matches = ['CDI' if m == 'CI' else m for m in matches]
+                return ', '.join(matches)
+        
+        # Remove common prefixes
+        employment_type = re.sub(r'^Choix Multiple:\s*', '', employment_type, flags=re.IGNORECASE)
+        
+        # Remove suffixes like "– Non Diplômé" or similar
+        employment_type = re.sub(r'\s*–\s*[^,]+', '', employment_type)
+        employment_type = re.sub(r'\s*-\s*[^,]+', '', employment_type)
+        
+        # Clean up extra whitespace
+        employment_type = re.sub(r'\s+', ' ', employment_type).strip()
+        
+        # Replace standalone "CI" with "CDI" (word boundary to avoid replacing CI in other words)
+        employment_type = re.sub(r'\bCI\b', 'CDI', employment_type)
+        
+        return employment_type if employment_type else None
+    
+    def _get_salary(self) -> str | None:
+        """Extract salary information and return just the number formatted with dots"""
+        # Try different possible labels for salary
+        salary_labels = [
+            "Salaire mensuel",
+            "Salaire",
+            "Rémunération",
+            "Salaire proposé"
+        ]
+        
+        for label in salary_labels:
+            salary = self._get_field_value(label)
+            if salary:
+                # Extract numbers from the salary string
+                # Handle formats like "2000 DHS", "2000 - 3000 DHS", etc.
+                # Remove existing dots and commas to avoid confusion
+                cleaned = salary.replace('.', '').replace(',', '')
+                numbers = re.findall(r'\d+', cleaned)
+                
+                if numbers:
+                    # Convert to integer and format with dots as thousand separators
+                    num = int(numbers[0])
+                    # Format with dots: 10000 -> "10.000", 2000 -> "2.000"
+                    formatted = f"{num:,}".replace(',', '.')
+                    return formatted
+        
+        return None
 
     def _get_seniority_level(self) -> str | None:
-        """Extract experience/seniority information from the job details."""
+        """Extract experience/seniority information and convert to numeric range."""
         experience = self._get_field_value("Expérience professionnelle")
-        if experience:
-            cleaned = experience.strip()
-            if cleaned.startswith("(") and cleaned.endswith(")"):
-                cleaned = cleaned[1:-1].strip()
-            return cleaned
+        if not experience:
+            return None
+        
+        cleaned = experience.strip().lower()
+        if cleaned.startswith("(") and cleaned.endswith(")"):
+            cleaned = cleaned[1:-1].strip()
+        
+        def convert_to_years(value: int, unit: str) -> float:
+            """Convert months to years, return as float."""
+            return value / 12 if "mois" in unit else float(value)
+        
+        def format_number(num: float) -> str:
+            """Format number, removing .0 for whole numbers."""
+            return str(int(num)) if num == int(num) else str(round(num, 1))
+        
+        # Handle "moins de X mois/ans" (less than)
+        match = re.search(r'moins de\s+(\d+)\s*(mois|ans?)', cleaned)
+        if match:
+            value = int(match.group(1))
+            upper = convert_to_years(value, match.group(2))
+            return f"0 - {format_number(upper)}"
+        
+        # Handle "plus de X ans" (more than)
+        match = re.search(r'plus de\s+(\d+)\s*(mois|ans?)', cleaned)
+        if match:
+            value = int(match.group(1))
+            lower = convert_to_years(value, match.group(2))
+            return f"{format_number(lower)}+"
+        
+        # Handle "X mois - Y an(s)" or "X an(s) - Y an(s)" ranges
+        match = re.search(r'(\d+)\s*(mois|ans?)\s*[-–]\s*(\d+)\s*(mois|ans?)', cleaned)
+        if match:
+            val1, unit1, val2, unit2 = int(match.group(1)), match.group(2), int(match.group(3)), match.group(4)
+            lower = convert_to_years(val1, unit1)
+            upper = convert_to_years(val2, unit2)
+            return f"{format_number(lower)} - {format_number(upper)}"
+        
+        # Handle single value like "2 ans" or "6 mois"
+        match = re.search(r'(\d+)\s*(mois|ans?)', cleaned)
+        if match:
+            value = int(match.group(1))
+            years = convert_to_years(value, match.group(2))
+            return format_number(years)
+        
         return None
+
 
     def _get_job_function(self) -> str | None:
         """Extract job function / position from the job details."""

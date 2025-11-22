@@ -13,7 +13,7 @@ MAX_CONCURRENT_REQUESTS = 10
 
 headers = {
     'accept': '*/*',
-    'accept-language': 'en-US,en;q=0.9',
+    'accept-language': 'fr-FR,fr;q=0.9',
     'priority': 'u=1, i',
     'referer': 'https://www.linkedin.com/jobs/search?keywords=&location=Morocco&geoId=102787409&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0',
     'sec-ch-ua': '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
@@ -37,7 +37,7 @@ async def main():
         #count the errors to break the loop
         count_errors = 0
     
-        for start in range(0, 10):
+        for start in range(0, 2):
             #scrape the page
             html = await scraper.scrape_page(LOCATION, GEO_ID, start*25)
 

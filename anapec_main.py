@@ -19,16 +19,16 @@ async def main():
     client = CurlClient(header=headers)
     scraper = AnapecScraper(client)
     
-    # for page in range(1, 20):
-    #     html = await scraper.scrape_page("1")
-    #     links = await scraper.extract_links(html.text)
+    for page in range(1, 5):
+        html = await scraper.scrape_page(page)
+        links = await scraper.extract_links(html.text)
 
-    #     for count, link in enumerate(links):
-    #         try:
-    #             job_data = await scraper.get_job_data(f"http://www.anapec.org{link}")
-    #             await scraper.save_job_data(job_data.text, f"{page}_{count}.html")
-    #         except Exception as e:
-    #             print(f"Error: {e}")
+        for count, link in enumerate(links):
+            try:
+                job_data = await scraper.get_job_data(f"http://www.anapec.org{link}")
+                await scraper.save_job_data(job_data.text, f"{page}_{count}.html")
+            except Exception as e:
+                print(f"Error: {e}")
     try:
         html_to_parse = FileLoader("data/raw", "anapec", "*.html").load()
         for count, html in enumerate(html_to_parse):

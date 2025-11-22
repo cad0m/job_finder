@@ -22,7 +22,7 @@ class CurlClient:
         self.session = requests.AsyncSession()  
         self.sleeper = Sleeper(1) #sleepr for 1-3 second to avoid many requests
 
-    async def get(self, url: str, params: dict, with_proxy: bool = True, more_attributes = None):
+    async def get(self, url: str, params: dict, with_proxy: bool = True, more_attributes = None, type = "get"):
 
         get_param = {
             'url': url,
@@ -37,7 +37,10 @@ class CurlClient:
         if with_proxy:
             get_param['proxies'] = self.proxy
 
-        response = await self.session.get(**get_param)
+        if type == "post":
+            response = await self.session.post(**get_param)
+        else:
+            response = await self.session.get(**get_param)
 
         #check if the request is successful
         if response.status_code == 200:
@@ -45,11 +48,12 @@ class CurlClient:
         elif response.status_code == 429:
             await self.sleeper.sleep()
             print(f"Too many requests! Request status code sleeped for {self.sleeper.seconds} seconds and retrying...")
-            return await self.get(url, params, with_proxy, more_attributes)
+            return await self.get(url, params, with_proxy, more_attributes, type)
         else:
             print(f"Error: Request status code: {response.status_code}")
 
         return response
+    
     
     async def close(self):
         await self.session.close()  
