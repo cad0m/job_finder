@@ -1,0 +1,409 @@
+source,external_id,industry_name
+anapec.org,KE2111251057425,Services fournis principalement aux entreprises
+anapec.org,SI2711251059380,Services personnels
+anapec.org,KH2111251057666,Industrie automobile
+anapec.org,TA2711251059285,Industrie automobile
+anapec.org,AI2111251057681,Services auxiliaires des transports
+anapec.org,LA2711251059454,Industrie du caoutchouc et des plastiques
+anapec.org,OU2111251057688,Assurance
+anapec.org,ES2111251057528,Autres
+anapec.org,ME2711251059376,Construction
+anapec.org,AI2111251057529,Services fournis principalement aux entreprises
+anapec.org,AI2711251059483,Auxiliaires financiers et d'assurance
+anapec.org,MO2711251059514,Fabrication de machines et appareils électriques
+anapec.org,TA2111251057610,Services fournis principalement aux entreprises
+anapec.org,AI2111251057618,Conseil en systèmes informatiques
+anapec.org,MO2711251059274,"Edition, imprimerie, reproduction"
+anapec.org,ES2711251059589,Activités immobilières
+anapec.org,KE2111251057521,Industrie automobile
+anapec.org,MA2711251059231,Autres
+anapec.org,NO2111251057651,Industries alimentaires
+anapec.org,BE2111251057653,Autres
+anapec.org,MA2711251059244,Autres
+anapec.org,EL2111251057590,Industrie chimique
+anapec.org,KE2711251059235,Industrie automobile
+anapec.org,FE2111251057661,Transports terrestres
+anapec.org,NO2711251059354,Fabrication de machines et appareils électriques
+anapec.org,EL2111251057690,Education
+anapec.org,SA2711251059464,Services fournis principalement aux entreprises
+anapec.org,AU2711251059336,Commerce de détail et réparation d'articles domestiques
+anapec.org,MA2111251057474,Industries alimentaires
+anapec.org,FE2711251059553,Services fournis principalement aux entreprises
+anapec.org,AU2711251059379,Hôtellerie et restauration
+anapec.org,SA2111251057573,Services fournis principalement aux entreprises
+anapec.org,AU2711251059414,Conseil en systèmes informatiques
+anapec.org,SA2111251057578,Services fournis principalement aux entreprises
+anapec.org,EL2111251057498,Education
+anapec.org,RA2711251059441,Auxiliaires financiers et d'assurance
+anapec.org,AI2111251057548,Services fournis principalement aux entreprises
+anapec.org,CH2711251059578,Hôtellerie et restauration
+anapec.org,AI2711251059497,Auxiliaires financiers et d'assurance
+anapec.org,KE2111251057428,Services fournis principalement aux entreprises
+anapec.org,FE2111251057484,Commerce de gros et intermédiaires du commerce
+anapec.org,MO2711251059505,Fabrication de machines et appareils électriques
+anapec.org,AI2111251057535,Services fournis principalement aux entreprises
+anapec.org,SA2711251059461,Services fournis principalement aux entreprises
+anapec.org,SA2111251057555,Auxiliaires financiers et d'assurance
+anapec.org,SA2711251059470,Commerce de gros et intermédiaires du commerce
+anapec.org,FE2711251059523,Assurance
+anapec.org,SK2111251057566,Services fournis principalement aux entreprises
+anapec.org,LA2611251059069,Industrie chimique
+anapec.org,SI2011251057052,Industries alimentaires
+anapec.org,ET2611251058856,Services fournis principalement aux entreprises
+anapec.org,MA2011251057300,Construction
+anapec.org,LA2011251057323,Transports terrestres
+anapec.org,OU2611251058936,Industries alimentaires
+anapec.org,CH2611251058858,Assurance
+anapec.org,ET2011251057363,Santé et action sociale
+anapec.org,OU2011251057346,Hôtellerie et restauration
+anapec.org,TA2611251058739,Education
+anapec.org,AG2711251059240,Industrie automobile
+anapec.org,KE2111251057463,Autres
+anapec.org,EL2111251057589,Industrie chimique
+anapec.org,LA2711251059487,Industrie du caoutchouc et des plastiques
+anapec.org,FE2111251057658,Autres
+anapec.org,H.2711251059546,Autres
+anapec.org,SA2111251057613,Services fournis principalement aux entreprises
+anapec.org,SA2711251059467,Services fournis principalement aux entreprises
+anapec.org,EL2711251059575,Activités immobilières
+anapec.org,LA2011251057335,Commerce de gros et intermédiaires du commerce
+anapec.org,NO2711251059443,Industrie chimique
+anapec.org,OU2011251057072,Hôtellerie et restauration
+anapec.org,KE2011251057358,Industrie automobile
+anapec.org,TE2711251059181,Services fournis principalement aux entreprises
+anapec.org,AG2711251059423,Commerce et réparation automobile
+anapec.org,SI2011251057241,Industries alimentaires
+anapec.org,BE2611251058785,"Fabrication de meubles, industries diverses"
+anapec.org,MA2011251057262,Activités immobilières
+anapec.org,AG2611251059036,Hôtellerie et restauration
+anapec.org,ET2011251057349,Santé et action sociale
+anapec.org,EL2611251058799,Santé et action sociale
+anapec.org,MA2011251057307,Construction
+anapec.org,ET2011251057075,Autres
+anapec.org,KE2611251058999,Commerce de gros et intermédiaires du commerce
+anapec.org,ME2011251057154,Services fournis principalement aux entreprises
+anapec.org,TA2611251058743,Education
+anapec.org,TA2011251057371,Industrie automobile
+anapec.org,TA2611251058926,Commerce de gros et intermédiaires du commerce
+anapec.org,SA2111251057659,Commerce de gros et intermédiaires du commerce
+anapec.org,SI2711251059171,Construction
+anapec.org,DA2611251058937,"Edition, imprimerie, reproduction"
+anapec.org,ET2611251059035,Postes et télécommunications
+anapec.org,LA2011251057060,Industrie automobile
+anapec.org,ET2611251058907,"Agriculture, chasse"
+anapec.org,LA2011251057310,Construction
+anapec.org,LA2011251057326,Commerce de gros et intermédiaires du commerce
+anapec.org,SA2611251058988,Services fournis principalement aux entreprises
+anapec.org,KE2011251057347,Industrie automobile
+anapec.org,TA2611251058919,Commerce de gros et intermédiaires du commerce
+anapec.org,ET2011251057356,Services fournis principalement aux entreprises
+anapec.org,TA2611251058931,Commerce et réparation automobile
+anapec.org,AG2611251059031,Hôtellerie et restauration
+anapec.org,NO2011251057249,Fabrication de machines et appareils électriques
+anapec.org,TA2611251058749,Education
+anapec.org,TE2011251057271,Santé et action sociale
+anapec.org,ZA2611251058847,Auxiliaires financiers et d'assurance
+anapec.org,LA2611251059059,Industrie chimique
+anapec.org,SI2011251057250,Industries alimentaires
+anapec.org,EL2111251057512,Industrie automobile
+anapec.org,EL2711251059544,Education
+anapec.org,KE2711251059499,Autres
+anapec.org,TA2111251057559,Services fournis principalement aux entreprises
+anapec.org,AI2111251057679,Services auxiliaires des transports
+anapec.org,MO2711251059319,"Production et distribution d'électricité, de gaz et de chaleur"
+anapec.org,AL2111251057527,Education
+anapec.org,RA2711251059452,Intermédiation financière
+anapec.org,KH2111251057647,Services fournis principalement aux entreprises
+anapec.org,SI2711251059172,Autres
+jobzyn,1067,Tech et data
+jobzyn,1072,Finance
+jobzyn,1080,Ressources humaines
+jobzyn,1087,Gestion de projet
+jobzyn,1089,Tech et data
+jobzyn,1094,Finance
+jobzyn,1097,Ressources humaines
+jobzyn,1102,Opérations
+jobzyn,1106,Tech et data
+jobzyn,1108,Opérations
+jobzyn,1110,Juridique
+jobzyn,1110,Finance
+jobzyn,1110,Téléconseil
+jobzyn,1117,Opérations
+jobzyn,1118,Tech et data
+jobzyn,1119,Tech et data
+jobzyn,1120,Commercial
+jobzyn,1121,Commercial
+jobzyn,1122,Commercial
+jobzyn,1123,Commercial
+jobzyn,1124,Commercial
+jobzyn,1125,Commercial
+jobzyn,1126,Commercial
+jobzyn,1127,Conseil
+jobzyn,1127,Finance
+jobzyn,1128,Construction
+jobzyn,1129,Construction
+jobzyn,1145,Construction
+jobzyn,1146,Tech et data
+jobzyn,1147,Marketing
+jobzyn,1153,Qualité et contrôle
+jobzyn,1154,Production
+jobzyn,1155,Production
+jobzyn,1157,Tech et data
+jobzyn,1158,Tech et data
+jobzyn,1159,Tech et data
+jobzyn,1161,Ressources humaines
+jobzyn,1164,Tech et data
+jobzyn,1167,Management
+jobzyn,1167,Logistique
+jobzyn,1167,Commercial
+jobzyn,1169,Tech et data
+jobzyn,1169,Management
+jobzyn,1171,Tech et data
+jobzyn,1173,Tech et data
+jobzyn,1174,Tech et data
+jobzyn,1175,Tech et data
+jobzyn,1176,Tech et data
+jobzyn,1177,Commercial
+jobzyn,1178,Tech et data
+jobzyn,1179,Tech et data
+jobzyn,1180,Marketing
+jobzyn,1181,Tech et data
+jobzyn,1182,Tech et data
+jobzyn,1185,Juridique
+jobzyn,1185,Finance
+jobzyn,1186,Commercial
+jobzyn,1186,Gestion de projet
+jobzyn,1186,Tech et data
+jobzyn,1186,Télécommunications
+jobzyn,1187,Finance
+jobzyn,1187,Logistique
+jobzyn,1189,Commercial
+jobzyn,1190,Finance
+jobzyn,1190,Tech et data
+jobzyn,1191,Ressources humaines
+jobzyn,1191,Tech et data
+jobzyn,1192,Tech et data
+jobzyn,1192,Gestion de projet
+jobzyn,1192,Management
+jobzyn,1192,Opérations
+jobzyn,1193,Finance
+jobzyn,1193,Gestion de projet
+jobzyn,1193,Ressources humaines
+jobzyn,1194,Finance
+jobzyn,1197,Logistique
+jobzyn,1198,Marketing
+jobzyn,1198,Commercial
+jobzyn,1199,Commercial
+jobzyn,1200,Commercial
+jobzyn,1201,Marketing
+jobzyn,1202,Marketing
+jobzyn,1203,Logistique
+jobzyn,1204,Tech et data
+jobzyn,1205,Tech et data
+jobzyn,1206,Tech et data
+jobzyn,1207,Tech et data
+jobzyn,1210,Logistique
+jobzyn,1211,Logistique
+jobzyn,1212,Opérations
+jobzyn,1213,Logistique
+jobzyn,1216,Tech et data
+jobzyn,1217,Marketing
+jobzyn,1219,Finance
+jobzyn,1220,Finance
+jobzyn,1221,Finance
+jobzyn,1223,Tech et data
+jobzyn,1224,Tech et data
+jobzyn,1225,Tech et data
+jobzyn,1226,Tech et data
+jobzyn,1227,Tech et data
+jobzyn,1227,Management
+jobzyn,1228,Tech et data
+jobzyn,1232,Tech et data
+jobzyn,1233,Tech et data
+jobzyn,1234,Tech et data
+jobzyn,1235,Tech et data
+jobzyn,1236,Design et créativité
+jobzyn,1237,Logistique
+jobzyn,1238,Opérations
+jobzyn,1239,Logistique
+jobzyn,1240,Opérations
+jobzyn,1241,Tech et data
+jobzyn,1242,Gestion de projet
+jobzyn,1243,Finance
+jobzyn,1244,Environnement et durabilité
+jobzyn,1245,Audit
+jobzyn,1245,Tech et data
+jobzyn,1247,Marketing
+jobzyn,1247,Commercial
+jobzyn,1248,Commercial
+jobzyn,1248,Marketing
+jobzyn,1249,Commercial
+jobzyn,1250,Finance
+jobzyn,1250,Management
+jobzyn,1252,Management
+jobzyn,1252,Gestion de projet
+jobzyn,1253,Opérations
+jobzyn,1253,Ressources humaines
+jobzyn,1254,Finance
+jobzyn,1255,Finance
+jobzyn,1256,Ressources humaines
+jobzyn,1258,Commercial
+jobzyn,1259,Commercial
+jobzyn,1261,Commercial
+jobzyn,1262,Construction
+jobzyn,1262,Gestion de projet
+jobzyn,1263,Commercial
+jobzyn,1263,Communication
+jobzyn,1264,Finance
+jobzyn,1265,Commercial
+jobzyn,1266,Commercial
+jobzyn,1267,Gestion de projet
+jobzyn,1268,Construction
+jobzyn,1268,Opérations
+jobzyn,1269,Finance
+jobzyn,1270,Ressources humaines
+jobzyn,1271,Marketing
+jobzyn,1272,Conseil
+jobzyn,1273,Conseil
+jobzyn,1274,Commercial
+jobzyn,1276,Tech et data
+jobzyn,1277,Tech et data
+jobzyn,1278,Tech et data
+jobzyn,1279,Tech et data
+jobzyn,1280,Tech et data
+jobzyn,1281,Tech et data
+jobzyn,1282,Tech et data
+jobzyn,1283,Vente au détail
+jobzyn,1284,Tech et data
+jobzyn,1285,Finance
+jobzyn,1286,Gestion de projet
+jobzyn,1287,Communication
+jobzyn,1288,Communication
+jobzyn,1288,Gestion de projet
+jobzyn,1289,Conseil
+jobzyn,1289,Gestion de projet
+jobzyn,1289,Ressources humaines
+jobzyn,1289,Tech et data
+jobzyn,1291,Finance
+jobzyn,1291,Conseil
+jobzyn,1291,Juridique
+jobzyn,1293,Construction
+jobzyn,1295,Audit
+jobzyn,1296,Audit
+jobzyn,1297,Finance
+jobzyn,1298,Commercial
+jobzyn,1299,Commercial
+jobzyn,1300,Commercial
+jobzyn,1301,Commercial
+jobzyn,1302,Construction
+jobzyn,1303,Conseil
+jobzyn,1303,Finance
+jobzyn,1305,Marketing
+jobzyn,1308,Marketing
+jobzyn,1310,Finance
+jobzyn,1310,Immobilier et gestion des installations
+jobzyn,1311,Finance
+jobzyn,1314,Finance
+jobzyn,1316,Tech et data
+jobzyn,1318,Transport
+jobzyn,1327,Tech et data
+jobzyn,1329,Construction
+jobzyn,1329,Communication
+jobzyn,1335,Marketing
+jobzyn,1336,Marketing
+jobzyn,1339,Construction
+jobzyn,1342,Opérations
+jobzyn,1344,Finance
+jobzyn,1344,Conseil
+jobzyn,1345,Marketing
+jobzyn,1347,Tech et data
+jobzyn,1348,Tech et data
+jobzyn,1349,Tech et data
+jobzyn,1350,Finance
+jobzyn,1351,Construction
+jobzyn,1352,Tech et data
+jobzyn,1352,Transport
+jobzyn,1354,Tech et data
+jobzyn,415,Gestion de projet
+jobzyn,417,Gestion de projet
+jobzyn,608,Tech et data
+jobzyn,637,Logistique
+jobzyn,652,Gestion de projet
+jobzyn,714,Tech et data
+jobzyn,723,Management
+jobzyn,723,Opérations
+jobzyn,826,Tech et data
+jobzyn,841,Finance
+jobzyn,841,Gestion de projet
+jobzyn,841,Opérations
+jobzyn,844,Audit
+jobzyn,850,Commercial
+jobzyn,858,Immobilier et gestion des installations
+jobzyn,867,Tech et data
+jobzyn,868,Production
+jobzyn,870,Finance
+jobzyn,870,Audit
+jobzyn,875,Finance
+jobzyn,889,Tech et data
+jobzyn,890,Tech et data
+jobzyn,898,Commercial
+jobzyn,904,Finance
+jobzyn,908,Tech et data
+jobzyn,910,Finance
+jobzyn,911,Finance
+jobzyn,919,Juridique
+jobzyn,927,Marketing
+jobzyn,932,Marketing
+jobzyn,932,Tech et data
+jobzyn,946,Tech et data
+jobzyn,950,Gestion de projet
+jobzyn,950,Finance
+jobzyn,950,Tech et data
+jobzyn,952,Commercial
+jobzyn,959,Finance
+linkedin,4114743724,Services de restauration
+linkedin,4234736075,Services et conseil en informatique
+linkedin,4267541361,Édition en ligne
+linkedin,4291571540,Services bancaires
+linkedin,4291956515,Services bancaires
+linkedin,4304808371,Services bancaires
+linkedin,4305435580,Industrie pétrolière et gazière
+linkedin,4323131538,Immobilier
+linkedin,4323598604,Hôtellerie
+linkedin,4323618448,Hôtellerie
+linkedin,4324351221,Immobilier
+linkedin,4324424254,Fabrication de véhicules automobiles
+linkedin,4324485493,Hôtellerie
+linkedin,4324532570,Hôtellerie
+linkedin,4324535267,Services financiers
+linkedin,4332952329,Industrie manufacturière
+linkedin,4332952329,Services de restauration et Fabrication de produits alimentaires et boissons
+linkedin,4334595844,Commerce de détail
+linkedin,4335692347,Gestion des associations et fondations
+linkedin,4336597230,Services et conseil en informatique
+linkedin,4336669102,Développement de logiciels et Services et conseil en informatique
+linkedin,4336738649,Développement de logiciels et Services et conseil en informatique
+linkedin,4336776592,Services et conseil en informatique
+linkedin,4336868300,Fabrication de machines industrielles et Services financiers
+linkedin,4336890637,Industrie manufacturière
+linkedin,4336890637,Services de restauration et Fabrication de produits alimentaires et boissons
+linkedin,4337146985,Transport aérien
+linkedin,4338698526,Services et conseil aux entreprises
+linkedin,4338718795,Services bancaires
+linkedin,4338759968,Fabrication de semi-conducteurs pour énergies renouvelables
+linkedin,4338990058,Services et conseil aux entreprises
+linkedin,4339139263,Technologie énergétique
+linkedin,4339139263,Services et conseil en informatique et Commerce de gros import-export
+linkedin,4340083985,Transport aérien et Hôtellerie
+linkedin,4340514740,Transport aérien et Hôtellerie
+linkedin,4340946564,Fabrication de véhicules automobiles
+linkedin,4347328732,Technologies et services de l’information
+linkedin,4347398111,Commerce de détail et Transport
+linkedin,4347398111,logistique
+linkedin,4347398111,chaîne logistique et stockage
+linkedin,4347458928,Services bancaires
+linkedin,4347458928,Services financiers et Sociétés de crédit
+linkedin,4347479667,Transport
+linkedin,4347479667,logistique
+linkedin,4347479667,chaîne logistique et stockage et Commerce de détail d’appareils électriques et électroniques
+linkedin,4347497793,Transport aérien et Hôtellerie

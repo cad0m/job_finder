@@ -1,40 +1,65 @@
+import os
 import psycopg2
 from dotenv import load_dotenv
-import os
 
-# Load environment variables from .env
 load_dotenv()
 
-# Fetch variables
-USER = os.getenv("user")
-PASSWORD = os.getenv("password")
-HOST = os.getenv("host")
-PORT = os.getenv("port")
-DBNAME = os.getenv("dbname")
+class DatabaseConnection:
+    def __init__(self):
+        self.connection = None
+        self.cursor = None
 
-# Connect to the database
-try:
-    connection = psycopg2.connect(
-        user=USER,
-        password=PASSWORD,
-        host=HOST,
-        port=PORT,
-        dbname=DBNAME
-    )
-    print("Connection successful!")
-    
-    # Create a cursor to execute SQL queries
-    cursor = connection.cursor()
-    
-    # Example query
-    cursor.execute("SELECT NOW();")
-    result = cursor.fetchone()
-    print("Current Time:", result)
+    def connect(self):
+        """Establish a database connection."""
+        try:
+            self.connection = psycopg2.connect(
+                user=os.getenv("user"),
+                password=os.getenv("password"),
+                host=os.getenv("host"),
+                port=os.getenv("port"),
+                dbname=os.getenv("dbname")
+            )
+            self.cursor = self.connection.cursor()
+            print("Database connection established.")
+        except Exception as e:
+            print(f"Database connection failed: {e}")
+            raise e
 
-    # Close the cursor and connection
-    cursor.close()
-    connection.close()
-    print("Connection closed.")
+    def execute(self, query, params=None):
+        """Safely execute a SQL query."""
+        try:
+            self.cursor.execute(query, params)
+        except Exception as e:
+            print(f"SQL execution failed: {e}")
+            print("Query:", query)
+            print("Params:", params)
+            raise e
 
-except Exception as e:
-    print(f"Failed to connect: {e}")
+    def commit(self):
+        """Commit the transaction."""
+        if self.connection:
+            self.connection.commit()
+
+    def close(self):
+        """Close cursor + connection."""
+        try:
+            if self.cursor:
+                self.cursor.close()
+            if self.connection:
+                self.connection.close()
+            print("✓ Database connection closed.")
+        except Exception as e:
+            print(f"⚠ Error closing database connection: {e}")
+
+
+if __name__ == "__main__":
+    db = DatabaseConnection()
+    try:
+        db.connect()
+        # Lightweight connectivity check (non-destructive).
+        db.execute("SELECT NOW();")
+        print("Current database time:", db.cursor.fetchone()[0])
+    except Exception as e:
+        print(f"Operation failed: {e}")
+    finally:
+        db.close()

@@ -1,1 +1,22 @@
-{"job_id": "1268", "job_title": "Conducteur de Travaux", "company_name": "AEDGE Partners", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-d7a18fee-e07b-4a18-9977-a26afbf7296b-1761829025452.png", "location": "Casablanca", "posted_date": "2025-11-05T13:32:40.428Z", "num_applicants": null, "job_description": null, "seniority_level": "3 - 5", "employment_type": "CDI", "job_function": "Construction, Opérations", "industries": ["Construction", "Opérations"], "salary": null, "job_url": "https://jobzyn.com/jobs/conducteur-de-travaux-casablanca", "company_url": "https://jobzyn.com/companies/aedge-partners", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.126481"}
+{
+  "job_id": "1268",
+  "job_title": "Conducteur de Travaux",
+  "company_name": "AEDGE Partners",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-d7a18fee-e07b-4a18-9977-a26afbf7296b-1761829025452.png",
+  "location": "Casablanca",
+  "posted_date": "2025-11-24T11:33:59.065Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "3 - 5",
+  "employment_type": "CDI",
+  "job_function": "Construction, Opérations",
+  "industries": [
+    "Construction",
+    "Opérations"
+  ],
+  "salary": null,
+  "job_url": "https://jobzyn.com/jobs/conducteur-de-travaux-casablanca",
+  "company_url": "https://jobzyn.com/companies/aedge-partners",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.756586"
+}

@@ -1,1 +1,21 @@
-{"job_id": "1228", "job_title": "Responsable Sécurité des Systèmes d'Information", "company_name": "TGCC", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/asset-30fa2ab5-53b6-4416-a69d-5ca92346544d-1739524328900_1758717739975.png", "location": "Casablanca", "posted_date": "2025-11-17T15:44:04.699Z", "num_applicants": null, "job_description": null, "seniority_level": "6 - 9", "employment_type": "CDI", "job_function": "Tech et data", "industries": ["Tech et data"], "salary": null, "job_url": "https://jobzyn.com/jobs/responsable-securite-des-systemes-dinformation-casablanca", "company_url": "https://jobzyn.com/companies/TGCC", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.198458"}
+{
+  "job_id": "1228",
+  "job_title": "Responsable Sécurité des Systèmes d'Information",
+  "company_name": "TGCC",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/asset-30fa2ab5-53b6-4416-a69d-5ca92346544d-1739524328900_1758717739975.png",
+  "location": "Casablanca",
+  "posted_date": "2025-11-24T11:22:10.160Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "6 - 9",
+  "employment_type": "CDI",
+  "job_function": "Tech et data",
+  "industries": [
+    "Tech et data"
+  ],
+  "salary": null,
+  "job_url": "https://jobzyn.com/jobs/responsable-securite-des-systemes-dinformation-casablanca",
+  "company_url": "https://jobzyn.com/companies/TGCC",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.622966"
+}

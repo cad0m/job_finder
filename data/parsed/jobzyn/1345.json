@@ -1,1 +1,21 @@
-{"job_id": "1345", "job_title": " Graphiste Motion Designer", "company_name": "KITEA", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/companies/42/logo_5a7582634fa146cdb36c575e97f18ff9.png-xxl.jpeg", "location": "Casablanca", "posted_date": "2025-11-20T15:53:54.288Z", "num_applicants": null, "job_description": null, "seniority_level": "0 - 2", "employment_type": "CDI", "job_function": "Marketing", "industries": ["Marketing"], "salary": null, "job_url": "https://jobzyn.com/jobs/infographiste-casablanca", "company_url": "https://jobzyn.com/companies/kitea", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.149599"}
+{
+  "job_id": "1345",
+  "job_title": " Graphiste Motion Designer",
+  "company_name": "KITEA",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/companies/42/logo_5a7582634fa146cdb36c575e97f18ff9.png-xxl.jpeg",
+  "location": "Casablanca",
+  "posted_date": "2025-11-24T11:41:56.212Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "0 - 2",
+  "employment_type": "CDI",
+  "job_function": "Marketing",
+  "industries": [
+    "Marketing"
+  ],
+  "salary": null,
+  "job_url": "https://jobzyn.com/jobs/infographiste-casablanca",
+  "company_url": "https://jobzyn.com/companies/kitea",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.699020"
+}

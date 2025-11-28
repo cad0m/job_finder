@@ -23,7 +23,7 @@ class Filesaver:
             f.write(self.data)
 
 class FileLoader:
-    def __init__(self, type: str, source: str, filename: str):
+    def __init__(self, type: str, source: str):
         self.type = type
         self.source = source
     

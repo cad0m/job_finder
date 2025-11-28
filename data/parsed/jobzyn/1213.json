@@ -1,1 +1,21 @@
-{"job_id": "1213", "job_title": "Head of International Sourcing", "company_name": "marjanemall", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-30cb8df4-8feb-40ef-b510-d89864b3e63c-1760625652595.png", "location": null, "posted_date": "2025-11-17T15:49:45.035Z", "num_applicants": null, "job_description": null, "seniority_level": "6 - 9", "employment_type": "CDI", "job_function": "Logistique", "industries": ["Logistique"], "salary": null, "job_url": "https://jobzyn.com/jobs/head-of-international-sourcing", "company_url": "https://jobzyn.com/companies/marjanemall", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.190996"}
+{
+  "job_id": "1213",
+  "job_title": "Head of International Sourcing",
+  "company_name": "marjanemall",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-30cb8df4-8feb-40ef-b510-d89864b3e63c-1760625652595.png",
+  "location": null,
+  "posted_date": "2025-11-24T11:24:33.750Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "6 - 9",
+  "employment_type": "CDI",
+  "job_function": "Logistique",
+  "industries": [
+    "Logistique"
+  ],
+  "salary": null,
+  "job_url": "https://jobzyn.com/jobs/head-of-international-sourcing",
+  "company_url": "https://jobzyn.com/companies/marjanemall",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.607647"
+}

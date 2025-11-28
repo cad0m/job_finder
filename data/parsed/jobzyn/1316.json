@@ -1,1 +1,21 @@
-{"job_id": "1316", "job_title": "MLOps Engineer (Edge AI Specialist)", "company_name": "Haldorix", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-5cb988a6-74b8-43fd-ad05-c1041455a8ff-1761913584082.png", "location": "Casablanca", "posted_date": "2025-11-19T09:39:50.992Z", "num_applicants": null, "job_description": null, "seniority_level": "3 - 5", "employment_type": "CDI", "job_function": "Tech et data", "industries": ["Tech et data"], "salary": "18,000 - 25,000", "job_url": "https://jobzyn.com/jobs/mlops-engineer-edge-ai-specialist-casablanca", "company_url": "https://jobzyn.com/companies/haldorix", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.190926"}
+{
+  "job_id": "1316",
+  "job_title": "MLOps Engineer (Edge AI Specialist)",
+  "company_name": "Haldorix",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-5cb988a6-74b8-43fd-ad05-c1041455a8ff-1761913584082.png",
+  "location": "Casablanca",
+  "posted_date": "2025-11-24T11:40:20.868Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "3 - 5",
+  "employment_type": "CDI",
+  "job_function": "Tech et data",
+  "industries": [
+    "Tech et data"
+  ],
+  "salary": "18,000 - 25,000",
+  "job_url": "https://jobzyn.com/jobs/mlops-engineer-edge-ai-specialist-casablanca",
+  "company_url": "https://jobzyn.com/companies/haldorix",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.714639"
+}

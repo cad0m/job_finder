@@ -1,1 +1,21 @@
-{"job_id": "1267", "job_title": "Chef de Projet – Programme Immobilier", "company_name": "AEDGE Partners", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-d7a18fee-e07b-4a18-9977-a26afbf7296b-1761829025452.png", "location": "Casablanca", "posted_date": "2025-11-10T15:58:12.946Z", "num_applicants": null, "job_description": null, "seniority_level": "6 - 9", "employment_type": "CDI", "job_function": "Gestion de projet", "industries": ["Gestion de projet"], "salary": null, "job_url": "https://jobzyn.com/jobs/chef-de-projet-casablanca", "company_url": "https://jobzyn.com/companies/aedge-partners", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.067303"}
+{
+  "job_id": "1267",
+  "job_title": "Chef de Projet – Programme Immobilier",
+  "company_name": "AEDGE Partners",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/media-1/asset-d7a18fee-e07b-4a18-9977-a26afbf7296b-1761829025452.png",
+  "location": "Casablanca",
+  "posted_date": "2025-11-24T11:34:01.740Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "6 - 9",
+  "employment_type": "CDI",
+  "job_function": "Gestion de projet",
+  "industries": [
+    "Gestion de projet"
+  ],
+  "salary": null,
+  "job_url": "https://jobzyn.com/jobs/chef-de-projet-casablanca",
+  "company_url": "https://jobzyn.com/companies/aedge-partners",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.756578"
+}

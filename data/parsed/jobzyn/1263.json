@@ -1,1 +1,22 @@
-{"job_id": "1263", "job_title": "Chargé(e) E-Commerce", "company_name": "Innoflex", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/companies/44/logo_3189b1a8d39849c2909896dbbf004521.jpg-xxl.jpeg", "location": "Had Soualem", "posted_date": "2025-11-03T14:48:42.282Z", "num_applicants": null, "job_description": null, "seniority_level": "0 - 2", "employment_type": "CDI", "job_function": "Commercial, Communication", "industries": ["Commercial", "Communication"], "salary": "4,000 - 4,500", "job_url": "https://jobzyn.com/jobs/chargee-e-commerce-had-soualem", "company_url": "https://jobzyn.com/companies/innoflex", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.126557"}
+{
+  "job_id": "1263",
+  "job_title": "Chargé(e) E-Commerce",
+  "company_name": "Innoflex",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/companies/44/logo_3189b1a8d39849c2909896dbbf004521.jpg-xxl.jpeg",
+  "location": "Had Soualem",
+  "posted_date": "2025-11-24T11:34:29.006Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "0 - 2",
+  "employment_type": "CDI",
+  "job_function": "Commercial, Communication",
+  "industries": [
+    "Commercial",
+    "Communication"
+  ],
+  "salary": "4,000 - 4,500",
+  "job_url": "https://jobzyn.com/jobs/chargee-e-commerce-had-soualem",
+  "company_url": "https://jobzyn.com/companies/innoflex",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.756546"
+}

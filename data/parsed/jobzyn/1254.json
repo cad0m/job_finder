@@ -1,1 +1,21 @@
-{"job_id": "1254", "job_title": "Contrôleur de gestion Industriel ", "company_name": "Mafoder Group", "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/companies/49/logo_9027ce95e6804276b6cf3d81781d10cf.png-xxl.jpeg", "location": "Casablanca", "posted_date": "2025-11-05T13:33:43.943Z", "num_applicants": null, "job_description": null, "seniority_level": "3 - 5", "employment_type": "CDI", "job_function": "Finance", "industries": ["Finance"], "salary": "15,000", "job_url": "https://jobzyn.com/jobs/controleur-de-gestion-industriel-casablanca", "company_url": "https://jobzyn.com/companies/mafoder", "source": "jobzyn", "scraped_at": "2025-11-22T12:12:40.126461"}
+{
+  "job_id": "1254",
+  "job_title": "Contrôleur de gestion Industriel ",
+  "company_name": "Mafoder Group",
+  "company_logo": "https://yoqjyawlszygnsafabhy.supabase.co/storage/v1/object/public/assets/companies/49/logo_9027ce95e6804276b6cf3d81781d10cf.png-xxl.jpeg",
+  "location": "Casablanca",
+  "posted_date": "2025-11-24T11:35:52.277Z",
+  "num_applicants": null,
+  "job_description": null,
+  "seniority_level": "3 - 5",
+  "employment_type": "CDI",
+  "job_function": "Finance",
+  "industries": [
+    "Finance"
+  ],
+  "salary": "15,000",
+  "job_url": "https://jobzyn.com/jobs/controleur-de-gestion-industriel-casablanca",
+  "company_url": "https://jobzyn.com/companies/mafoder",
+  "source": "jobzyn",
+  "scraped_at": "2025-11-28T03:21:11.741523"
+}
