@@ -1,8 +1,0 @@
-pandas                  # for data manipulation
-psycopg2-binary         # for Postgres / Supabase
-pymysql                 # or mysqlclient if you prefer
-python-dotenv           # for loading environment variables
-curl-cffi               # for making HTTP requests
-selectolax              # for HTML parsing
-pydantic                # for data validation
-rich                    # for pretty printing

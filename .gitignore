@@ -1,2 +1,7 @@
 .env
+data/
+job_finder/.env
+**/.env
+airflow_home/logs/dag_id*
+airflow_home/logs/scheduler/*
 venv/
