@@ -20,7 +20,7 @@ class CurlClient:
             'https': f'http://{PROXY_USER}:{PROXY_PASSWORD}@{PROXY_HOST}:{PROXY_PORT}'
         }
         self.session = requests.AsyncSession()  
-        self.sleeper = Sleeper(1) #sleepr for 1-3 second to avoid many requests
+        self.sleeper = Sleeper(2) #sleepr for 1-3 second to avoid many requests
 
     async def get(self, url: str, params: dict, with_proxy: bool = True, more_attributes = None, type = "get"):
 

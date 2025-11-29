@@ -23,7 +23,7 @@ class LinkedInScraper:
             "start": str(start)
         }
         print(f"Scraping with params: {params}")
-        response = await self.client.get(self.BASE_URL, params=params, with_proxy=False)
+        response = await self.client.get(self.BASE_URL, params=params)
         return response  
     
     async def extract_links(self, html: str):
@@ -31,7 +31,7 @@ class LinkedInScraper:
         return [job.attributes.get('href') for job in parser.css('a.base-card__full-link')]
     
     async def get_job_data(self, link: str):
-        response = await self.client.get(link, {}, with_proxy=False)
+        response = await self.client.get(link, {})
         return response
     
     async def save_job_data(self, data: str, filename: str):

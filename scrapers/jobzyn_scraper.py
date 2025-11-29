@@ -20,7 +20,7 @@ class JobzynScraper:
         attrib = {
             "data" : page_word
         }
-        response = await self.client.get(self.BASE_URL, params={}, more_attributes=attrib, type="post", with_proxy=False)
+        response = await self.client.get(self.BASE_URL, params={}, more_attributes=attrib, type="post")
         return response  
     
     async def extract_dic(self, full_json: str):
