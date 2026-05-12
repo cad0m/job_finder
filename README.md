@@ -15,7 +15,7 @@ sudo apt install python3.11 python3.11-venv python3.11-dev -y
 ## 2. Clone the Project
 
 ```bash
-git clone https://github.com/.../job_finder.git
+git clone https://github.com/cad0m/job_finder.git
 cd job_finder
 ```
 ## 3. Create Virtual Environment
@@ -86,7 +86,7 @@ DB_NAME=jobs
 
 ## 9. Airflow Must Load .env
 
-Add this to dags/job_pipeline.py (already done in project):
+Add this to dags/job_pipeline.py:
 ```bash
 from dotenv import load_dotenv
 load_dotenv(".env")
