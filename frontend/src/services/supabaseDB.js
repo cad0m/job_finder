@@ -1,5 +1,29 @@
 import { supabase } from '../lib/supabaseClient';
 
+// Generated files live in the private "generated-cvs" bucket. Their download links expire
+// after an hour, so the app keeps the file path and asks for a fresh link when it shows them.
+const FILES_BUCKET = 'generated-cvs';
+const LINK_SECONDS = 60 * 60;
+const filePathFrom = (value) => {
+  if (!value) return null;
+  if (!/^https?:/i.test(value)) return value; // already a path
+  const m = value.match(new RegExp(`/object/(?:sign|public)/${FILES_BUCKET}/([^?]+)`));
+  return m ? decodeURIComponent(m[1]) : null;
+};
+const LINK_FIELDS = ['cv_url', 'cover_letter_url', 'email_url'];
+export const refreshFileLinks = async (apps) => {
+  const paths = [...new Set(apps.flatMap((a) => LINK_FIELDS.map((f) => filePathFrom(a[f]))).filter(Boolean))];
+  if (!paths.length) return apps;
+  const { data, error } = await supabase.storage.from(FILES_BUCKET).createSignedUrls(paths, LINK_SECONDS);
+  if (error || !data) return apps;
+  const fresh = Object.fromEntries(data.filter((d) => d.signedUrl).map((d) => [d.path, d.signedUrl]));
+  return apps.map((a) => {
+    const out = { ...a };
+    LINK_FIELDS.forEach((f) => { const p = filePathFrom(a[f]); if (p && fresh[p]) out[f] = fresh[p]; });
+    return out;
+  });
+};
+
 export const supabaseDB = {
   /**
    * Save candidate profile data into user_profile table.
@@ -255,7 +279,8 @@ export const supabaseDB = {
 
       if (error) throw error;
 
-      return (data || []).map(app => ({
+      const withLinks = await refreshFileLinks(data || []);
+      return withLinks.map(app => ({
         ...app,
         job: app.job ? {
           ...app.job,

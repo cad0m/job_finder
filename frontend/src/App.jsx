@@ -1,8 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import UploadResume from './pages/UploadResume';
 
 import ProfileReview from './pages/ProfileReview';
@@ -17,6 +19,7 @@ import Saved from './pages/Saved';
 import Applied from './pages/Applied';
 import { AuthProvider } from './context/AuthProvider';
 import ProtectedRoute from './components/layout/ProtectedRoute';
+import PublicOnlyRoute from './components/layout/PublicOnlyRoute';
 
 function App() {
   return (
@@ -25,8 +28,10 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<PublicOnlyRoute><SignIn /></PublicOnlyRoute>} />
+          <Route path="/signup" element={<PublicOnlyRoute><SignUp /></PublicOnlyRoute>} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Protected Routes */}
           <Route path="/upload" element={<ProtectedRoute><UploadResume /></ProtectedRoute>} />
@@ -41,6 +46,9 @@ function App() {
           <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
           <Route path="/saved" element={<ProtectedRoute><Saved /></ProtectedRoute>} />
           <Route path="/applied" element={<ProtectedRoute><Applied /></ProtectedRoute>} />
+
+          {/* Unknown links go to the home page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </AuthProvider>

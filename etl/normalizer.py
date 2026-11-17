@@ -12,8 +12,16 @@ from etl.core.utils import FileLoader
 def normalize_date(value) -> pd.Timestamp:
     if not value or value == "":
         return pd.NaT
-    ts = pd.to_datetime(value, errors="coerce", dayfirst=True)
-    return pd.NaT if pd.isna(ts) else ts.normalize()
+    text = str(value).strip()
+    # ISO dates (Jobzyn: 2026-02-12T10:00Z) are year-month-day; dayfirst would swap them into 2 December.
+    # The other sites write day-month-year (17-11-2026, 17/11/2026).
+    iso = re.match(r"^\d{4}-\d{2}-\d{2}", text) is not None
+    ts = pd.to_datetime(text, errors="coerce", dayfirst=not iso)
+    if pd.isna(ts):
+        return pd.NaT
+    if ts.tzinfo is not None:
+        ts = ts.tz_convert(None)
+    return ts.normalize()
 
 
 def parse_salary(value) -> Optional[float]:
