@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../hooks/useAuth';
@@ -15,13 +15,13 @@ const NoCvBanner = () => (
   <div className="no-cv-banner">
     <div className="ap-glass no-cv-banner__card">
       <span className="material-symbols-outlined no-cv-banner__icon">upload_file</span>
-      <h2 className="no-cv-banner__title">No CV Found</h2>
+      <h2 className="no-cv-banner__title">Upload your CV first</h2>
       <p className="no-cv-banner__body">
-        You need to upload your CV before applying to jobs. Our AI needs it to tailor your application.
+        The application documents are written from your CV. Upload it, then come back to this offer.
       </p>
       <Link to="/upload" className="no-cv-banner__btn">
         <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>upload</span>
-        Upload My CV
+        Upload your CV
       </Link>
     </div>
   </div>
@@ -37,7 +37,8 @@ const JobHeader = ({ jobDetails }) => (
       </div>
     )}
     <div>
-      <h1 className="job-header__title">{jobDetails?.title || 'Loading...'}</h1>
+      <p className="job-header__kicker">Application for</p>
+      <h1 className="job-header__title">{jobDetails?.title || 'Loading…'}</h1>
       <p className="job-header__company">{jobDetails?.company_name || ''}</p>
     </div>
   </div>
@@ -52,14 +53,14 @@ const StepIndicator = ({ currentStep }) => (
           : '1'
         }
       </div>
-      <span className={`step-indicator__label ${currentStep === 1 ? 'active' : ''}`}>Configure</span>
+      <span className={`step-indicator__label ${currentStep === 1 ? 'active' : ''}`}>Set up</span>
     </div>
     <div className="step-indicator__connector">
       <div className={`step-indicator__connector-fill ${currentStep === 2 ? 'active' : ''}`} />
     </div>
     <div className="step-indicator__item">
       <div className={`step-indicator__circle ${currentStep === 2 ? 'active' : ''}`}>2</div>
-      <span className={`step-indicator__label ${currentStep === 2 ? 'active' : ''}`}>Results</span>
+      <span className={`step-indicator__label ${currentStep === 2 ? 'active' : ''}`}>Your documents</span>
     </div>
   </div>
 );
@@ -73,7 +74,7 @@ const TemplateSelector = ({ selectedTemplate, onSelectTemplate }) => {
 
   return (
     <div className="template-section">
-      <p className="section-label">Choose Template</p>
+      <h2 className="section-label">Choose a CV template</h2>
       <div className="template-scroll-row">
         {TEMPLATES.map((i) => {
           const key = `template${i}.tex`;
@@ -110,78 +111,40 @@ const TemplateSelector = ({ selectedTemplate, onSelectTemplate }) => {
         })}
       </div>
       <p className="template-selected-info">
-        Selected: <span>template{selectedNum}.tex</span> — Professional LaTeX Engine
+        Selected: <span>Template {selectedNum}</span>
       </p>
     </div>
   );
 };
+
+const SOCIAL_FIELDS = [
+  { id: 'linkedin-url', field: 'linkedin_url', label: 'LinkedIn URL', type: 'url', placeholder: 'https://linkedin.com/in/…', full: true },
+  { id: 'github-label', field: 'github_label', label: 'GitHub name shown on the CV', type: 'text', placeholder: 'e.g. johndoe' },
+  { id: 'github-url', field: 'github_url', label: 'GitHub URL', type: 'url', placeholder: 'https://github.com/…' },
+  { id: 'portfolio-label', field: 'portfolio_label', label: 'Portfolio name shown on the CV', type: 'text', placeholder: 'e.g. mysite.io' },
+  { id: 'portfolio-url', field: 'portfolio_url', label: 'Portfolio URL', type: 'url', placeholder: 'https://…' },
+];
 
 const SocialLinksForm = ({ socialLinks, onChange }) => {
   const update = (field) => (e) => onChange(prev => ({ ...prev, [field]: e.target.value }));
 
   return (
     <div className="social-section">
-      <p className="section-label">Professional Links</p>
+      <h2 className="section-label">Links to put on your CV <span className="section-label__hint">Optional</span></h2>
       <div className="ap-glass social-form">
-        {/* LinkedIn URL */}
-        <div className="social-form__row social-form__row--full">
-          <div className="social-input-wrap">
-            <span className="material-symbols-outlined input-icon">link</span>
+        {SOCIAL_FIELDS.map(({ id, field, label, type, placeholder, full }) => (
+          <div key={id} className={`social-field ${full ? 'social-field--full' : ''}`}>
+            <label htmlFor={id} className="label">{label}</label>
             <input
-              id="linkedin-url"
-              type="url"
-              placeholder="https://linkedin.com/in/..."
-              value={socialLinks.linkedin_url}
-              onChange={update('linkedin_url')}
+              id={id}
+              type={type}
+              placeholder={placeholder}
+              value={socialLinks[field]}
+              onChange={update(field)}
+              className="field"
             />
           </div>
-        </div>
-        {/* GitHub */}
-        <div className="social-form__row">
-          <div className="social-input-wrap">
-            <span className="material-symbols-outlined input-icon">code</span>
-            <input
-              id="github-label"
-              type="text"
-              placeholder="GitHub Label (e.g. johndoe)"
-              value={socialLinks.github_label}
-              onChange={update('github_label')}
-            />
-          </div>
-          <div className="social-input-wrap">
-            <span className="material-symbols-outlined input-icon">link</span>
-            <input
-              id="github-url"
-              type="url"
-              placeholder="https://github.com/..."
-              value={socialLinks.github_url}
-              onChange={update('github_url')}
-            />
-          </div>
-        </div>
-        {/* Portfolio */}
-        <div className="social-form__row">
-          <div className="social-input-wrap">
-            <span className="material-symbols-outlined input-icon">language</span>
-            <input
-              id="portfolio-label"
-              type="text"
-              placeholder="Portfolio Label (e.g. mysite.io)"
-              value={socialLinks.portfolio_label}
-              onChange={update('portfolio_label')}
-            />
-          </div>
-          <div className="social-input-wrap">
-            <span className="material-symbols-outlined input-icon">link</span>
-            <input
-              id="portfolio-url"
-              type="url"
-              placeholder="https://yourportfolio.com"
-              value={socialLinks.portfolio_url}
-              onChange={update('portfolio_url')}
-            />
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
@@ -189,16 +152,16 @@ const SocialLinksForm = ({ socialLinks, onChange }) => {
 
 const PHASE_CONTENT = {
   thinking: {
-    headline: 'Analyzing Your Profile',
-    sub: 'Matching your experience to the job requirements...',
+    headline: 'Writing your documents',
+    sub: 'Matching your experience to what the offer asks for.',
   },
   compiling: {
-    headline: 'Compiling Your Pack',
-    sub: 'LaTeX engine rendering your documents...',
+    headline: 'Building the PDFs',
+    sub: 'Laying out your CV, cover letter and email.',
   },
   default: {
-    headline: 'Generating...',
-    sub: 'Please wait while we prepare your application pack.',
+    headline: 'Preparing your application',
+    sub: 'Keep this page open while your documents are written.',
   },
 };
 
@@ -222,21 +185,21 @@ const GeneratingLoader = ({ phase }) => {
         {/* Step 1: AI Tailoring */}
         <div className={`gen-step ${isThinkingDone ? 'gen-step--done' : phase === 'thinking' ? 'gen-step--active' : 'gen-step--pending'}`}>
           <span className="material-symbols-outlined gen-step__icon" style={{ fontVariationSettings: "'FILL' 1" }}>
-            {isThinkingDone ? 'check_circle' : phase === 'thinking' ? 'psychology' : 'radio_button_unchecked'}
+            {isThinkingDone ? 'check_circle' : phase === 'thinking' ? 'edit_note' : 'radio_button_unchecked'}
           </span>
-          AI Tailoring Content
+          Writing the content
         </div>
         {/* Step 2: Compiling */}
         <div className={`gen-step ${isCompiling ? 'gen-step--active' : 'gen-step--pending'}`}>
           <span className={`material-symbols-outlined gen-step__icon ${isCompiling ? 'spin-icon' : ''}`}>
             {isCompiling ? 'sync' : 'radio_button_unchecked'}
           </span>
-          Compiling to PDF
+          Building the PDFs
         </div>
         {/* Step 3: Upload */}
         <div className="gen-step gen-step--pending">
           <span className="material-symbols-outlined gen-step__icon">radio_button_unchecked</span>
-          Uploading to Secure Storage
+          Saving your documents
         </div>
       </div>
     </div>
@@ -247,9 +210,9 @@ const ErrorBanner = ({ message, onRetry }) => (
   <div className="ap-glass error-banner">
     <span className="material-symbols-outlined error-banner__icon">error_outline</span>
     <div>
-      <p className="error-banner__title">Generation Failed</p>
+      <p className="error-banner__title">The documents could not be generated</p>
       <p className="error-banner__msg">{message}</p>
-      <button className="error-banner__retry" onClick={onRetry}>Try Again</button>
+      <button className="error-banner__retry" onClick={onRetry}>Try again</button>
     </div>
   </div>
 );
@@ -260,7 +223,7 @@ const PdfPreview = ({ url, label }) => {
     return (
       <div className="iframe-fallback">
         <span className="material-symbols-outlined" style={{ fontSize: '2rem' }}>picture_as_pdf</span>
-        <p>{url ? 'Preview unavailable' : 'Not generated'}</p>
+        <p>{url ? 'No preview for this file' : 'This document was not generated'}</p>
         {url && (
           <a href={url} target="_blank" rel="noreferrer">
             <span className="material-symbols-outlined" style={{ fontSize: '16px', verticalAlign: 'middle' }}>open_in_new</span>
@@ -312,7 +275,7 @@ const EmailPreview = ({ dataEmail, emailUrl }) => {
         ) : (
           <div className="iframe-fallback" style={{ height: '200px' }}>
             <span className="material-symbols-outlined" style={{ fontSize: '2rem' }}>alternate_email</span>
-            <p>No email content</p>
+            <p>The email was not generated</p>
           </div>
         )}
       </div>
@@ -344,13 +307,13 @@ const StepTwoResults = ({ pack, onDownloadAll }) => {
             check_circle
           </span>
           <div>
-            <p className="success-banner__title">Pack Generated Successfully</p>
-            <p className="success-banner__sub">Your AI-optimized documents are ready. Preview or download below.</p>
+            <p className="success-banner__title">Your application is ready</p>
+            <p className="success-banner__sub">Read each document before you send it. Download them one by one, or all together.</p>
           </div>
         </div>
         <button className="download-all-btn" onClick={onDownloadAll} id="download-all-btn">
           <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
-          Download All
+          Download all
         </button>
       </div>
 
@@ -387,14 +350,14 @@ const StepTwoResults = ({ pack, onDownloadAll }) => {
             <button
               className="result-col__download-btn"
               onClick={() => pack.cover_letter_url && window.open(pack.cover_letter_url, '_blank')}
-              title="Download Cover Letter"
+              title="Download cover letter"
               id="download-letter-btn"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>file_download</span>
             </button>
           </div>
           <div className="ap-glass result-preview-panel">
-            <PdfPreview url={pack.cover_letter_url} label="Cover Letter" />
+            <PdfPreview url={pack.cover_letter_url} label="Cover letter" />
           </div>
         </div>
 
@@ -408,7 +371,7 @@ const StepTwoResults = ({ pack, onDownloadAll }) => {
             <button
               className="result-col__download-btn"
               onClick={handleEmailDownload}
-              title="Download Email"
+              title="Download email"
               id="download-email-btn"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>file_download</span>
@@ -421,8 +384,8 @@ const StepTwoResults = ({ pack, onDownloadAll }) => {
       </div>
 
       <div className="back-btn-wrap">
-        <button className="back-btn" onClick={() => navigate('/jobs')} id="back-to-jobs-btn">
-          ← Apply to Another Job
+        <button className="back-btn" onClick={() => navigate('/dashboard')} id="back-to-jobs-btn">
+          Back to your matches
         </button>
       </div>
     </div>
@@ -601,8 +564,8 @@ const Apply = () => {
         <Sidebar />
         <main className="apply-main-content">
           <div className="page-loading">
-            <span className="material-symbols-outlined" style={{ animation: 'spin-cw 1.5s linear infinite', fontSize: '24px', color: '#a6c8ff' }}>sync</span>
-            Loading...
+            <span className="material-symbols-outlined" style={{ animation: 'spin-cw 1.5s linear infinite', fontSize: '24px' }}>sync</span>
+            Loading…
           </div>
         </main>
       </div>
@@ -649,10 +612,7 @@ const Apply = () => {
                     onClick={handleGenerate}
                     disabled={isGenerating}
                   >
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      auto_awesome
-                    </span>
-                    Generate My Application Pack
+                    Generate the application
                   </button>
                 </div>
               </>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../hooks/useAuth';
@@ -24,11 +24,10 @@ const getInitials = (name) => {
 
 const getAvatarColor = (name) => {
   const colors = [
-    ['#1a3a5c', '#a6c8ff'],
-    ['#1a3a2a', '#00e29e'],
-    ['#3a1a3a', '#d4a6ff'],
-    ['#3a2a1a', '#ffcc80'],
-    ['#1a2a3a', '#80d4ff'],
+    ['#edf0fc', '#172f99'],
+    ['#e4f3ea', '#17734a'],
+    ['#fff0d1', '#8a4f00'],
+    ['#eceef2', '#14172b'],
   ];
   const idx = name ? name.charCodeAt(0) % colors.length : 0;
   return colors[idx];
@@ -73,21 +72,21 @@ const TabOverview = ({ candidate }) => {
   const certs = safeArray(candidate?.certifications);
 
   return (
-    <div className="tab-content-panel glass-card">
+    <div className="tab-content-panel sheet">
       <div className="update-cv-banner">
         <div className="update-cv-banner-text">
-          <strong>Want to update your Profile Info or Skills?</strong>
+          <strong>Is something out of date?</strong>
           <br />
-          These details are extracted from your CV by our AI. Upload a new CV to update them.
+          These details come from your CV. Upload a new one to replace them.
         </div>
-        <Link to="/upload" className="update-cv-btn">Update CV</Link>
+        <Link to="/upload" className="update-cv-btn">Upload a new CV</Link>
       </div>
 
       {/* About */}
       <div>
         <div className="section-label">About</div>
         <p className="about-text">
-          {candidate?.professional_summary || 'No summary extracted from your CV yet.'}
+          {candidate?.professional_summary || 'Your CV did not include a summary.'}
         </p>
       </div>
 
@@ -99,7 +98,7 @@ const TabOverview = ({ candidate }) => {
             {skills.map((s, i) => <span key={i} className="skill-pill">{s}</span>)}
           </div>
         ) : (
-          <p className="muted-placeholder">Skills will appear here after your CV is parsed.</p>
+          <p className="muted-placeholder">Your skills appear here once your CV has been read.</p>
         )}
       </div>
 
@@ -141,25 +140,25 @@ const TabExperience = ({ candidate, navigate }) => {
 
   if (education.length === 0 && experience.length === 0) {
     return (
-      <div className="tab-content-panel glass-card">
+      <div className="tab-content-panel sheet">
         <div className="empty-state">
           <span className="material-symbols-outlined">upload_file</span>
-          <p>Upload your CV to extract your experience automatically.</p>
-          <Link to="/upload" className="empty-state-btn">Go to Upload</Link>
+          <p>Upload your CV and your experience appears here.</p>
+          <Link to="/upload" className="empty-state-btn">Upload your CV</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="tab-content-panel glass-card">
+    <div className="tab-content-panel sheet">
       <div className="update-cv-banner">
         <div className="update-cv-banner-text">
-          <strong>Want to update your Experience or Education?</strong>
+          <strong>Is something out of date?</strong>
           <br />
-          These details are extracted directly from your CV. Upload a new CV to refresh them.
+          These details come from your CV. Upload a new one to replace them.
         </div>
-        <Link to="/upload" className="update-cv-btn">Update CV</Link>
+        <Link to="/upload" className="update-cv-btn">Upload a new CV</Link>
       </div>
 
       {education.length > 0 && (
@@ -176,7 +175,7 @@ const TabExperience = ({ candidate, navigate }) => {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="timeline-header">
                     <div className="timeline-title-block">
-                      <p className="timeline-title">{ed.school || ed.institution || 'Unknown School'}</p>
+                      <p className="timeline-title">{ed.school || ed.institution || 'School not found'}</p>
                       <p className="timeline-sub">{ed.degree || ed.field || ''}</p>
                       {ed.location && <p className="timeline-location">{ed.location}</p>}
                     </div>
@@ -201,7 +200,7 @@ const TabExperience = ({ candidate, navigate }) => {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {experience.map((ex, i) => (
-              <div key={i} className="timeline-item glass-card">
+              <div key={i} className="timeline-item sheet">
                 <div className="timeline-header">
                   <div className="timeline-title-block">
                     <p className="timeline-title">{ex.title || ex.role || 'Unknown Role'}</p>
@@ -233,30 +232,30 @@ const TabExperience = ({ candidate, navigate }) => {
 const TabPreferences = ({ profile, desiredLocations, desiredIndustries, preferredFunctions }) => {
   const score = profile?.min_match_score || 85;
   return (
-    <div className="tab-content-panel glass-card">
-      {/* Job Search Preferences */}
+    <div className="tab-content-panel sheet">
+      {/* Job search preferences */}
       <div>
-        <div className="section-label">Job Search Preferences</div>
+        <div className="section-label">Job search preferences</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
           {/* Remote */}
-          <div className="pref-row glass-card">
+          <div className="pref-row sheet">
             <div className="pref-row-icon">
               <span className="material-symbols-outlined">home_work</span>
             </div>
             <div className="pref-row-body">
-              <div className="pref-row-label">Open to Remote</div>
+              <div className="pref-row-label">Open to remote work</div>
               <div className={`pref-row-value ${profile?.open_to_remote ? 'green' : 'muted'}`}>
                 {profile?.open_to_remote ? 'Yes' : 'No'}
               </div>
             </div>
           </div>
           {/* Match score */}
-          <div className="pref-row glass-card">
+          <div className="pref-row sheet">
             <div className="pref-row-icon">
               <span className="material-symbols-outlined">center_focus_strong</span>
             </div>
             <div className="pref-row-body">
-              <div className="pref-row-label">Minimum Match Score</div>
+              <div className="pref-row-label">Minimum match score</div>
               <div className="pref-row-value blue">{score}%</div>
               <div className="match-bar-track">
                 <div className="match-bar-fill" style={{ width: `${score}%` }} />
@@ -264,12 +263,12 @@ const TabPreferences = ({ profile, desiredLocations, desiredIndustries, preferre
             </div>
           </div>
           {/* Smart alerts */}
-          <div className="pref-row glass-card">
+          <div className="pref-row sheet">
             <div className="pref-row-icon">
               <span className="material-symbols-outlined">notifications_active</span>
             </div>
             <div className="pref-row-body">
-              <div className="pref-row-label">Smart Job Alerts</div>
+              <div className="pref-row-label">Job alerts</div>
               <div className={`pref-row-value ${profile?.smart_alerts ? 'green' : 'muted'}`}>
                 {profile?.smart_alerts ? 'Enabled' : 'Disabled'}
               </div>
@@ -363,13 +362,13 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
   };
 
   return (
-    <div className="tab-content-panel glass-card">
+    <div className="tab-content-panel sheet">
       <div>
-        <div className="section-label">Profile Settings</div>
+        <div className="section-label">Account settings</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {/* Display Name */}
           <div className="settings-field">
-            <label className="settings-field-label" htmlFor="settings-name">DISPLAY NAME</label>
+            <label className="settings-field-label" htmlFor="settings-name">Display name</label>
             {isEditing ? (
               <input
                 id="settings-name"
@@ -394,7 +393,7 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
 
           {/* Location */}
           <div className="settings-field">
-            <label className="settings-field-label" htmlFor="settings-location">LOCATION</label>
+            <label className="settings-field-label" htmlFor="settings-location">City</label>
             {isEditing ? (
               <input
                 id="settings-location"
@@ -419,7 +418,7 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
 
           {/* Remote toggle */}
           <div className="settings-field">
-            <div className="settings-field-label">REMOTE WORK</div>
+            <div className="settings-field-label">Remote work</div>
             <Toggle
               id="settings-remote"
               checked={editForm.open_to_remote}
@@ -446,7 +445,7 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
 
           {/* Smart alerts toggle */}
           <div className="settings-field">
-            <div className="settings-field-label">SMART ALERTS</div>
+            <div className="settings-field-label">Job alerts</div>
             <Toggle
               id="settings-alerts"
               checked={editForm.smart_alerts}
@@ -466,7 +465,7 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
             <button className="btn-save" onClick={handleSave} disabled={isSaving}>
               {isSaving
                 ? <><span className="material-symbols-outlined" style={{ animation: 'spin 1s linear infinite', fontSize: '16px' }}>sync</span>Saving…</>
-                : <><span className="material-symbols-outlined" style={{ fontSize: '16px' }}>save</span>Save Changes</>
+                : <><span className="material-symbols-outlined" style={{ fontSize: '16px' }}>save</span>Save changes</>
               }
             </button>
             {isEditing && (
@@ -476,24 +475,24 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
 
           {/* Password Section */}
           <div className="password-section">
-            <div className="section-label">SECURITY</div>
+            <div className="section-label">Password</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div className="settings-field">
-                <label className="settings-field-label">NEW PASSWORD</label>
+                <label className="settings-field-label">New password</label>
                 <input
                   type="password"
                   className="profile-input"
-                  placeholder="Enter new password"
+                  placeholder=""
                   value={newPassword}
                   onChange={e => setNewPassword(e.target.value)}
                 />
               </div>
               <div className="settings-field">
-                <label className="settings-field-label">CONFIRM PASSWORD</label>
+                <label className="settings-field-label">Confirm new password</label>
                 <input
                   type="password"
                   className="profile-input"
-                  placeholder="Confirm new password"
+                  placeholder=""
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
                 />
@@ -513,7 +512,7 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
                 disabled={isChangingPassword || !newPassword}
                 style={{ marginTop: '0.5rem' }}
               >
-                {isChangingPassword ? 'Updating...' : 'Update Password'}
+                {isChangingPassword ? 'Updating...' : 'Update password'}
               </button>
             </div>
           </div>
@@ -522,13 +521,13 @@ const TabSettings = ({ editForm, setEditForm, isEditing, setIsEditing, isSaving,
 
       {/* Danger zone */}
       <div className="danger-zone-card">
-        <div className="danger-zone-title">Danger Zone</div>
+        <div className="danger-zone-title">Session</div>
         <button
           className="btn-signout"
-          onClick={async () => { await signOut(); navigate('/auth'); }}
+          onClick={async () => { await signOut(); navigate('/'); }}
         >
           <span className="material-symbols-outlined">logout</span>
-          Sign Out
+          Sign out
         </button>
       </div>
     </div>
@@ -600,7 +599,7 @@ const Profile = () => {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      setSaveError('An error occurred during upload. Please try again.');
+      setSaveError('The photo could not be uploaded. Choose it again.');
       console.error('Upload error:', error);
     } finally {
       setIsUploadingAvatar(false);
@@ -718,7 +717,7 @@ const Profile = () => {
     }
 
     if (pError || cError) {
-      setSaveError('An error occurred while saving. Please try again.');
+      setSaveError('Your changes were not saved. Check your connection and save again.');
       console.error('Save error:', pError || cError);
     } else {
       setProfile(prev => ({ ...prev, full_name: editForm.full_name, open_to_remote: editForm.open_to_remote, min_match_score: editForm.min_match_score, smart_alerts: editForm.smart_alerts }));
@@ -764,7 +763,7 @@ const Profile = () => {
           )}
 
           {/* Identity card */}
-          <div className="identity-card glass-card">
+          <div className="identity-card sheet">
             <div 
               className="profile-avatar" 
               style={profile?.avatar_url ? { backgroundImage: `url(${profile.avatar_url})` } : { background: avatarBg, color: avatarFg }}
@@ -796,7 +795,7 @@ const Profile = () => {
                 <span className="seniority-pill">{candidate.seniority_level}</span>
               )}
               {candidate?.years_experience && (
-                <span className="years-pill">{candidate.years_experience} YRS EXP</span>
+                <span className="years-pill">{candidate.years_experience} {candidate.years_experience === 1 ? 'year' : 'years'} of experience</span>
               )}
             </div>
 
@@ -825,18 +824,18 @@ const Profile = () => {
           {/* Mini stats */}
           <div className="mini-stats">
             {/* Applications */}
-            <div className="mini-stat-card glass-card">
+            <div className="mini-stat-card sheet">
               <div className="mini-stat-icon mini-stat-icon--blue">
                 <span className="material-symbols-outlined">send</span>
               </div>
               <div className="mini-stat-content">
                 <div className="mini-stat-value">{appCount}</div>
-                <div className="mini-stat-label">Applications Sent</div>
+                <div className="mini-stat-label">Applications</div>
               </div>
             </div>
 
             {/* CV Status */}
-            <div className="mini-stat-card glass-card">
+            <div className="mini-stat-card sheet">
               <div className={`mini-stat-icon ${cvUploaded ? 'mini-stat-icon--green' : 'mini-stat-icon--red'}`}>
                 <span className="material-symbols-outlined">description</span>
               </div>
@@ -844,23 +843,23 @@ const Profile = () => {
                 <div className={`mini-stat-value ${cvUploaded ? 'green' : 'red'}`}>
                   {cvUploaded ? 'Uploaded' : 'Missing'}
                 </div>
-                <div className="mini-stat-label">CV Status</div>
+                <div className="mini-stat-label">CV</div>
                 {!cvUploaded && (
                   <Link to="/upload" className="mini-stat-link">
-                    → Upload
+                    Upload your CV
                   </Link>
                 )}
               </div>
             </div>
 
             {/* Match Threshold */}
-            <div className="mini-stat-card glass-card">
+            <div className="mini-stat-card sheet">
               <div className="mini-stat-icon mini-stat-icon--blue">
                 <span className="material-symbols-outlined">center_focus_strong</span>
               </div>
               <div className="mini-stat-content">
                 <div className="mini-stat-value blue">{profile?.min_match_score || 85}%</div>
-                <div className="mini-stat-label">Min Match Score</div>
+                <div className="mini-stat-label">Minimum match score</div>
               </div>
             </div>
           </div>
@@ -901,7 +900,7 @@ const Profile = () => {
             ) : (
               <button className="profile-edit-btn" onClick={() => setIsEditing(true)}>
                 <span className="material-symbols-outlined">edit</span>
-                Edit Preferences
+                Edit preferences
               </button>
             )
           )}

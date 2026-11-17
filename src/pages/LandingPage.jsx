@@ -1,30 +1,29 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import HowItWorks from '../components/HowItWorks';
-import Features from '../components/Features';
-import Pricing from '../components/Pricing';
+import ApplicationPack from '../components/ApplicationPack';
+import Sources from '../components/Sources';
 import Footer from '../components/Footer';
 
-const LandingPage = () => {
-  return (
-    <div className="min-h-screen text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container relative">
-      <div className="fixed inset-0 noise-overlay pointer-events-none z-[100]"></div>
-      <div className="fixed top-0 left-0 w-full h-[1px] bg-surface-bright/20 pointer-events-none z-[60]"></div>
-      
-      <Navbar />
+const LandingPage = () => (
+  <div className="min-h-screen">
+    <Navbar />
+    <main>
+      <Hero />
+      <HowItWorks />
+      <ApplicationPack />
+      <Sources />
 
-      <main className="relative min-h-screen overflow-hidden flex flex-col items-center">
-        <div className="absolute inset-0 grid-mesh pointer-events-none"></div>
-        <Hero />
-        <HowItWorks />
-        <Features />
-        <Pricing />
-      </main>
-
-      <Footer />
-    </div>
-  );
-};
+      <section className="bg-ink text-white">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-16 sm:px-8 md:flex-row md:items-center md:justify-between">
+          <h2 className="max-w-xl text-[2rem] font-bold sm:text-[2.5rem]">Start with the CV you already have.</h2>
+          <Link to="/upload" className="btn btn-lg bg-white text-ink hover:bg-desk">Upload your CV</Link>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </div>
+);
 
 export default LandingPage;

@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import AppShell from '../components/AppShell';
+import MatchScore from '../components/MatchScore';
+import EmptyState from '../components/EmptyState';
+import LoadingState from '../components/common/LoadingState';
 import { supabaseDB } from '../services/supabaseDB';
 import { useAuth } from '../hooks/useAuth';
-import LoadingState from '../components/common/LoadingState';
 
+const Fact = ({ label, children }) =>
+  children ? (
+    <div className="flex items-baseline justify-between gap-4 py-2.5">
+      <dt className="text-graphite">{label}</dt>
+      <dd className="text-right font-medium">{children}</dd>
+    </div>
+  ) : null;
 
 const JobDetails = () => {
   const { jobId } = useParams();
@@ -52,198 +61,114 @@ const JobDetails = () => {
 
   if (loading) {
     return (
-      <div className="flex bg-background min-h-screen text-white">
-        <Sidebar />
-        <LoadingState message="Syncing Intelligence..." />
-      </div>
+      <AppShell>
+        <LoadingState message="Loading the offer…" />
+      </AppShell>
     );
   }
 
   if (!job) {
     return (
-      <div className="flex bg-background min-h-screen text-white">
-        <Sidebar />
-        <div className="flex-1 flex flex-col items-center justify-center p-8">
-          <span className="material-symbols-outlined text-6xl text-slate-700 mb-6">error</span>
-          <h2 className="text-3xl font-headline font-bold mb-2">Role Not Found</h2>
-          <p className="text-slate-400 mb-8 max-w-md text-center">We couldn't find the details for this specific role. It might have been filled or removed.</p>
-          <Link to="/dashboard" className="px-8 py-3 bg-primary text-black font-bold rounded-lg group flex items-center gap-3">
-            <span className="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
-            Back to Pipeline
-          </Link>
-        </div>
-      </div>
+      <AppShell>
+        <EmptyState
+          icon="link_off"
+          title="This offer is no longer available"
+          action={<Link to="/dashboard" className="btn btn-primary">Back to your matches</Link>}
+        >
+          It may have been filled or taken down by the company.
+        </EmptyState>
+      </AppShell>
     );
   }
 
+  const skills = job.skills || [];
+
   return (
-    <div className="font-body selection:bg-primary-container selection:text-on-primary-container bg-background antialiased min-h-screen text-[#d3e5f1]">
-      <div className="flex min-h-screen">
-        <Sidebar />
+    <AppShell>
+      <Link to="/dashboard" className="mb-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-graphite hover:text-ink">
+        <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        Your matches
+      </Link>
 
-        <main className="flex-1 md:pl-60 pr-0 min-h-screen bg-surface-container-lowest">
-          <div className="p-12 w-full">
-            {/* Hero Section */}
-            <div className="relative mb-10 group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-transparent blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-              <div className="relative bg-surface-container-low p-8 rounded-2xl border border-white/5 flex flex-col md:flex-row md:items-end justify-between gap-8 backdrop-blur-xl">
-                <div className="flex gap-6 items-start">
-                  <div className="h-20 w-20 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center p-4">
-                    {job.logo_url ? (
-                      <img src={job.logo_url} alt={job.company} className="w-full h-full object-contain mix-blend-screen" />
-                    ) : (
-                      <span className="material-symbols-outlined text-4xl text-primary">work</span>
-                    )}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="bg-primary/20 text-primary text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest border border-primary/20">
-                        {job.location || 'Location TBD'}
-                      </span>
-                      <span className="text-zinc-500 font-mono text-xs uppercase">{job.posted_at || 'Recently Posted'}</span>
-                    </div>
-                    <h1 className="font-headline text-4xl font-extrabold tracking-tighter text-white mb-2 leading-tight">{job.title}</h1>
-                    <p className="font-body text-lg text-zinc-400 flex items-center gap-2">
-                      <span className="text-primary font-bold">{job.company}</span>
-                      {job.location && (
-                        <>
-                          <span className="h-1.5 w-1.5 bg-zinc-700 rounded-full"></span>
-                          <span>{job.location}</span>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={handleToggleSave}
-                    className={`px-6 py-3 border text-[11px] font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2
-                      ${isSaved
-                        ? 'bg-primary/20 border-primary/50 text-primary hover:bg-primary/10'
-                        : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
-                      }`}
-                  >
-                    <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: isSaved ? "'FILL' 1" : "'FILL' 0" }}>
-                      bookmark
-                    </span>
-                    {isSaved ? 'Saved' : 'Save for later'}
-                  </button>
-                  <Link
-                    to={`/apply/${job.id}`}
-                    state={{ match_score: matchScore }}
-                    className="px-8 py-3 bg-primary text-black text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:shadow-[0_0_30px_rgba(29,142,255,0.4)] active:scale-[0.98] transition-all rounded-xl"
-                  >
-                    <span className="material-symbols-outlined text-sm">bolt</span>
-                    Apply with AI
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Bento Grid Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-              {/* Main Body (8 cols) */}
-              <div className="md:col-span-8 space-y-6">
-                {/* Stats Bento Row */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  <div className="glass-card p-6 rounded-2xl border border-white/5 flex flex-col justify-between h-36 group hover:border-primary/30 transition-all">
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Base Salary</span>
-                    <div>
-                      <span className="font-mono text-2xl font-bold text-primary">{job.salary_range || 'Competitive'}</span>
-                      <p className="text-[10px] text-zinc-600 font-mono mt-1">+ Equity & Bonus</p>
-                    </div>
-                  </div>
-                  {/* Applications */}
-                  <div className="glass-card p-6 rounded-2xl border border-white/5 flex flex-col justify-between h-36 group hover:border-primary/30 transition-all">
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Applications</span>
-                    <div>
-                      <span className="font-mono text-2xl font-bold text-zinc-200">
-                        {job.num_application ? job.num_application.toLocaleString() : '—'}
-                      </span>
-                      <p className="text-[10px] text-zinc-600 font-mono mt-1">Total applicants</p>
-                    </div>
-                  </div>
-                  {/* Experience */}
-                  <div className="glass-card p-6 rounded-2xl border border-white/5 flex flex-col justify-between h-36 group hover:border-primary/30 transition-all">
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Experience</span>
-                    <div>
-                      <span className="font-mono text-2xl font-bold text-zinc-200">
-                        {job.experience_level || '—'}
-                      </span>
-                      <p className="text-[10px] text-zinc-600 font-mono mt-1">Seniority level</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Role Overview */}
-                <section className="glass-card p-8 rounded-2xl border border-white/5">
-                  <h3 className="font-headline text-xl font-bold text-white mb-6 uppercase tracking-tight flex items-center gap-3">
-                    <span className="h-5 w-1 bg-primary rounded-full"></span>
-                    Role Overview
-                  </h3>
-                  <div className="max-w-none text-zinc-400 space-y-6 leading-relaxed text-sm font-body whitespace-pre-line">
-                    {job.description || "No detailed description provided for this role yet."}
-                  </div>
-                </section>
-
-                {/* Required Skills */}
-                <section className="glass-card p-8 rounded-2xl border border-white/5">
-                  <h3 className="font-headline text-xl font-bold text-white mb-6 uppercase tracking-tight flex items-center gap-3">
-                    <span className="h-5 w-1 bg-primary rounded-full"></span>
-                    Neural Alignment (Skills)
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {(job.skills || []).length === 0 ? (
-                      <p className="text-zinc-500 text-sm">Skills extracted from job description coming soon.</p>
-                    ) : (
-                      job.skills.map((skill, i) => (
-                        <span key={i} className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-mono text-zinc-300">
-                          {skill}
-                        </span>
-                      ))
-                    )}
-                  </div>
-                </section>
-              </div>
-
-              {/* Sidebar Info (4 cols) */}
-              <div className="md:col-span-4 space-y-6">
-                <div className="glass-card p-8 rounded-2xl border border-white/5">
-                  <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-6">Company Insight</h4>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                    {job.company_bio || `${job.company} is leading the charge in modern software infrastructure and innovation.`}
-                  </p>
-                  <div className="space-y-4 pt-6 border-t border-white/5">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-zinc-500">Size</span>
-                      <span className="text-zinc-200 font-mono">{job.company_size || '500-1000'}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-zinc-500">Founded</span>
-                      <span className="text-zinc-200 font-mono">{job.founded_in || '2018'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="glass-card p-8 rounded-2xl border border-primary/20 bg-primary/5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="material-symbols-outlined text-primary">psychology</span>
-                    <h4 className="text-xs font-bold text-primary uppercase tracking-widest">AI Matching Analysis</h4>
-                  </div>
-                  <p className="text-zinc-300 text-xs leading-relaxed">
-                    Your profile has a high <strong>85%+ alignment</strong> with this role's core technical requirements and culture pillars.
-                  </p>
-                  <button className="w-full mt-6 py-3 bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest rounded-xl hover:bg-primary/20 transition-all">
-                    View Compatibility Report
-                  </button>
-                </div>
-              </div>
-
-            </div>
+      <header className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex min-w-0 gap-4">
+          {job.logo_url && (
+            <img src={job.logo_url} alt="" className="h-14 w-14 shrink-0 rounded-lg border border-rule bg-paper object-contain p-1.5" />
+          )}
+          <div className="min-w-0">
+            <h1 className="text-[2rem] font-bold sm:text-[2.5rem]">{job.title}</h1>
+            <p className="mt-2 flex flex-wrap gap-x-3 text-[1.0625rem] text-graphite">
+              {job.company_website ? (
+                <a href={job.company_website} target="_blank" rel="noreferrer" className="font-semibold text-ink underline decoration-rule-strong underline-offset-4 hover:decoration-ink">
+                  {job.company}
+                </a>
+              ) : (
+                <span className="font-semibold text-ink">{job.company}</span>
+              )}
+              {job.location && <span>{job.location}</span>}
+            </p>
           </div>
-        </main>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <button onClick={handleToggleSave} aria-pressed={isSaved} className="btn btn-secondary">
+            <span className={`material-symbols-outlined ${isSaved ? 'icon-fill text-pen' : ''}`} aria-hidden="true">bookmark</span>
+            {isSaved ? 'Saved' : 'Save'}
+          </button>
+          <Link to={`/apply/${job.id}`} state={{ match_score: matchScore }} className="btn btn-primary">
+            Prepare application
+          </Link>
+        </div>
+      </header>
+
+      <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
+        <article className="sheet p-6 sm:p-9">
+          <h2 className="text-xl font-semibold">About the job</h2>
+          <div className="mt-4 max-w-[68ch] whitespace-pre-line leading-relaxed text-graphite">
+            {job.description || 'The company did not publish a description for this offer.'}
+          </div>
+
+          {skills.length > 0 && (
+            <>
+              <h2 className="mt-8 text-xl font-semibold">Skills asked for</h2>
+              <ul className="mt-4 flex flex-wrap gap-1.5">
+                {skills.map((skill, i) => (
+                  <li key={i} className="chip">{skill}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </article>
+
+        <aside className="space-y-6">
+          {matchScore !== null && (
+            <section className="sheet p-6">
+              <h2 className="font-sans text-[0.9375rem] font-semibold tracking-normal text-graphite">Match with your CV</h2>
+              <MatchScore score={matchScore} size="lg" className="mt-3" />
+              <p className="mt-3 text-[0.9375rem] text-graphite">
+                How close this offer’s description is to the experience and skills on your CV.
+              </p>
+            </section>
+          )}
+
+          <section className="sheet px-6 py-4">
+            <h2 className="sr-only">Details</h2>
+            <dl className="divide-y divide-rule text-[0.9375rem]">
+              <Fact label="Posted">{job.posted_at}</Fact>
+              <Fact label="Level">{job.experience_level}</Fact>
+              <Fact label="Salary">{job.salary_range}</Fact>
+              <Fact label="Applicants">{job.num_application ? job.num_application.toLocaleString() : null}</Fact>
+            </dl>
+            {job.job_url && (
+              <a href={job.job_url} target="_blank" rel="noreferrer" className="link mt-3 inline-flex items-center gap-1.5 pb-1 text-[0.9375rem]">
+                View the original posting
+                <span className="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+              </a>
+            )}
+          </section>
+        </aside>
       </div>
-    </div>
+    </AppShell>
   );
 };
 

@@ -1,79 +1,103 @@
-import React from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import Logo from './Logo';
+
+const NAV = [
+  { name: 'Matches', icon: 'format_list_numbered', path: '/dashboard', also: ['/job-details', '/apply'] },
+  { name: 'Search', icon: 'search', path: '/search' },
+  { name: 'Saved', icon: 'bookmark', path: '/saved' },
+  { name: 'Applications', short: 'Applied', icon: 'send', path: '/applied' },
+  { name: 'Profile', icon: 'person', path: '/profile' },
+];
 
 const Sidebar = () => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   const handleLogout = async () => {
     await signOut();
     navigate('/');
   };
-  const menuItems = [
-    { name: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
-    { name: 'Search', icon: 'search', path: '/search' },
-    { name: 'Upload', icon: 'upload_file', path: '/upload' },
-    { name: 'Saved', icon: 'bookmark', path: '/saved' },
-    { name: 'Applied', icon: 'send', path: '/applied' },
-    { name: 'Profile', icon: 'account_circle', path: '/profile' },
-  ];
+
+  const isActive = (item) =>
+    pathname === item.path || (item.also || []).some((prefix) => pathname.startsWith(prefix));
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-60 z-40 bg-[#04151e] border-r border-white/5 flex flex-col py-8 px-0">
-      <Link to="/dashboard" className="mb-10 px-6 text-white block group">
-        <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="JobMatcher AI" className="w-6 h-6 object-contain group-hover:scale-105 transition-transform duration-300" />
-          <h1 className="text-xl font-bold font-space tracking-tight leading-none group-hover:text-primary transition-colors">JobMatcher AI</h1>
-        </div>
-        <p className="text-[9px] text-[#1D8EFF] tracking-[0.2em] uppercase mt-1 font-bold font-space">Intelligence Engine</p>
-      </Link>
+    <>
+      {/* Desktop: fixed left column */}
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-rule bg-paper md:flex">
+        <Link to="/dashboard" className="px-6 pb-6 pt-7">
+          <Logo />
+        </Link>
 
-      <nav className="flex-1 px-0 space-y-0.5">
-        {menuItems.map((item) => {
-          const isActivePath = location.pathname === item.path;
-          const isRelatedActive = (item.name === 'Dashboard' && (location.pathname.startsWith('/job-details') || location.pathname.startsWith('/apply')));
+        <nav className="flex-1 px-3" aria-label="Main">
+          <ul className="space-y-0.5">
+            {NAV.map((item) => {
+              const active = isActive(item);
+              return (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    aria-current={active ? 'page' : undefined}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.9375rem] transition-colors ${
+                      active ? 'bg-pen-wash font-semibold text-pen-dark' : 'text-graphite hover:bg-desk hover:text-ink'
+                    }`}
+                  >
+                    <span className={`material-symbols-outlined ${active ? 'icon-fill' : ''}`} aria-hidden="true">{item.icon}</span>
+                    {item.name}
+                  </NavLink>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-          return (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={() =>
-                `flex items-center gap-4 px-6 py-3.5 transition-all text-sm font-medium font-space ${isActivePath || isRelatedActive
-                  ? 'bg-gradient-to-r from-[#1D8EFF]/10 to-transparent border-l-2 border-[#1D8EFF] text-white'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`
-              }
-            >
-              {() => (
-                <>
-                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: (isActivePath || isRelatedActive) ? "'FILL' 1" : "'FILL' 0" }}>
-                    {item.icon}
-                  </span>
-                  {item.name}
-                </>
-              )}
-            </NavLink>
-          );
-        })}
-      </nav>
-
-      <div className="mt-auto px-6 space-y-6">
-        <button className="w-full bg-gradient-to-r from-[#89b4ff] to-[#1D8EFF] text-[#002a54] py-3 rounded-lg font-bold text-sm tracking-tight shadow-[0_4px_12px_rgba(29,142,255,0.25)] hover:brightness-110 active:scale-[0.98] transition-all">
-          Open to Work
-        </button>
-
-        <div className="space-y-1 pb-4">
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-6 py-2 text-slate-400 hover:text-white transition-colors text-xs font-medium font-space text-left"
-          >
-            <span className="material-symbols-outlined text-[18px]">logout</span> Logout
+        <div className="space-y-1 border-t border-rule p-3">
+          <Link to="/upload" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.9375rem] text-graphite transition-colors hover:bg-desk hover:text-ink">
+            <span className="material-symbols-outlined" aria-hidden="true">upload_file</span>
+            Upload a new CV
+          </Link>
+          <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[0.9375rem] text-graphite transition-colors hover:bg-desk hover:text-ink">
+            <span className="material-symbols-outlined" aria-hidden="true">logout</span>
+            Sign out
           </button>
         </div>
-      </div>
-    </aside>
+      </aside>
+
+      {/* Mobile: top bar + bottom tabs */}
+      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-rule bg-paper px-4 md:hidden">
+        <Link to="/dashboard"><Logo /></Link>
+        <div className="flex items-center gap-1">
+          <Link to="/upload" className="grid h-10 w-10 place-items-center rounded-lg text-graphite hover:bg-desk" aria-label="Upload a new CV">
+            <span className="material-symbols-outlined" aria-hidden="true">upload_file</span>
+          </Link>
+          <button onClick={handleLogout} className="grid h-10 w-10 place-items-center rounded-lg text-graphite hover:bg-desk" aria-label="Sign out">
+            <span className="material-symbols-outlined" aria-hidden="true">logout</span>
+          </button>
+        </div>
+      </header>
+
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper pb-[env(safe-area-inset-bottom)] md:hidden" aria-label="Main">
+        <ul className="grid grid-cols-5">
+          {NAV.map((item) => {
+            const active = isActive(item);
+            return (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  aria-current={active ? 'page' : undefined}
+                  className={`flex flex-col items-center gap-0.5 py-2 text-[0.6875rem] ${active ? 'font-semibold text-pen-dark' : 'text-graphite'}`}
+                >
+                  <span className={`material-symbols-outlined text-[1.375rem] ${active ? 'icon-fill' : ''}`} aria-hidden="true">{item.icon}</span>
+                  {item.short || item.name}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 };
 
