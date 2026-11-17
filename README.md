@@ -1,78 +1,89 @@
-# Job Finder ETL – Airflow 2.7.2 (Python 3.11)
+# JobMatcher
 
-This project uses Apache Airflow to orchestrate the ETL pipeline for Job Finder.  
-Follow these steps to install Python 3.11, set up Airflow 2.7.2, configure environment variables, and run the DAG on port **8081**.
+JobMatcher finds job offers in Morocco (ANAPEC, Jobzyn, LinkedIn), ranks them against your CV, and writes a tailored CV, cover letter and email for the ones you pick.
+
+This repository holds the whole project:
+
+```
+job_finder/
+├── etl/                  Scraping pipeline (Python package)
+│   ├── scrapers/         Download offers from ANAPEC, Jobzyn and LinkedIn
+│   ├── parsers/          Turn the downloaded HTML into structured offers
+│   ├── normalizer.py     Clean and merge the parsed offers
+│   ├── load/             Load the offers into Postgres (Supabase)
+│   └── core/             HTTP client, database connection, helpers
+├── airflow/              Airflow home: the DAG that runs the pipeline
+│   ├── dags/job_pipeline.py
+│   └── airflow_local_settings.py
+├── frontend/             Web app (React, Vite, Supabase)
+├── requirements.txt      Python dependencies for the pipeline
+└── setup.py              Installs the etl package
+```
+
+Scraped files are written to `data/` when the pipeline runs. That folder is not tracked.
 
 ---
 
-## 1. Install Python 3.11 (WSL / Ubuntu)
+## Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Create `frontend/.env` with your Supabase project:
+
+```
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_PUBLISHABLE_KEY=...
+```
+
+---
+
+## Pipeline (Airflow 2.7.2, Python 3.11)
+
+### 1. Install Python 3.11 (Ubuntu / WSL)
 
 ```bash
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 sudo apt update
 sudo apt install python3.11 python3.11-venv python3.11-dev -y
 ```
-## 2. Clone the Project
+
+### 2. Create a virtual environment and install
 
 ```bash
 git clone https://github.com/cad0m/job_finder.git
 cd job_finder
-```
-## 3. Create Virtual Environment
-
-```bash
 python3.11 -m venv venv
 source venv/bin/activate
-```
-
-## 4. Install Requirements
-```bash
 pip install --upgrade pip
 pip install -r requirements.txt
-```
-## 5. Install Apache Airflow 2.7.2
-
-Airflow requires a specific install command:
-```bash
+pip install -e .
 pip install "apache-airflow==2.7.2" --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.7.2/constraints-3.11.txt
 ```
-## 6. Set AIRFLOW_HOME
 
-Inside the project root (same level as dags/):
+### 3. Point Airflow at the `airflow/` folder
+
+Run this from the project root, in every terminal you use for Airflow:
+
 ```bash
-export AIRFLOW_HOME="$(pwd)/airflow_home"
+export AIRFLOW_HOME="$(pwd)/airflow"
 ```
 
-Create the folder:
-```bash
-mkdir -p airflow_home
+### 4. Initialise Airflow
 
-## 7. Initialize Airflow Database
 ```bash
 airflow db init
+airflow users create --username admin --firstname admin --lastname admin --role Admin --email admin@example.com
 ```
 
-Create admin user:
-```bash
-airflow users create \
-    --username admin \
-    --firstname admin \
-    --lastname admin \
-    --role Admin \
-    --email admin@example.com
+`airflow db init` creates `airflow.cfg`, the database and the logs inside `airflow/`. They are not tracked. In `airflow.cfg`, set `load_examples = False`.
+
+### 5. Create `.env` in the project root
+
 ```
-## 8. Create .env File
-
-Inside the project root:
-`
-job_finder/
-    .env     ← create here
-    dags/
-    job_finder/
-
-
-The .env must contain:
-
 PROXY_USER=xxxx
 PROXY_PASS=xxxx
 PROXY_HOST=xxxx
@@ -83,37 +94,17 @@ DB_PASS=xxxx
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=jobs
-
-## 9. Airflow Must Load .env
-
-Add this to dags/job_pipeline.py:
-```bash
-from dotenv import load_dotenv
-load_dotenv(".env")
 ```
-## 10. Run Airflow on Port 8081
 
-* Start scheduler:
+### 6. Run Airflow on port 8081
+
 ```bash
 airflow scheduler &
-```
-
-* Start webserver:
-```bash
 airflow webserver --port 8081 &
 ```
 
-Open in browser:
+Open http://localhost:8081. The `job_pipeline` DAG appears automatically. Trigger it from the UI, or:
 
-http://localhost:8081
-
-
-Your DAG should appear automatically.
-
-## 11. Trigger the DAG
-
-From the UI → DAGs → job_pipeline → Trigger DAG
-OR:
 ```bash
 airflow dags trigger job_pipeline
 ```
