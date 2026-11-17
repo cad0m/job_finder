@@ -9,6 +9,7 @@ x-airflow: &airflow
     - path: .env
       required: false
   environment: &airflow-env
+    HOME: /home/airflow                # where the image keeps its Python packages, whatever AIRFLOW_UID is
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
     AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/project/airflow/dags
@@ -39,8 +40,13 @@ services:
 
   airflow-init:                        # creates the tables and the admin user, then exits
     <<: *airflow
-    entrypoint: /bin/bash
-    command: -c "airflow db migrate && airflow users create --username admin --password admin --firstname admin --lastname admin --role Admin --email admin@example.com || true"
+    command: version
+    environment:
+      <<: *airflow-env
+      _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin
     restart: "no"
 
   airflow-scheduler:
