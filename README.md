@@ -16,6 +16,7 @@ job_finder/
 │   ├── dags/job_pipeline.py
 │   └── airflow_local_settings.py
 ├── frontend/             Web app (React, Vite, Supabase)
+├── design/               Approved designs: HTML previews of every page (open design/previews/index.html)
 ├── requirements.txt      Python dependencies for the pipeline
 └── setup.py              Installs the etl package
 ```
