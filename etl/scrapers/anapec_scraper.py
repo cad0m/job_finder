@@ -6,7 +6,9 @@ import asyncio
 import argparse
 
 class AnapecScraper:
-    BASE_URL = "http://www.anapec.org/sigec-app-rv/chercheurs/resultat_recherche/"
+    BASE_URL = "https://www.anapec.org/sigec-app-rv/chercheurs/resultat_recherche/"
+    # anapec.org serves an incomplete certificate chain, so the certificate check is skipped for this site only
+    NO_VERIFY = {"verify": False}
     BASE_RAW_FOLDER = os.path.join("data/raw", "anapec")  
 
     def __init__(self, client: CurlClient) -> None:  
@@ -15,7 +17,7 @@ class AnapecScraper:
 
     async def scrape_page(self, page: int):
         url = f"{self.BASE_URL}page:{page}/tout:all"
-        response = await self.client.get(url, {}, with_proxy=False)
+        response = await self.client.get(url, {}, with_proxy=False, more_attributes=self.NO_VERIFY)
         return response
     
     async def extract_links(self, html: str):
@@ -23,7 +25,7 @@ class AnapecScraper:
         return [job.attributes.get('href') for job in parser.css('a.nyroModal')]
     
     async def get_job_data(self, link: str):
-        response = await self.client.get(link, {}, with_proxy=False)
+        response = await self.client.get(link, {}, with_proxy=False, more_attributes=self.NO_VERIFY)
         return response
     
     async def save_job_data(self, data: str, filename: str):
@@ -43,7 +45,7 @@ class AnapecScraper:
 
             for count, link in enumerate(links):
                 try:
-                    job_data = await self.get_job_data(f"http://www.anapec.org{link}")
+                    job_data = await self.get_job_data(f"https://www.anapec.org{link}")
                     filename = f"{page}_{count}.html"
                     await self.save_job_data(job_data.text, filename)
                     print(f"Saved job {page}_{count}")

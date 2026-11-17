@@ -12,10 +12,11 @@ job_finder/
 │   ├── normalizer.py     Clean and merge the parsed offers
 │   ├── load/             Load the offers into Postgres (Supabase)
 │   └── core/             HTTP client, database connection, helpers
-├── airflow/              Airflow home: the DAG that runs the pipeline
+├── airflow/              Airflow: the DAG and its Dockerfile
 │   ├── dags/job_pipeline.py
 │   └── airflow_local_settings.py
 ├── frontend/             Web app (React, Vite, Supabase)
+├── docker-compose.yml    Runs Airflow (scheduler, web UI, its database)
 ├── requirements.txt      Python dependencies for the pipeline
 └── setup.py              Installs the etl package
 ```
@@ -41,70 +42,32 @@ VITE_SUPABASE_PUBLISHABLE_KEY=...
 
 ---
 
-## Pipeline (Airflow 2.7.2, Python 3.11)
+## Pipeline (Airflow in Docker)
 
-### 1. Install Python 3.11 (Ubuntu / WSL)
-
-```bash
-sudo add-apt-repository ppa:deadsnakes/ppa -y
-sudo apt update
-sudo apt install python3.11 python3.11-venv python3.11-dev -y
-```
-
-### 2. Create a virtual environment and install
+Needs Docker with Compose.
 
 ```bash
-git clone https://github.com/cad0m/job_finder.git
-cd job_finder
-python3.11 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-pip install -e .
-pip install "apache-airflow==2.7.2" --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.7.2/constraints-3.11.txt
+cp .env.example .env      # fill in your database, and a proxy if you have one
+docker compose up -d
 ```
 
-### 3. Point Airflow at the `airflow/` folder
+Open http://localhost:8081 (user `admin`, password `admin`), unpause `job_etl_pipeline` and trigger it. It runs once a day after that.
 
-Run this from the project root, in every terminal you use for Airflow:
+The DAG scrapes ANAPEC, Jobzyn and LinkedIn, parses and normalizes the offers, then loads them into your database. Scraped files are written to `data/`.
+
+Without a proxy in `.env`, the scrapers connect directly.
+
+### Test one scraper without the full pipeline
 
 ```bash
-export AIRFLOW_HOME="$(pwd)/airflow"
+docker compose run --rm --no-deps -e HOME=/home/airflow --entrypoint python airflow-scheduler \
+  -c "import asyncio; from etl.scrapers.anapec_scraper import run_scraper; asyncio.run(run_scraper(1, 2))"
 ```
 
-### 4. Initialise Airflow
+`run_scraper(1, 2)` scrapes page 1 only: the end page is not included.
+
+### Stop
 
 ```bash
-airflow db init
-airflow users create --username admin --firstname admin --lastname admin --role Admin --email admin@example.com
-```
-
-`airflow db init` creates `airflow.cfg`, the database and the logs inside `airflow/`. They are not tracked. In `airflow.cfg`, set `load_examples = False`.
-
-### 5. Create `.env` in the project root
-
-```
-PROXY_USER=xxxx
-PROXY_PASS=xxxx
-PROXY_HOST=xxxx
-PROXY_PORT=xxxx
-
-DB_USER=postgres
-DB_PASS=xxxx
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=jobs
-```
-
-### 6. Run Airflow on port 8081
-
-```bash
-airflow scheduler &
-airflow webserver --port 8081 &
-```
-
-Open http://localhost:8081. The `job_pipeline` DAG appears automatically. Trigger it from the UI, or:
-
-```bash
-airflow dags trigger job_pipeline
+docker compose down
 ```

@@ -15,10 +15,11 @@ class CurlClient:
     def __init__(self, cookies={}, header={}):
         self.cookies = cookies
         self.header = header
+        # Use the proxy only when one is configured in .env
         self.proxy = {
             'http': f'http://{PROXY_USER}:{PROXY_PASSWORD}@{PROXY_HOST}:{PROXY_PORT}',
             'https': f'http://{PROXY_USER}:{PROXY_PASSWORD}@{PROXY_HOST}:{PROXY_PORT}'
-        }
+        } if PROXY_HOST else None
         self.session = requests.AsyncSession()  
         self.sleeper = Sleeper(2) #sleepr for 1-3 second to avoid many requests
 
@@ -34,7 +35,7 @@ class CurlClient:
         }
 
         #some websites block the request if it's from a proxy
-        if with_proxy:
+        if with_proxy and self.proxy:
             get_param['proxies'] = self.proxy
 
         if type == "post":

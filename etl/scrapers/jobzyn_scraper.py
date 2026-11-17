@@ -24,8 +24,11 @@ class JobzynScraper:
         return response  
     
     async def extract_dic(self, full_json: str):
-        dict_json = full_json.split("1:", 1)[1]
-        return dict_json
+        # The reply is a stream of lines like "0:...", "1:...". The job list is on the line that starts with "1:".
+        for line in full_json.splitlines():
+            if line.startswith("1:"):
+                return line[2:]
+        raise ValueError("No job list (line starting with '1:') in the Jobzyn reply")
         
     async def save_job_data(self, data: str, filename: str):
         filesaver = Filesaver("data/raw", "jobzyn", filename, data)

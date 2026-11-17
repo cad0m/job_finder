@@ -2,7 +2,8 @@ import os
 import sys
 
 # Help imports whether running under Airflow or running the script directly
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))  # airflow/dags -> project root
+os.chdir(PROJECT_ROOT)  # the scrapers read and write data/ relative to the project root
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
