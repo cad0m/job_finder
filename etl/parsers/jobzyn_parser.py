@@ -88,7 +88,9 @@ class JobzynParser:
     
     def _get_job_function(self) -> Optional[str]:
         categories = self.job.get('categories', [])
-        return ', '.join(categories) if categories else None
+        # A job has one function in the database: keep the main (first) category.
+        # Joining them all made values like "Télécommunications, Audit, Commercial, ..." (over 128 characters).
+        return categories[0].strip() if categories else None
     
     def _get_industries(self) -> Optional[list[str]]:
         return self.job.get('categories')

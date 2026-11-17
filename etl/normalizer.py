@@ -192,6 +192,10 @@ class Transformer:
         
         # Clean dates
         df["posted_date"] = df["posted_date"].apply(normalize_date)
+        # Stay within the database column sizes (company, function: varchar(128); title: 256)
+        for col, size in (("company_name", 128), ("job_function", 128), ("job_title", 256)):
+            if col in df.columns:
+                df[col] = df[col].where(df[col].isna(), df[col].astype(str).str.strip().str.slice(0, size))
         df["scraped_at"] = pd.to_datetime(df["scraped_at"], errors="coerce")
         
         # Clean numeric fields
