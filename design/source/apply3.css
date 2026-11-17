@@ -1,0 +1,92 @@
+/* v3: design switcher on the stage, centred CV, guide tucked behind the paper, a real highlighter and a writing pen. */
+.ctrl h1{font-size:44px}
+.lead3{margin:-6px 0 0;font-size:15.5px;line-height:23px;color:var(--muted)}
+/* switcher above the paper */
+.dsw-w{position:absolute;z-index:6;top:18px;left:50%;translate:-50% 0;display:flex;align-items:center;gap:8px;max-width:calc(100% - 32px)}
+.dsw{display:flex;gap:4px;padding:5px;border-radius:999px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(218,214,234,.9),0 16px 34px -24px rgba(30,28,43,.45)}
+.dpill{position:relative;display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 14px 0 11px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;white-space:nowrap;transition:color .25s ease}
+.dpill input{position:absolute;opacity:0;width:1px;height:1px}
+.dpill svg{flex:none;position:relative;z-index:1}
+.dpill span{position:relative;z-index:1}
+.dpill::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--ink);opacity:0;scale:.8;transition:opacity .25s ease,scale .35s var(--spring)}
+.dpill:hover::before{opacity:.06;scale:1}
+.dpill:has(input:checked){color:var(--white)}
+.dpill:has(input:checked)::before{opacity:1;scale:1}
+.dpill:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+.dpill .sug{position:absolute;z-index:2;top:-8px;right:4px;height:16px;padding:0 6px;border-radius:999px;background:var(--accent);color:var(--ink);font-size:9.5px;font-weight:800;line-height:16px}
+.arw{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.86);box-shadow:0 0 0 1px rgba(218,214,234,.9);color:var(--ink);cursor:pointer;transition:scale .3s var(--spring),background-color .2s ease}
+.arw:hover{background:var(--white)}.arw:active{scale:.9}
+.studio:not([data-step="setup"]) .dsw-w{display:none}
+/* centred paper */
+.paper{top:86px;bottom:26px;left:50%;max-width:calc(100% - 48px)}
+.studio:not([data-step="setup"]) .paper{top:30px}
+.layer{z-index:2}
+.paper.lift{animation:lift .6s var(--out)}
+@keyframes lift{35%{scale:.975}}
+/* the guide leans out from behind the paper's right edge; his bubble uses the empty margin */
+.paper .guide{position:absolute;z-index:1;left:auto;right:-122px;bottom:-30px;width:150px;scale:-1 1;transition:translate .5s var(--out)}
+.paper .bubble{position:absolute;z-index:3;left:calc(100% + 18px);right:auto;top:auto;bottom:205px;width:190px;border-radius:20px 20px 20px 20px}
+.paper .bubble::after{left:auto;right:56px;bottom:-9px}
+.tipbar,.zoomb,.zoom{display:none}
+/* the highlighter */
+.big .cvd .mark{padding:0 .3cqw;margin:0 -.3cqw;border-radius:.6cqw;background:linear-gradient(90deg,rgba(255,127,69,.32),rgba(255,127,69,.24)) 0 0/0% 100% no-repeat;transition:background-size .8s var(--out)}
+.marks-on .big .cvd .mark{background-size:100% 100%}
+.marks-on .big .cvd .mark:nth-of-type(2){transition-delay:.08s}
+/* the writing pen */
+.pen{position:absolute;z-index:4;left:-14px;right:-14px;top:0;height:3px;border-radius:3px;background:var(--accent);box-shadow:0 0 0 4px rgba(255,127,69,.18),0 0 26px 6px rgba(255,127,69,.35);opacity:0;pointer-events:none}
+.pen.run{animation:pen 2.6s cubic-bezier(.45,0,.25,1) both}
+@keyframes pen{0%{top:2%;opacity:0}8%{opacity:1}92%{opacity:1}100%{top:98%;opacity:0}}
+/* stage doc turning between CV, letter and email */
+.stage3[data-doc="cl"] .l-cv,.stage3[data-doc="em"] .l-cv{translate:-24% 0;rotate:y -24deg;scale:.88}
+.stage3[data-doc="cv"] .l-cl,.stage3[data-doc="cv"] .l-em{translate:24% 0;rotate:y 24deg;scale:.88}
+/* CV content fills the page */
+.cvd .crt{margin-top:1.4cqw}
+/* ready list doc icons */
+.ditem .di{background:var(--tint)}
+@media (max-width:1280px){.paper .guide{width:120px;right:-96px}.paper .bubble{bottom:160px;width:146px;padding:12px 13px;font-size:13px;line-height:18px}.dpill{padding:0 11px 0 9px}.dpill span{font-size:13.5px}}
+@media (max-width:1180px){.paper .bubble,.paper .guide{display:none}.studio .tipbar{display:flex;position:absolute;z-index:6;left:16px;right:16px;bottom:16px}.paper{bottom:96px}}
+@media (max-width:900px){
+.stage3{display:flex;flex-direction:column;gap:12px;height:auto;padding:14px 12px 14px;border-radius:28px}
+.dsw-w{position:static;translate:none;max-width:none;margin:0 -12px;padding:0 12px;overflow-x:auto;scrollbar-width:none}
+.dsw-w::-webkit-scrollbar{display:none}
+.dsw-w .arw{display:none}
+.dsw{flex:none}
+.paper{position:relative;inset:auto;left:auto;translate:none;width:100%;max-width:none;aspect-ratio:1/1.414;height:auto;animation:none}
+.studio:not([data-step="setup"]) .paper{top:auto}
+.layer .cvd,.layer .ltr{width:100%;height:auto}
+.l-em{place-items:start stretch}
+.paper .guide,.paper .bubble{display:none}
+.studio .tipbar{position:static;display:flex}
+.zoomb{display:inline-flex;position:absolute;z-index:5;right:10px;bottom:10px;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:999px;background:var(--ink);color:var(--white);font:600 13px/1 Outfit,sans-serif;box-shadow:0 10px 24px -12px rgba(30,28,43,.6)}
+.studio:not([data-step="setup"]):not([data-step="ready"]) .zoomb{display:none}
+.ctrl h1{font-size:32px}
+.cscroll{gap:14px}
+.stamp2{right:auto;left:22px;top:auto;bottom:150px}
+}
+.tipbar{align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:20px;background:var(--white);box-shadow:0 0 0 1px rgba(218,214,234,.9),0 16px 30px -24px rgba(30,28,43,.45)}
+.mini-g{flex:none;width:46px;height:46px;border-radius:50%;background:var(--tint);overflow:hidden;display:grid;place-items:center}
+.mini-g svg{width:46px;height:46px}
+.tipbar p{margin:0;font-size:14px;line-height:20px}
+.tipbar p.swap{animation:btin .45s var(--out)}
+/* full-size viewer on phones */
+.zoom{padding:0;border:0;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;background:var(--page)}
+.zoom[open]{display:flex;flex-direction:column}
+.zoom::backdrop{background:rgba(30,28,43,.4)}
+.zbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--white)}
+.zbar b{font-size:15px}
+.zx{display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:12px;background:var(--page);font-size:20px;cursor:pointer}
+.zbody{flex:1;overflow:auto;padding:16px}
+.zdoc{width:760px}
+.zdoc .cvd{border-radius:8px;box-shadow:0 0 0 1px var(--line)}
+@media (prefers-reduced-motion:no-preference){
+.dsw-w{animation:focusin .8s var(--out) .35s both}
+.paper .guide{animation:peekr .9s var(--spring) .9s both}
+.paper .bubble{animation:bubin .6s var(--spring) 1.3s both}
+.zoom[open]{animation:sheet .4s var(--out)}
+.paper .guide.nod .pk-head{animation:nod2 .8s var(--out)}
+}
+@keyframes peekr{from{opacity:0;translate:-40% 0}}
+@keyframes sheet{from{translate:0 100%}}
+@keyframes nod2{40%{rotate:-8deg}75%{rotate:4deg}}
+.c-setup .get{margin-top:2px}
+.c-setup .get li{font-size:14px}

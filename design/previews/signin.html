@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JobMatcher Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+/* JobMatcher auth pages v2. Sign in: the form beside a CV being read by a magnifying glass. Sign up: the form is the top of your CV.
+   Performance rule: only whole elements move (transform/opacity on composited boxes). Nothing animates inside the character drawings. */
+:root{--ink:#1E1C2B;--muted:#5E5C6E;--line:#DAD6EA;--field:#CFCADF;--page:#F6F5FB;--tint:#E9E5FF;--lav:#CDBFFF;--accent:#FF7F45;--peach:#FFE3D3;--white:#FFFFFF;--out:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.45,.64,1);--L:8s}
+body{margin:0;background:var(--page);color:var(--ink);font-family:Outfit,"Noto Sans Arabic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--ink)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.display{margin:0;font-family:Anton,"Arial Narrow",Impact,sans-serif;font-weight:400;letter-spacing:0;text-wrap:balance}
+p{text-wrap:pretty}
+.page{position:relative;isolation:isolate;min-height:100vh;background:var(--page);overflow-x:clip}
+.page::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse 60% 70% at 0% 0%,rgba(184,166,255,.38),transparent 70%),radial-gradient(ellipse 50% 60% at 10% 100%,rgba(255,170,128,.22),transparent 70%)}
+.page::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .12 0 0 0 0 .11 0 0 0 0 .17 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* Frame */
+.auth{max-width:1680px;margin:0 auto;display:grid;min-height:100vh;grid-template-rows:auto 1fr auto}
+.signin{grid-template-columns:minmax(420px,.7fr) minmax(0,1.3fr);grid-template-areas:"hdr stage" "form stage" "foot stage"}
+.ahdr{grid-area:hdr;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 40px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo img{width:40px;height:40px}.logo span{font-size:30px;line-height:1}
+.lang{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border:0;border-radius:999px;background:var(--white);color:var(--ink);font:500 15px/1 Outfit,system-ui,sans-serif;cursor:pointer}
+.lang:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.afoot{grid-area:foot;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;padding:0 40px 24px;font-size:14px;color:var(--muted)}
+.afoot a{color:var(--muted);text-decoration:none}.afoot a:hover{color:var(--ink)}
+.aform{grid-area:form;align-self:center;justify-self:center;width:100%;max-width:440px;box-sizing:border-box;padding:24px;display:flex;flex-direction:column;gap:24px}
+.atitle{font-size:clamp(50px,4.6vw,72px);line-height:.94}
+.asub{margin:0;font-size:18px;line-height:28px;color:var(--muted)}
+.head{display:flex;flex-direction:column;gap:14px}
+form{display:flex;flex-direction:column;gap:16px}
+
+/* Fields */
+.fld{display:flex;flex-direction:column;gap:8px}
+.lbl{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px;font-weight:600}
+.lbl a{font-weight:500;font-size:14px;color:var(--muted);text-underline-offset:3px}.lbl a:hover{color:var(--ink)}
+.ctl{position:relative;display:block}
+.ctl>.ic{position:absolute;left:16px;top:50%;translate:0 -50%;color:#8B89A0;transition:color .2s ease;pointer-events:none}
+.ctl input{width:100%;height:56px;box-sizing:border-box;padding:0 54px 0 48px;border:1.5px solid var(--field);border-radius:16px;background:var(--white);color:var(--ink);font:400 17px/24px Outfit,system-ui,sans-serif;transition:border-color .2s ease,box-shadow .3s var(--out)}
+.ctl input::placeholder{color:#9A98AA}
+.ctl input:hover{border-color:#B3AECB}
+.ctl input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 5px rgba(141,112,255,.2)}
+.ctl:focus-within>.ic{color:var(--ink)}
+.eye{position:absolute;right:8px;top:50%;translate:0 -50%;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer}
+.eye:hover{background:var(--page);color:var(--ink)}
+.eye svg{grid-area:1/1;transition:opacity .2s ease,scale .3s var(--out)}
+.eye .e-off{opacity:0;scale:.6}
+.eye[aria-pressed="true"] .e-on{opacity:0;scale:.6}.eye[aria-pressed="true"] .e-off{opacity:1;scale:1}
+.hint{margin:0;font-size:14px;line-height:20px;color:var(--muted)}
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.meter i{height:6px;border-radius:999px;background:var(--line);overflow:clip}
+.meter i::after{content:"";display:block;height:100%;border-radius:inherit;background:var(--accent);scale:0 1;transform-origin:0 50%;transition:scale .45s var(--out),background-color .3s ease}
+.meter[data-s="1"] i:nth-child(-n+1)::after,.meter[data-s="2"] i:nth-child(-n+2)::after,.meter[data-s="3"] i:nth-child(-n+3)::after,.meter[data-s="4"] i::after{scale:1 1}
+.meter[data-s="3"] i::after,.meter[data-s="4"] i::after{background:var(--ink)}
+.chk{position:relative;display:flex;align-items:center;gap:12px;font-size:15px;cursor:pointer;user-select:none}
+.chk input{position:absolute;opacity:0;width:24px;height:24px;margin:0}
+.box{flex:none;display:grid;place-items:center;width:24px;height:24px;box-sizing:border-box;border-radius:8px;border:1.5px solid var(--field);background:var(--white);transition:background-color .2s ease,border-color .2s ease}
+.box path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .4s var(--out)}
+.chk input:checked+.box{background:var(--ink);border-color:var(--ink)}
+.chk input:checked+.box path{stroke-dashoffset:0}
+.chk input:focus-visible+.box{outline:2px solid var(--ink);outline-offset:3px}
+.go{position:relative;display:grid;place-items:center;width:100%;height:58px;margin-top:4px;border:0;border-radius:999px;background:var(--ink);color:var(--white);font:600 17px/1 Outfit,system-ui,sans-serif;cursor:pointer;overflow:clip;transition:background-color .2s ease,box-shadow .45s var(--out),translate .35s var(--out)}
+.go:hover{background:#34314A}
+.go>span{grid-area:1/1;display:inline-flex;align-items:center;gap:10px;transition:opacity .25s ease,translate .45s var(--out)}
+.go .s-wait,.go .s-ok{opacity:0;translate:0 120%}
+.go[data-state="wait"] .s-go,.go[data-state="ok"] .s-go{opacity:0;translate:0 -120%}
+.go[data-state="wait"] .s-wait,.go[data-state="ok"] .s-ok{opacity:1;translate:0 0}
+form:valid .go{box-shadow:0 0 0 6px rgba(141,112,255,.24)}
+.spin{width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:var(--white);animation:spin .8s linear infinite}
+.switch{margin:0;text-align:center;font-size:15px;color:var(--muted)}
+.switch a{font-weight:600;text-underline-offset:3px}
+.note{margin:-8px 0 0;text-align:center;font-size:13px;color:var(--muted)}
+
+/* Stage (sign in) */
+.stage{grid-area:stage;position:sticky;top:16px;align-self:start;height:calc(100vh - 32px);min-height:680px;margin:16px 16px 16px 0;border-radius:40px;background:var(--tint);overflow:clip;isolation:isolate;contain:layout paint}
+.st-in{position:absolute;z-index:4;left:48px;top:44px;right:48px;display:flex;flex-direction:column;align-items:flex-start;gap:16px;pointer-events:none}
+.st-chip{display:inline-flex;align-items:center;gap:10px;height:36px;padding:0 16px 0 14px;border-radius:999px;background:var(--white);font-size:14px;font-weight:500;white-space:nowrap}
+.live{position:relative;flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.live::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:0}
+.st-title{font-size:clamp(38px,3.2vw,54px);line-height:.98;max-width:520px}
+.aura{position:absolute;z-index:0;width:520px;height:520px;border-radius:50%;pointer-events:none}
+.a1{right:-180px;top:-160px;background:radial-gradient(closest-side,rgba(255,127,69,.38),rgba(255,127,69,0))}
+.a2{left:-200px;bottom:-200px;background:radial-gradient(closest-side,rgba(141,112,255,.34),rgba(141,112,255,0))}
+
+/* The character: mirrored so she faces the form; she reacts with face and head only on interaction */
+.host{position:absolute;z-index:5;height:auto;overflow:visible;scale:-1 1;will-change:transform}
+.signin .host{left:-6px;bottom:-2px;width:min(30%,340px)}
+.pk-head{transform-box:fill-box;transform-origin:50% 92%;transition:rotate .6s var(--out)}
+.pk-gaze{transition:translate .5s var(--out)}
+.pk-f{transition:opacity .2s ease}
+/* She follows the field you are filling in (the drawing is mirrored, so negative turns look up toward the form) */
+.signin:has(#email:focus) .pk-head{rotate:-9deg}.signin:has(#email:focus) .pk-gaze{translate:16px -8px}
+.signin:has(#password:focus) .pk-head{rotate:-4deg}.signin:has(#password:focus) .pk-gaze{translate:16px -2px}
+.signin:has(.go:focus-visible) .pk-head{rotate:2deg}
+.signup:has(#name:focus) .pk-head{rotate:-13deg}.signup:has(#name:focus) .pk-gaze{translate:16px -12px}
+.signup:has(#email:focus) .pk-head{rotate:-8deg}.signup:has(#email:focus) .pk-gaze{translate:16px -7px}
+.signup:has(#password:focus) .pk-head{rotate:-3deg}.signup:has(#password:focus) .pk-gaze{translate:16px -2px}
+/* Everything filled in: she is delighted */
+.auth:has(form:valid) .pk-f-open{opacity:0}
+.auth:has(form:valid) .pk-f-happy{opacity:1}
+/* Password shown: she closes her eyes and looks up, so she never sees it */
+.auth:has(#password[type="text"]) :is(.pk-f-open,.pk-f-happy){opacity:0}
+.auth:has(#password[type="text"]) .pk-f-closed{opacity:1}
+.auth:has(#password[type="text"]) .pk-head{rotate:-16deg}
+.auth:has(#password[type="text"]) .pk-gaze{translate:0 0}
+.auth.done .pk-f-open,.auth.done .pk-f-closed{opacity:0}
+.auth.done .pk-f-happy{opacity:1}
+
+/* Scan scene: a CV, a magnifying glass, and the jobs it finds */
+.scan{position:absolute;z-index:2;left:56%;top:59%;width:620px;height:520px;translate:-36% -50%;scale:var(--sc,1);transform-origin:50% 50%}
+.cv{position:absolute;left:0;top:0;width:340px;height:500px;box-sizing:border-box;padding:28px 28px 24px;border-radius:12px;background:var(--white);box-shadow:0 40px 80px -42px rgba(30,28,43,.5),0 0 0 1px rgba(218,214,234,.9);rotate:-2.5deg;display:flex;flex-direction:column;gap:10px}
+.cv::before{content:"";position:absolute;inset:12px -12px -12px 12px;z-index:-1;border-radius:12px;background:#F1EEFC;box-shadow:0 0 0 1px var(--line);rotate:4deg}
+.cv-top{display:flex;align-items:center;gap:14px;padding-bottom:16px;border-bottom:1.5px solid var(--line)}
+.cv-av{flex:none;width:58px;height:58px;border-radius:50%;background:var(--tint);overflow:clip}
+.cv-av img{width:100%;height:100%;object-fit:cover;object-position:50% 6%}
+.cv-name{display:block;font:400 24px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.cv-role{display:block;margin-top:4px;font-size:13px;color:var(--muted)}
+.cv-sec{margin-top:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ln{display:block;height:8px;width:var(--w);border-radius:999px;background:#E4E1F0}
+.gpill{display:inline-block;height:24px;border-radius:999px;background:#E4E1F0}
+.cv-skills{display:flex;flex-wrap:wrap;gap:6px}
+.sk{position:relative;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:999px;background:var(--page);font-size:13px;font-weight:600;isolation:isolate}
+.sk::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--peach);box-shadow:inset 0 0 0 1.5px var(--accent);opacity:0}
+.sk::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);order:-1;scale:0}
+.loupe{position:absolute;z-index:3;left:0;top:0;width:112px;height:112px;margin:-56px 0 0 -56px;pointer-events:none;translate:var(--x0) var(--y0);will-change:transform}
+.lens{position:absolute;inset:0;box-sizing:border-box;border-radius:50%;border:7px solid var(--ink);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),rgba(255,255,255,.18) 55%,rgba(205,191,255,.25));box-shadow:0 18px 30px -16px rgba(30,28,43,.45)}
+.lens::after{content:"";position:absolute;left:18px;top:14px;width:22px;height:10px;border-radius:50%;background:rgba(255,255,255,.9);rotate:-35deg}
+.handle{position:absolute;left:90px;top:88px;width:18px;height:62px;border-radius:9px;background:var(--ink);rotate:-45deg;transform-origin:50% 0}
+.finds{position:absolute;left:300px;top:150px;display:flex;flex-direction:column;gap:12px;width:300px}
+.find{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;background:var(--white);box-shadow:0 26px 54px -30px rgba(30,28,43,.45),0 0 0 1px rgba(218,214,234,.9)}
+.find .pct{flex:none;display:flex;align-items:baseline;justify-content:center;padding-top:14px;box-sizing:border-box;width:56px;height:52px;border-radius:16px;background:var(--tint);font:400 22px/1 Anton,"Arial Narrow",Impact,sans-serif}
+.find .pct small{font:600 11px/1 Outfit,sans-serif}
+.find.top .pct{background:var(--accent);color:var(--ink)}
+.t1{display:block;font-size:16px;line-height:21px;font-weight:600}
+.t2{display:block;font-size:13px;line-height:18px;color:var(--muted)}
+.mp{display:none}
+
+/* Sign up: the form is the top of a CV */
+.signup{grid-template-columns:minmax(320px,.72fr) minmax(0,1.28fr);grid-template-areas:"hdr stage" "intro stage" "foot stage"}
+.intro{grid-area:intro;align-self:center;padding:24px 40px;display:flex;flex-direction:column;gap:24px;max-width:460px}
+.steps{display:flex;align-items:center;gap:8px;margin:0;padding:0;list-style:none;font-size:14px;font-weight:600;color:var(--muted)}
+.steps .st{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px 0 6px;border-radius:999px;background:var(--white);white-space:nowrap}
+.steps .st b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--page);font-size:13px}
+.steps .st.on{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.steps .st.on b{background:var(--ink);color:var(--white)}
+.steps .bar{flex:1;min-width:10px;max-width:40px;height:2px;border-radius:2px;background:var(--line)}
+.next{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.next li{display:flex;align-items:center;gap:12px;font-size:16px;line-height:22px}
+.next .ni{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:var(--white);box-shadow:0 0 0 1px var(--line)}
+.desk{grid-area:stage;position:sticky;top:16px;align-self:start;height:calc(100vh - 32px);display:flex;align-items:center;justify-content:center;margin:16px 16px 16px 0;padding:24px 0 0 24px;border-radius:40px;background:var(--tint);overflow:clip;isolation:isolate;min-height:calc(100vh - 32px);box-sizing:border-box}
+.sheet{position:relative;z-index:2;flex:0 1 560px;min-width:0;width:min(560px,100%);box-sizing:border-box;padding:26px 36px 24px;border-radius:12px;background:var(--white);box-shadow:0 50px 90px -50px rgba(30,28,43,.55),0 0 0 1px rgba(218,214,234,.9)}
+.sheet::before{content:"";position:absolute;inset:14px -14px -14px 14px;z-index:-1;border-radius:12px;background:#F1EEFC;box-shadow:0 0 0 1px var(--line);rotate:2.4deg}
+.sheet .kicker{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.s-head{display:flex;align-items:center;gap:16px;padding-right:96px;padding-bottom:14px;border-bottom:1.5px solid var(--line)}
+.s-av{flex:none;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:var(--tint);color:var(--ink);font:400 26px/1 Anton,"Arial Narrow",Impact,sans-serif;transition:background-color .3s ease}
+.s-av svg{color:#8B89A0}
+.s-av.has{background:var(--accent)}
+.s-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.s-name label{font-size:12px;font-weight:600;color:var(--muted)}
+.s-name input{width:100%;box-sizing:border-box;padding:2px 0 6px;border:0;border-bottom:2px dashed var(--field);border-radius:0;background:transparent;color:var(--ink);font:400 36px/1.1 Anton,"Arial Narrow",Impact,sans-serif;transition:border-color .2s ease}
+.s-name input::placeholder{color:#C5C1D6}
+.s-name input:focus{outline:none;border-bottom-style:solid;border-bottom-color:var(--ink)}
+.s-sec{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 20px;padding:13px 0;border-bottom:1.5px solid var(--line)}
+.s-sec>.sl{padding-top:6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ghost{opacity:.9}
+.ghost .ln{height:8px}
+.ghost .gnote{margin-top:4px;font-size:13px;color:var(--muted)}
+.s-foot{display:flex;flex-direction:column;gap:12px;padding-top:16px}
+.stamp{position:absolute;z-index:3;right:24px;top:40px;display:grid;place-items:center;width:96px;height:96px;border-radius:50%;border:3px solid var(--accent);color:var(--accent);font:600 11px/1.25 Outfit,sans-serif;letter-spacing:.14em;text-transform:uppercase;text-align:center;rotate:-14deg;opacity:0;scale:1.6;pointer-events:none;transition:opacity .25s ease,scale .5s var(--spring)}
+.stamp::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.5px dashed var(--accent)}
+form:valid .stamp,.auth.done .stamp{opacity:1;scale:1}
+.signup .host{position:relative;flex:none;align-self:flex-end;width:auto;height:min(62vh,calc((64vw - 600px)*1.2));margin:0 0 -2px -28px}
+
+/* Phones and narrow windows */
+.host-m,.mchip,.next-m{display:none}
+.signup .fwrap{position:relative;z-index:2;flex:0 1 560px;min-width:0}
+.signup .fwrap .sheet{width:100%}
+@media (max-width:1100px){.signup .host:not(.host-m){display:none}}
+@media (min-width:1500px) and (min-height:820px){.scan{--sc:1.12}}
+@media (min-width:1700px) and (min-height:860px){.scan{--sc:1.2}}
+@media (max-height:760px) and (min-width:901px){.scan{--sc:.86}}
+@media (max-width:900px){
+.signin{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"hdr" "stage" "form" "foot"}
+.signup{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"hdr" "intro" "stage" "foot"}
+.ahdr{padding:16px 20px 0}.afoot{padding:0 20px 24px}
+.stage{position:relative;top:auto;height:260px;min-height:0;margin:16px 16px 0;border-radius:32px}
+.st-in{left:20px;top:18px;right:20px}
+.st-title{display:none}
+.scan{--sc:.5;left:58%;top:64%}
+.signin .host{width:150px;left:-4px}
+.aform{padding:24px 20px 32px;gap:22px}
+.atitle{font-size:50px}.asub{font-size:17px;line-height:26px}
+.intro{padding:20px 20px 8px;gap:18px;max-width:none}
+.next{display:none}
+.desk{position:relative;top:auto;height:auto;min-height:0;margin:8px 0 0;padding:20px 12px 28px;border-radius:32px 32px 0 0}
+.sheet{padding:26px 20px 24px}
+.sheet::before{inset:10px -6px -10px 6px}
+.s-name input{font-size:32px}
+.s-sec{grid-template-columns:1fr;gap:10px;padding:16px 0}
+.s-av{width:56px;height:56px;font-size:22px}
+.stamp{width:78px;height:78px;font-size:9px;right:14px;top:auto;bottom:118px}
+.s-head{padding-right:0}
+}
+
+/* ---------- Phones: a layout made for the phone, not a shrunken desktop ---------- */
+@media (max-width:900px){
+.signin{grid-template-areas:"hdr" "form" "foot";grid-template-rows:auto 1fr auto}
+.signin .stage{display:none}
+.aform{padding:12px 16px 28px;gap:20px}
+.fwrap{position:relative;padding-top:116px}
+.auth .fwrap>.host-m{display:block;position:absolute;z-index:0;top:4px;right:2px;left:auto;bottom:auto;width:132px;height:auto;margin:0;flex:none;align-self:auto;animation:none !important}
+.mchip{display:flex;align-items:center;gap:8px;position:absolute;left:0;top:58px;max-width:calc(100% - 150px);margin:0;padding:8px 12px 8px 8px;border-radius:999px;background:var(--white);box-shadow:0 0 0 1px var(--line);font-size:13px;white-space:nowrap;overflow:hidden}
+.mc-ic{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--white)}
+.mc-sk{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;background:var(--peach);box-shadow:inset 0 0 0 1.5px var(--accent);font-weight:600}
+.mc-ar{color:var(--muted)}
+.signin form{position:relative;z-index:1;padding:22px 18px 20px;border-radius:28px;background:var(--white);box-shadow:0 30px 60px -36px rgba(30,28,43,.4),0 0 0 1px rgba(218,214,234,.9)}
+.signin .switch{margin-top:4px}
+.signup{grid-template-areas:"hdr" "intro" "stage" "foot"}
+.desk{background:transparent;margin:0;padding:0 16px 28px !important;border-radius:0;display:block;animation:none !important}
+.desk .aura,.desk .mp{display:none}
+.signup .fwrap{padding-top:112px}
+.sheet{position:relative;z-index:1;padding:22px 18px 20px;border-radius:24px;box-shadow:0 30px 60px -36px rgba(30,28,43,.4),0 0 0 1px rgba(218,214,234,.9)}
+.sheet::before{display:none}
+.sheet .kicker{margin-bottom:8px}
+.s-sec{padding:12px 0}
+.s-sec>.sl,.ghost{display:none}
+.next-m{display:block;margin:0;padding:14px 0 2px;font-size:14px;line-height:20px;color:var(--muted)}
+.s-foot{padding-top:16px}
+.stamp{width:76px;height:76px;font-size:9px;right:12px;top:auto;bottom:122px}
+.intro{padding:16px 16px 0}
+/* she looks down at the field you are in */
+.signin:has(#email:focus) .pk-head,.signup:has(#name:focus) .pk-head{rotate:4deg}
+.signin:has(#password:focus) .pk-head,.signup:has(#email:focus) .pk-head{rotate:9deg}
+.signup:has(#password:focus) .pk-head{rotate:13deg}
+.auth:has(form input:focus) .pk-gaze{translate:16px 8px}
+.auth:has(#password[type="text"]) .pk-head{rotate:-16deg}
+.auth:has(#password[type="text"]) .pk-gaze{translate:0 0}
+}
+@media (max-width:420px){.st-chip .hide-sm{display:none}.steps{gap:6px;font-size:13px}.steps .st{padding:0 11px 0 5px;gap:6px}.steps .bar{min-width:6px}}
+
+@media (prefers-reduced-motion:no-preference){
+.wd{display:inline-block;animation:focusin 1.05s var(--out) both;animation-delay:calc(120ms + var(--w)*80ms)}
+.rise{animation:focusin .95s var(--out) both;animation-delay:calc(320ms + var(--d,0)*70ms)}
+.stage,.desk{animation:stagein 1.1s var(--out) .05s both}
+.st-in{animation:focusin 1s var(--out) .4s both}
+.cv{animation:cvin 1.1s var(--out) .45s both}
+.finds{animation:fadein .6s ease .9s both}
+.sheet{animation:sheetin 1.15s var(--out) .3s both}
+.host{animation:hostin .9s var(--spring) .9s both,bob 4s ease-in-out 1.9s infinite}
+.a1{animation:orb1 16s ease-in-out infinite}
+.a2{animation:orb2 19s ease-in-out infinite}
+.live::after{animation:ping 2.2s var(--out) infinite}
+/* the scan loop: glass glides to a skill, the skill lights up, a job card appears */
+.loupe{animation:glide var(--L) var(--out) 1.2s infinite both}
+.sk[data-k]::before{animation:var(--hit) var(--L) var(--out) 1.2s infinite both}
+.sk[data-k]::after{animation:var(--dot) var(--L) var(--spring) 1.2s infinite both}
+.find{animation:var(--pop) var(--L) var(--spring) 1.2s infinite both}
+.mp{position:absolute;z-index:6;right:22px;bottom:22px;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.88);box-shadow:0 0 0 1px rgba(218,214,234,.9);cursor:pointer}
+.mp input{position:absolute;inset:0;margin:0;border-radius:50%;opacity:0;cursor:pointer}
+.mp svg{grid-area:1/1}.mp .i-play{display:none}
+.mp:has(input:checked) .i-play{display:block}.mp:has(input:checked) .i-pause{display:none}
+.mp:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:3px}
+:is(.stage,.desk):has(.mp input:checked) :is(.loupe,.find,.aura,.host,.live){animation-play-state:paused}
+.stage:has(.mp input:checked) .sk::before,.stage:has(.mp input:checked) .sk::after,.stage:has(.mp input:checked) .live::after{animation-play-state:paused}
+.shake{animation:shake .45s ease both}
+.desk .mp{right:auto;left:22px}
+@media (max-width:900px){.mp{width:34px;height:34px;right:14px;bottom:14px}.desk .mp{display:none}}
+@media (hover:hover){.go:hover{translate:0 -2px}.go .arr{transition:translate .35s var(--out)}.go:hover .arr{translate:4px 0}}
+}
+@keyframes focusin{from{opacity:0;translate:0 .45em;filter:blur(12px)}}
+@keyframes fadein{from{opacity:0}}
+@keyframes stagein{from{opacity:0;scale:.97}}
+@keyframes cvin{from{opacity:0;translate:0 60px;rotate:-8deg}}
+@keyframes sheetin{from{opacity:0;translate:0 70px;rotate:-3deg}}
+@keyframes hostin{from{opacity:0;translate:0 40%}}
+@keyframes bob{50%{translate:0 -6px}}
+@keyframes orb1{50%{translate:-120px 220px}}
+@keyframes orb2{50%{translate:120px -200px}}
+@keyframes ping{0%{opacity:.6;scale:1}80%,100%{opacity:0;scale:3}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes shake{20%,60%{translate:-6px 0}40%,80%{translate:6px 0}}
+
+@media (max-width:900px) and (prefers-reduced-motion:no-preference){.host-m{animation:hostin .9s var(--spring) .7s both !important}.mchip{animation:focusin .9s var(--out) .9s both}}
+.loupe{--x0:321px;--y0:517px}
+@keyframes glide{0%{translate:321px 517px}8%,30%{translate:66px 251px}38%,58%{translate:212px 244px}66%,86%{translate:161px 282px}94%,100%{translate:321px 517px}}
+@keyframes hit0{0%,10%{opacity:0}13%,88%{opacity:1}94%,100%{opacity:0}}
+@keyframes dot0{0%,10%{scale:0}14%,88%{scale:1}94%,100%{scale:0}}
+@keyframes pop0{0%,13%{opacity:0;translate:-28px 0;scale:.86}19%,88%{opacity:1;translate:0 0;scale:1}94%,100%{opacity:0;translate:18px 0;scale:.96}}
+@keyframes hit1{0%,38%{opacity:0}41%,88%{opacity:1}94%,100%{opacity:0}}
+@keyframes dot1{0%,38%{scale:0}42%,88%{scale:1}94%,100%{scale:0}}
+@keyframes pop1{0%,41%{opacity:0;translate:-28px 0;scale:.86}47%,88%{opacity:1;translate:0 0;scale:1}94%,100%{opacity:0;translate:18px 0;scale:.96}}
+@keyframes hit2{0%,66%{opacity:0}69%,88%{opacity:1}94%,100%{opacity:0}}
+@keyframes dot2{0%,66%{scale:0}70%,88%{scale:1}94%,100%{scale:0}}
+@keyframes pop2{0%,69%{opacity:0;translate:-28px 0;scale:.86}75%,88%{opacity:1;translate:0 0;scale:1}94%,100%{opacity:0;translate:18px 0;scale:.96}}
+/*audit-polish*/
+.get li i{font-size:11px !important}
+:focus-visible{outline:2px solid #1E1C2B;outline-offset:3px}
+.zz,.zz *{animation-play-state:paused !important}
+.mtop a{text-decoration:none}
+.chip button{position:relative}
+.chip button::after{content:"";position:absolute;inset:-7px}
+.card :is(h2,h3) a{padding:8px 2px;margin:-8px -2px}
+.rm{width:36px !important;height:36px !important;right:-10px !important;top:0 !important}
+.need-tag{font-size:11.5px !important}
+.fp-msg{margin:6px 0 0;font-size:13.5px;line-height:19px;color:#5E5C6E}
+.fp-msg.bad{color:#C2410C;font-weight:600}
+.fp-msg:empty{display:none}
+@media (max-width:900px){
+.mtop{margin-bottom:20px !important}
+.tt-n{font-size:11.5px !important}
+.ditem .di,.ditem .di i{font-size:11px !important}
+.fnav a{display:inline-block;padding:10px 0}
+.lkd,.editl{min-height:32px}
+.lbl a{display:inline-block;padding:6px 0}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="auth signin" id="auth">
+  <header class="ahdr">
+    <a class="logo" href="index.html"><img src="assets/nabta-mark.svg" alt="" width="40" height="40"><span class="display">JobMatcher</span></a>
+    <button class="lang" type="button" aria-label="Language: English. Also available in French and Arabic."><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E1C2B" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"></path></svg><span>EN</span></button>
+  </header>
+  <main class="aform">
+    <div class="head">
+      <h1 class="display atitle"><span class="wd" style="--w: 0;">Welcome</span> <span class="wd" style="--w: 1;">back.</span></h1>
+      <p class="asub rise" style="--d: 0;">Sign in to see your matches and the applications you have prepared.</p>
+    </div>
+    <div class="fwrap">
+      <p class="mchip" aria-hidden="true"><span class="mc-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L20 20"></path></svg></span><span class="mc-sk">Python</span><span class="mc-ar">→</span><span><b>Data Analyst</b> · 91%</span></p>
+      <svg class="host host-m" aria-hidden="true" focusable="false" viewBox="24 13 795 1176" fill="none"><!-- Artwork: Open Peeps by Pablo Stanley (CC0), composed and recoloured for JobMatcher. --><g class="pk-peep"><g class="pk-body"><g transform="translate(0 459)"><path d="M689 328C686 319 690 311 693 302C702 273 712 244 726 217C731 208 722 197 712 200C695 202 677 200 660 199C653 183 637 176 623 167C608 157 593 147 578 138C577 131 567 129 562 134C546 124 527 126 510 120C497 99 496 77 492 57C491 48 493 39 487 31C466 3 387 -9 357 8C341 -2 341 16 339 27C336 32 334 38 335 45C318 81 279 97 244 110C240 105 233 106 229 109C199 116 170 127 144 145C116 154 96 177 81 202C79 205 79 208 79 210C34 276 13 355 10 435C-19 452 24 608 34 640C34 640 34 640 34 640C40 652 47 684 64 682C75 694 92 692 107 693C105 702 106 713 109 722C112 733 129 734 132 722C281 751 435 728 586 732C630 732 673 734 717 737C723 737 729 731 729 725C719 625 711 494 700 395C698 372 696 350 689 328Z" transform="translate(55 -33)" fill="#FF7F45" stroke="none"/><path d="M348 1C348 0 350 0 350 1C351 29 344 63 321 82C310 92 295 97 281 102L279 102L254 111C254 112 253 112 252 113C246 115 240 117 235 114C240 126 244 138 249 149C256 163 265 176 276 187C317 233 383 247 442 234C473 227 502 214 523 190C539 172 548 147 550 123C550 123 549 123 548 123C541 121 533 117 527 113L526 113C520 109 513 105 508 99C504 93 499 74 499 74C498 67 497 52 497 45C497 44 500 44 500 44C503 51 504 64 506 71L507 72C509 79 511 87 516 92C525 103 538 107 551 112C552 100 570 101 570 113C570 113 570 114 570 115C571 116 573 116 574 117L575 118C580 121 585 125 590 127C600 133 610 137 621 142C631 147 641 153 650 160C654 163 658 167 662 170L663 172C666 175 671 179 673 184C674 185 676 188 677 188C697 189 716 191 735 193C740 194 742 197 740 201C734 215 709 272 703 287C703 293 703 299 703 306L703 306C703 312 703 318 703 323C704 340 705 356 707 372C713 431 721 489 729 547C733 577 737 606 740 635C742 650 743 665 745 679C745 686 746 692 746 698L746 703C746 704 746 705 746 706C747 712 747 718 744 723C742 725 737 727 735 724C731 720 730 717 730 712C730 708 730 704 729 701C729 692 729 684 728 675C727 659 726 642 724 625C719 567 709 509 703 450C699 421 697 391 696 362C695 347 695 332 695 317C695 312 695 306 696 301C686 323 676 345 665 367L662 372C655 386 648 400 640 413L639 415C635 420 631 428 625 430C622 431 618 431 615 431C613 430 612 430 611 430C607 430 603 430 598 430C593 430 589 429 584 428C583 428 583 428 582 427C577 435 569 441 561 444C555 447 548 449 541 451L539 451C531 453 523 454 519 461L518 463C515 468 512 472 507 476C501 480 495 483 488 485C481 487 475 488 468 490L466 490C462 492 457 493 453 494C451 494 449 495 447 495C445 496 443 497 442 499C440 504 434 507 428 507C425 506 423 505 420 504C416 507 412 510 408 514C402 518 396 523 390 527C378 536 366 545 354 554C332 569 310 584 288 598C278 604 269 610 259 616L260 616L262 617C267 619 272 622 273 627C274 632 272 635 267 635C262 636 258 632 255 629C253 627 252 626 250 624C250 624 249 623 249 622C240 628 230 633 220 638L218 639C194 652 171 665 147 677C140 680 132 683 124 686C127 694 127 703 127 711C127 720 114 719 114 711L114 707C114 701 115 694 116 688C93 692 69 683 65 680C60 678 55 673 52 669C44 660 38 649 34 638C23 615 16 590 11 566C-9 474 -1 377 31 289C39 267 49 246 60 225L61 223C72 203 84 182 99 165C115 147 135 133 156 122C167 117 177 112 188 108C190 107 192 107 194 106C205 99 219 92 233 92C234 92 234 92 235 93C236 93 236 93 237 93C239 94 240 95 240 97L240 98C240 98 240 98 240 98C240 99 241 99 241 99C254 95 267 89 280 85L283 84C294 80 305 76 314 69C323 61 330 51 335 41C340 28 343 14 348 1ZM222 101C225 101 227 100 230 100C231 100 232 100 233 100C232 102 231 104 230 106C230 106 229 106 229 107C223 136 241 167 258 189C264 196 270 202 277 208C276 208 275 209 274 209L273 209C272 210 270 210 269 211C266 212 263 214 262 218C261 224 265 231 272 231C275 231 278 229 280 227C281 226 282 225 283 224L284 222C285 221 285 220 286 219C286 218 286 217 287 216C301 227 317 235 334 241C366 253 401 255 435 250C468 244 502 231 527 207C550 185 566 154 569 122C574 127 579 132 585 136C594 142 605 146 615 151C624 156 634 161 643 168C647 171 651 175 655 179C658 181 660 184 662 187C653 186 644 186 634 186C632 185 630 185 628 185C622 185 616 185 610 185C602 186 597 190 593 196C584 211 577 227 569 242L567 248C564 253 562 258 560 262C559 261 557 260 555 259L554 259C551 257 547 257 544 257L543 257C539 256 538 261 540 263C542 266 544 268 546 270C549 273 551 276 554 277C551 286 548 295 546 304C543 305 539 305 535 306C522 310 508 314 495 318C491 319 486 320 482 322C483 320 484 319 484 317C484 313 482 309 480 305C479 304 478 302 477 300L477 299C475 294 473 289 470 284C469 282 465 282 465 285C464 291 463 297 465 304C465 310 466 318 471 323C472 324 473 324 474 324C469 327 464 329 460 332C450 340 442 350 434 360L430 365C424 373 418 381 412 389C408 389 405 390 401 392C400 391 399 390 397 390C391 391 387 393 382 396L377 399C373 401 369 403 366 405C356 410 345 416 335 421C315 432 294 443 273 453C244 468 213 480 181 490C182 485 182 480 182 475C183 462 183 450 184 437C184 425 184 413 183 400L183 399C182 388 182 376 177 366C177 365 175 365 175 366C171 377 170 388 168 400C168 404 167 408 167 412C166 412 166 412 165 412C163 411 160 411 157 411C154 412 152 417 156 417L157 418C160 419 163 421 166 422C165 427 165 432 164 436C163 448 163 460 162 472C162 478 161 483 161 489C161 492 161 494 162 496C156 498 151 499 145 501L144 501C129 505 114 510 101 519C97 522 98 527 102 525C114 518 127 513 140 510L149 509C154 508 159 507 164 506C164 507 165 509 166 510L170 517C173 521 178 522 181 519C185 516 185 511 182 508L178 503C188 500 199 498 209 494C228 489 246 481 264 473L274 469C295 460 316 450 336 439C347 433 359 427 370 421C375 417 381 414 387 411C388 410 390 409 391 409C390 415 390 421 390 427L390 431C391 439 391 447 393 456C396 469 401 482 410 493C410 494 411 495 411 495C409 497 407 499 405 500C399 504 394 508 388 512C378 520 367 527 357 535C336 549 314 563 292 577C259 599 225 619 190 638C189 637 189 636 189 635L189 634C188 629 181 626 178 632C175 636 174 641 175 646C169 649 164 652 159 655L158 655C146 661 134 668 121 673C115 675 111 676 98 676C86 676 75 671 72 668C68 665 65 662 61 658C55 651 50 642 46 633C38 614 32 595 28 575L27 572C23 556 20 541 18 525C21 525 24 525 27 525C30 525 33 524 36 523C45 521 41 507 33 510C30 510 27 511 24 512C21 513 19 514 17 514C14 489 13 464 15 439C16 409 21 379 27 350C28 351 29 351 30 350C37 348 44 346 51 344C54 344 56 340 56 338C56 336 56 335 55 334C54 332 50 330 47 331C41 333 35 336 30 341C33 330 36 319 39 308C53 265 73 223 99 187C115 166 133 149 155 136C167 129 178 124 190 118C201 113 211 107 222 101ZM211 148C213 146 218 146 219 150C220 156 221 161 220 167C219 170 219 173 218 176C217 179 215 181 212 183C208 187 198 186 197 179L197 178C197 178 197 178 197 178C196 174 196 171 197 168C197 166 199 163 200 161L200 161C203 156 207 152 211 148ZM574 159L573 159C569 159 569 164 572 166C575 167 578 169 580 171C580 171 580 171 581 171C584 174 586 176 590 175C592 174 594 172 594 170C594 161 581 159 574 159ZM609 194C601 196 598 205 594 212C586 227 579 243 572 259C569 263 567 268 565 273C565 273 564 274 564 274C560 284 555 294 549 303C554 302 560 302 565 301C564 297 567 292 568 288C569 287 569 286 569 286L569 285C571 280 574 272 579 269C581 268 582 269 583 271C583 276 580 281 577 285C576 286 575 287 575 288C573 291 571 294 570 297C569 298 569 300 568 301C571 300 573 300 576 300L578 300C588 299 598 299 607 304C615 308 619 318 615 326C609 337 597 339 586 340C572 341 559 343 545 345C531 347 518 352 504 354C503 355 502 353 503 352C514 346 527 342 540 338L540 338C547 336 554 334 560 333C567 331 574 331 580 330L581 330C582 330 583 330 584 330C592 329 607 328 606 319C606 311 594 310 589 310C564 310 540 316 516 323L511 325C502 328 492 330 483 334C472 338 464 344 456 352C447 361 439 370 430 379C425 384 419 389 413 395C412 396 411 398 410 401C409 405 409 408 410 412C411 423 411 433 413 443C414 453 416 463 420 472C421 475 423 479 426 482L428 484C428 485 429 486 430 488C432 486 434 485 436 485C441 486 445 485 450 484C454 483 458 482 462 481C469 479 477 478 484 476L485 475C491 473 496 471 501 468C506 464 508 458 512 452C520 441 538 442 551 439C561 436 571 432 579 424L579 424C579 423 579 421 581 420L581 420C581 420 582 420 582 420C583 419 584 418 584 417C585 416 586 417 586 417C586 418 586 418 585 419C592 417 598 417 604 418C605 418 606 418 607 418L617 417C618 417 621 417 621 417L621 417C621 417 621 417 621 417L621 417C621 417 621 417 621 417C621 417 621 417 621 417C621 417 621 417 621 417C622 416 622 416 623 415C624 413 626 411 627 408C611 412 595 415 579 417C562 419 545 421 528 421C523 421 523 414 528 413C546 413 564 412 582 409C592 408 601 407 610 405C614 404 617 403 621 403L624 402C625 402 630 401 632 400C633 399 633 398 634 397C633 395 628 395 625 395L625 395L625 395C625 395 625 395 625 395C622 395 619 395 616 395L616 395L616 395L616 395L616 395L616 395L616 395L616 395L616 395L616 395C614 395 613 395 611 395C602 395 594 395 585 395L585 395L583 395C579 395 574 395 569 395C556 395 542 394 528 395C524 395 521 388 526 386C545 378 567 376 588 373C599 372 610 370 620 368L623 367C630 365 637 363 643 359C634 356 624 356 615 356L614 356C602 355 589 354 577 354C552 354 526 355 501 356C501 357 500 356 501 355C527 350 553 347 580 347C592 346 605 347 617 347L622 347C632 348 644 348 653 354C654 355 655 356 655 358C667 334 678 310 689 286C697 268 705 249 714 230L717 224C721 216 725 208 729 201C713 199 696 197 680 196C665 195 616 193 609 194ZM616 246C623 237 627 227 628 217C630 206 615 203 613 215L613 215C611 218 608 222 607 224L606 226C602 232 600 240 604 246C607 251 613 250 616 246ZM110 251C111 251 113 251 115 251C116 251 117 251 118 251L120 252C126 252 132 253 138 255C148 260 142 276 132 276C124 276 118 272 111 269C106 265 102 261 98 256C97 254 99 252 100 252C103 252 107 251 110 251ZM406 285C395 285 385 284 375 283L374 283C371 283 371 288 374 289C384 293 394 297 404 300C414 304 418 286 406 285ZM253 299C254 299 255 298 257 298C262 296 267 294 273 295C275 295 277 297 276 299C272 305 267 308 261 312L261 312C255 317 248 321 242 324C231 331 221 313 232 307C239 304 246 301 253 299ZM627 376C636 373 646 370 652 363C647 372 642 382 637 391C636 390 635 390 634 389C630 387 624 387 619 388C617 388 616 388 614 388C605 387 596 387 587 387C580 387 572 387 564 387C574 385 585 384 595 382C606 381 617 379 627 376ZM318 388C318 385 321 383 323 385C328 389 332 393 337 397L337 397C340 400 344 406 340 410C335 415 328 408 326 404C322 399 320 394 318 388ZM71 413C69 413 68 414 69 416C71 418 72 421 75 424C77 426 80 428 83 430L84 430C90 435 97 440 104 442C108 443 112 441 114 437C115 436 115 435 116 434L116 433C116 430 114 426 111 425C105 422 97 421 91 419C87 418 84 416 81 415C78 414 74 414 71 413ZM208 442C212 434 222 427 231 428C245 429 248 447 234 451C227 454 216 451 209 447C207 446 207 444 208 442ZM607 452C607 449 604 449 602 450C594 454 589 462 586 469C585 472 587 476 589 478C590 480 592 480 595 480C598 481 601 479 602 476C605 472 606 468 607 463C607 461 608 459 608 457C608 455 607 453 607 452ZM641 463C641 462 643 462 643 463C645 472 645 482 646 492L646 493C647 503 647 514 648 524C649 545 650 566 651 587C652 597 652 607 653 618C655 616 657 615 660 614C663 613 666 613 670 613C675 613 678 617 678 621C677 626 673 628 668 627C663 627 658 626 654 625C654 633 655 641 655 649C656 659 657 670 658 680C658 681 658 682 658 684C661 682 664 681 668 680L669 680C669 680 669 680 670 680C675 678 680 677 684 680C687 682 688 686 685 689C682 693 676 693 671 693C671 693 670 693 670 693L667 693C664 692 661 692 659 692C659 698 659 705 659 712C658 716 653 717 652 713C649 703 648 693 647 682C646 673 645 663 644 654L644 651C642 630 641 609 640 588C639 567 638 545 638 524C638 515 638 505 639 496L639 493C639 483 639 472 641 463ZM680 495C676 493 671 496 673 500C674 504 675 507 677 510C679 514 682 517 684 520L685 520C689 525 697 532 704 526C711 521 703 511 698 508L697 507C694 505 692 502 689 500C686 498 683 497 680 495ZM480 508C480 507 480 506 481 506C488 507 494 510 499 514C502 516 505 518 508 520C512 522 513 524 514 529C514 532 511 534 509 535C502 537 494 530 490 525L490 525C485 520 481 515 480 508ZM262 511C259 510 256 513 257 516C263 526 270 533 280 538C285 540 289 539 292 535C293 534 293 532 293 531L293 530C293 527 290 523 287 522C278 520 269 516 262 511ZM129 574C130 571 125 569 123 572C119 577 114 580 110 584L109 585C105 589 99 592 97 598C95 602 95 607 98 610C101 613 107 614 111 612C123 604 124 587 129 574ZM603 586C607 585 617 582 619 585C619 585 620 585 620 586C620 587 620 588 620 590C616 595 613 598 608 602L608 602C603 606 598 610 592 612C583 614 577 604 583 597C588 592 595 590 602 587L603 586ZM413 604C417 602 420 607 418 610L413 614C409 618 406 622 402 626L401 628C397 634 392 641 385 643C376 646 367 635 372 627C377 620 385 617 393 615C400 612 407 608 413 604ZM475 656C481 655 487 657 493 660C493 660 494 660 494 660L495 660C501 662 511 664 514 671C516 675 515 680 510 681C503 683 498 679 492 676C491 675 490 675 489 674L489 674C483 670 476 667 473 661C472 660 472 657 475 656ZM204 681C203 681 202 682 202 684C202 684 202 684 202 684C201 686 201 688 202 689C202 691 204 693 205 694L206 695C208 699 212 702 216 704C221 706 227 705 230 699C232 694 229 688 223 686C220 685 217 685 214 683C212 683 211 682 209 681C207 681 206 681 204 681ZM621 685C620 682 616 680 614 682C606 688 601 699 601 708C602 717 613 719 618 712C622 705 624 693 621 685Z" transform="translate(48 -20)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-head" transform="translate(225 0)"><g class="pk-hair"><g ><path d="M171 0C322 5 331 76 331 196C331 316 253 392 224 405C195 418 120 475 51 449C-17 422 3 312 3 265C3 217 21 -5 171 0Z" transform="translate(89 105)" fill="#FFFFFF" stroke="none"/><path d="M283 3C319 10 353 30 378 56C420 103 437 168 441 229C443 269 440 309 429 348C418 385 401 420 380 451C381 453 382 455 383 457C389 464 394 472 399 480C408 494 416 509 418 526C419 528 419 531 419 534C418 542 409 549 402 544C393 537 382 538 372 542C367 548 362 555 356 561C342 578 328 594 311 608C296 619 279 627 260 627C240 627 220 619 202 611C163 592 125 572 86 552C67 542 48 532 29 521C27 520 25 519 23 518C22 518 22 518 21 518C20 518 19 518 17 518C12 519 6 519 2 515C-1 510 0 504 3 499C6 493 12 488 17 484C23 479 28 475 34 471C41 466 48 461 54 457C54 456 55 455 55 455C62 444 66 433 67 420C64 417 62 414 60 411C37 376 25 333 20 291C16 249 21 206 35 166C60 99 114 40 181 14C214 1 249 -4 283 3ZM235 114C217 125 201 139 185 152C156 179 131 211 122 249C122 250 121 251 121 251C149 224 178 197 207 171C223 157 238 144 253 130C261 124 269 117 277 110C281 107 285 103 288 100C290 99 291 97 293 96C272 96 253 103 235 114ZM306 98C306 98 306 97 306 97C346 102 380 132 391 171C390 172 389 173 390 175C390 176 390 177 390 178C389 176 387 175 386 174C382 170 378 166 374 162C365 154 356 147 347 140C330 128 313 117 293 112C294 111 296 109 297 108C301 105 304 103 306 98ZM318 434C291 449 259 450 229 440C211 434 195 425 180 414C167 405 155 395 143 384C133 362 125 341 121 318C117 297 116 275 121 254C152 229 183 203 213 177C229 164 245 151 261 138C269 132 277 125 285 118C286 117 288 116 289 115C306 127 323 138 340 150C349 157 357 163 365 171C369 175 373 178 377 182C381 186 384 191 390 193C390 193 391 193 392 193C399 254 404 319 374 375C361 399 342 420 318 434ZM144 450C140 447 135 452 139 456C163 479 196 491 228 497C233 498 236 490 231 489C199 484 168 472 144 450ZM110 489C105 487 109 480 114 482C133 492 153 498 174 501C179 502 176 510 171 509C150 505 129 500 110 489Z" transform="translate(3 37)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-gaze"><g class="pk-f pk-f-open" transform="translate(159 186)"><g ><path d="M141 0L139 0C138 0 136 0 134 1C133 1 132 2 131 4C129 6 129 7 130 10C130 11 131 13 132 14C134 14 135 15 137 15C145 16 153 18 160 20C163 21 167 23 170 25L173 26C175 27 178 28 182 29C182 29 182 30 182 30C183 29 183 29 184 29L184 29C184 28 184 28 184 26C177 10 156 4 141 0ZM44 5L45 5C51 3 58 3 63 7C65 10 66 14 63 17C59 20 55 20 50 20C49 20 47 19 46 20C40 20 36 21 31 22C20 25 11 31 2 37C1 38 0 36 0 35C5 25 16 16 26 11C32 8 38 6 44 5ZM30 50C31 40 47 37 48 48C50 57 48 65 44 74C40 81 30 78 29 71C28 63 29 59 29 55C30 53 30 52 30 50ZM159 42C155 41 152 43 150 46C150 46 150 46 149 47C143 53 145 66 151 72C154 76 161 75 163 70C168 62 171 45 159 42ZM129 119C137 108 125 97 118 92C116 91 117 86 122 87C160 94 140 160 91 123C85 119 92 108 99 112C99 113 99 113 100 113C107 119 120 129 129 119ZM94 189C87 186 81 182 76 176C75 174 75 172 75 170C75 167 77 165 78 164C80 163 82 162 85 162C86 163 88 164 90 166L90 166C93 170 96 173 100 175C104 176 108 177 112 177C120 176 126 171 132 165C133 165 134 164 134 163C135 162 135 162 136 162C137 161 138 161 139 162C140 162 140 162 141 163C141 164 141 165 141 166C141 172 138 177 133 182C128 187 121 190 114 191C107 193 100 192 94 189Z" transform="translate(53 52)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-f pk-f-closed" transform="translate(159 186)" opacity="0"><g ><path d="M180 14C189 14 189 0 180 0C150 1 120 2 90 4C61 5 31 6 2 11C0 10 -1 14 2 14C28 16 54 16 80 16C82 16 84 16 86 16L91 16C121 16 151 15 180 14ZM169 33L169 33C164 21 182 16 183 27L184 27C185 39 182 54 168 55C153 56 146 39 147 26C148 24 150 24 151 26L152 26C152 27 152 28 153 30C155 36 158 45 165 45C171 45 171 37 169 33ZM38 28C38 27 36 23 34 24C29 26 30 37 32 41L32 42C34 49 40 55 48 57C63 60 79 41 69 28C64 22 56 28 56 33C55 34 55 35 55 36C56 38 56 40 54 42C51 45 47 43 45 40C42 38 40 34 39 30L38 28ZM149 93C146 96 142 98 138 99C128 102 115 101 107 98C106 97 104 96 103 94C102 93 102 91 103 89C103 89 103 88 103 88C104 86 105 85 106 85C108 84 110 84 111 84C111 84 111 85 112 85L112 85C117 86 125 89 132 88C137 88 140 87 142 83C143 81 143 79 142 77C141 74 138 72 136 70C133 68 129 67 126 66C124 65 123 65 121 64C121 64 121 64 120 64C120 63 120 63 120 62C120 62 120 61 120 61C120 61 121 60 121 60C128 57 137 59 144 64C147 66 150 69 152 73C153 76 154 80 154 84C153 88 151 91 149 93ZM140 145L139 145C134 146 129 147 124 149C124 149 123 149 123 149C118 150 105 153 107 157C109 159 111 160 114 161L116 161C120 162 125 162 129 163C133 163 138 163 143 163L143 163C143 163 144 163 144 163C149 163 154 163 158 159C162 154 161 148 156 145C151 142 146 143 141 144C141 145 140 145 140 145Z" transform="translate(43 81)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-f pk-f-happy" transform="translate(159 186)" opacity="0"><g ><path d="M57 7C60 11 57 17 52 18C47 19 42 18 36 20C32 21 27 24 23 27C18 30 14 34 10 38C8 40 5 46 1 46C-2 46 2 35 3 34C3 34 3 34 3 34C6 27 10 20 15 15C25 4 45 -8 57 7ZM169 5L166 4C160 2 155 1 149 4C145 6 144 11 145 15L145 15L145 16C146 22 153 23 158 21C164 21 172 23 178 26L180 26C186 28 191 34 197 36C197 36 198 36 198 36C203 27 194 18 187 13L187 12L186 12C181 8 175 6 169 5ZM139 51C147 44 157 49 163 56L164 57C165 59 167 60 168 62C174 56 183 52 192 55C200 58 205 66 204 74C202 84 195 90 187 95L184 97C175 103 166 109 158 118C157 119 154 119 153 117L153 115L152 114C146 102 140 90 135 78C132 69 131 58 139 51ZM47 56L46 57C44 58 43 60 42 62C36 56 27 52 18 55C10 57 5 66 6 74C8 84 16 91 24 96L26 98C36 103 44 109 52 118C53 119 56 119 57 117C57 116 58 115 58 114L59 112C64 101 70 90 74 79C78 70 80 58 71 51C63 44 53 49 47 56ZM117 95C112 95 111 99 113 101C120 105 132 116 124 127C115 136 103 128 96 122L94 121C87 117 80 127 86 132C135 168 155 102 117 95ZM57 164C48 162 38 164 38 175C38 185 46 194 53 201C58 205 63 208 69 210C86 218 108 220 126 218C135 218 143 215 150 211C151 211 152 211 153 210C154 209 156 208 157 207C165 201 175 192 176 182C177 171 167 167 158 166L157 166C152 165 146 166 141 166C139 166 136 166 134 166C126 166 117 166 108 167C107 167 106 168 106 168L103 168C88 168 72 166 57 164ZM110 197C103 197 96 198 89 200C84 202 80 205 75 207C90 212 108 214 124 213C131 212 137 211 144 208C143 207 142 206 141 206C138 204 134 202 131 201C124 199 117 197 110 197Z" transform="translate(58 44)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g></g></g></g></svg>
+    <form id="authform" action="#" method="post">
+      <div class="fld rise" style="--d: 1;">
+        <label class="lbl" for="email">Email</label>
+        <span class="ctl"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M4 7l8 6 8-6"></path></svg><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></span>
+      </div>
+      <div class="fld rise" style="--d: 2;">
+        <span class="lbl"><label for="password">Password</label><a href="#forgot">Forgot password?</a></span>
+        <span class="ctl"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="3"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required><button class="eye" type="button" data-for="password" aria-pressed="false" aria-label="Show password"><svg class="e-on" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg><svg class="e-off" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.1A9.8 9.8 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-3.2 3.9M6.6 7.6C3.9 9.4 2 12 2 12s3.5 6 10 6c1.6 0 3-.3 4.3-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg></button></span>
+      </div>
+      <label class="chk rise" style="--d: 3;"><input type="checkbox" id="keep" name="keep" checked><span class="box"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Keep me signed in on this device</label>
+      <button class="go rise" style="--d: 4;" type="submit" data-state="idle"><span class="s-go">Sign in<svg class="arr" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span><span class="s-wait"><i class="spin"></i>Signing in…</span><span class="s-ok"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Welcome back</span></button>
+    </form>
+    </div>
+    <p class="note" id="demo-note" hidden>This is a design preview, so nothing was sent.</p>
+    <p class="switch rise" style="--d: 5;">New to JobMatcher? <a href="signup.html">Create an account</a></p>
+  </main>
+  <footer class="afoot"><span>© 2026 JobMatcher</span><a href="index.html">Back to the home page</a></footer>
+  <aside class="stage" aria-label="How JobMatcher reads your CV">
+    <div class="aura a1" aria-hidden="true"></div><div class="aura a2" aria-hidden="true"></div>
+    <div class="st-in">
+      <span class="st-chip"><i class="live"></i><span>New offers every day<span class="hide-sm"> from ANAPEC, Jobzyn and LinkedIn</span></span></span>
+      <h2 class="display st-title">Your CV in. The right jobs out.</h2>
+    </div>
+    <div class="scan" aria-hidden="true">
+      <div class="cv">
+        <div class="cv-top"><span class="cv-av"><img src="assets/peep-cv-match.svg" alt=""></span><span><span class="cv-name">Salma El Idrissi</span><span class="cv-role">Data analyst · Casablanca</span></span></div>
+        <span class="cv-sec">Experience</span>
+        <i class="ln" style="--w: 92%;"></i><i class="ln" style="--w: 76%;"></i><i class="ln" style="--w: 84%;"></i>
+        <span class="cv-sec">Skills</span>
+        <div class="cv-skills"><span class="sk" data-k="0" style="--hit: hit0; --dot: dot0;">Python</span><span class="sk">Excel</span><span class="sk" data-k="1" style="--hit: hit1; --dot: dot1;">SQL</span><span class="sk">Tableau</span><span class="sk" data-k="2" style="--hit: hit2; --dot: dot2;">Power BI</span><span class="sk">Arabic</span><span class="sk">French</span></div>
+        <span class="cv-sec">Education</span>
+        <i class="ln" style="--w: 70%;"></i><i class="ln" style="--w: 52%;"></i>
+      </div>
+      <div class="finds">
+        <div class="find top" style="--pop: pop0;"><span class="pct">91<small>%</small></span><span style="min-width: 0;"><span class="t1">Data Analyst</span><span class="t2">Attijariwafa bank · Casablanca</span></span></div>
+        <div class="find" style="--pop: pop1;"><span class="pct">84<small>%</small></span><span style="min-width: 0;"><span class="t1">BI Developer</span><span class="t2">OCP Group · Rabat</span></span></div>
+        <div class="find" style="--pop: pop2;"><span class="pct">76<small>%</small></span><span style="min-width: 0;"><span class="t1">Stage PFE Data</span><span class="t2">inwi · Casablanca</span></span></div>
+      </div>
+      <div class="loupe"><i class="lens"></i><i class="handle"></i></div>
+    </div>
+    <svg class="host" aria-hidden="true" focusable="false" viewBox="24 13 795 1176" fill="none"><!-- Artwork: Open Peeps by Pablo Stanley (CC0), composed and recoloured for JobMatcher. --><g class="pk-peep"><g class="pk-body"><g transform="translate(0 459)"><path d="M689 328C686 319 690 311 693 302C702 273 712 244 726 217C731 208 722 197 712 200C695 202 677 200 660 199C653 183 637 176 623 167C608 157 593 147 578 138C577 131 567 129 562 134C546 124 527 126 510 120C497 99 496 77 492 57C491 48 493 39 487 31C466 3 387 -9 357 8C341 -2 341 16 339 27C336 32 334 38 335 45C318 81 279 97 244 110C240 105 233 106 229 109C199 116 170 127 144 145C116 154 96 177 81 202C79 205 79 208 79 210C34 276 13 355 10 435C-19 452 24 608 34 640C34 640 34 640 34 640C40 652 47 684 64 682C75 694 92 692 107 693C105 702 106 713 109 722C112 733 129 734 132 722C281 751 435 728 586 732C630 732 673 734 717 737C723 737 729 731 729 725C719 625 711 494 700 395C698 372 696 350 689 328Z" transform="translate(55 -33)" fill="#FF7F45" stroke="none"/><path d="M348 1C348 0 350 0 350 1C351 29 344 63 321 82C310 92 295 97 281 102L279 102L254 111C254 112 253 112 252 113C246 115 240 117 235 114C240 126 244 138 249 149C256 163 265 176 276 187C317 233 383 247 442 234C473 227 502 214 523 190C539 172 548 147 550 123C550 123 549 123 548 123C541 121 533 117 527 113L526 113C520 109 513 105 508 99C504 93 499 74 499 74C498 67 497 52 497 45C497 44 500 44 500 44C503 51 504 64 506 71L507 72C509 79 511 87 516 92C525 103 538 107 551 112C552 100 570 101 570 113C570 113 570 114 570 115C571 116 573 116 574 117L575 118C580 121 585 125 590 127C600 133 610 137 621 142C631 147 641 153 650 160C654 163 658 167 662 170L663 172C666 175 671 179 673 184C674 185 676 188 677 188C697 189 716 191 735 193C740 194 742 197 740 201C734 215 709 272 703 287C703 293 703 299 703 306L703 306C703 312 703 318 703 323C704 340 705 356 707 372C713 431 721 489 729 547C733 577 737 606 740 635C742 650 743 665 745 679C745 686 746 692 746 698L746 703C746 704 746 705 746 706C747 712 747 718 744 723C742 725 737 727 735 724C731 720 730 717 730 712C730 708 730 704 729 701C729 692 729 684 728 675C727 659 726 642 724 625C719 567 709 509 703 450C699 421 697 391 696 362C695 347 695 332 695 317C695 312 695 306 696 301C686 323 676 345 665 367L662 372C655 386 648 400 640 413L639 415C635 420 631 428 625 430C622 431 618 431 615 431C613 430 612 430 611 430C607 430 603 430 598 430C593 430 589 429 584 428C583 428 583 428 582 427C577 435 569 441 561 444C555 447 548 449 541 451L539 451C531 453 523 454 519 461L518 463C515 468 512 472 507 476C501 480 495 483 488 485C481 487 475 488 468 490L466 490C462 492 457 493 453 494C451 494 449 495 447 495C445 496 443 497 442 499C440 504 434 507 428 507C425 506 423 505 420 504C416 507 412 510 408 514C402 518 396 523 390 527C378 536 366 545 354 554C332 569 310 584 288 598C278 604 269 610 259 616L260 616L262 617C267 619 272 622 273 627C274 632 272 635 267 635C262 636 258 632 255 629C253 627 252 626 250 624C250 624 249 623 249 622C240 628 230 633 220 638L218 639C194 652 171 665 147 677C140 680 132 683 124 686C127 694 127 703 127 711C127 720 114 719 114 711L114 707C114 701 115 694 116 688C93 692 69 683 65 680C60 678 55 673 52 669C44 660 38 649 34 638C23 615 16 590 11 566C-9 474 -1 377 31 289C39 267 49 246 60 225L61 223C72 203 84 182 99 165C115 147 135 133 156 122C167 117 177 112 188 108C190 107 192 107 194 106C205 99 219 92 233 92C234 92 234 92 235 93C236 93 236 93 237 93C239 94 240 95 240 97L240 98C240 98 240 98 240 98C240 99 241 99 241 99C254 95 267 89 280 85L283 84C294 80 305 76 314 69C323 61 330 51 335 41C340 28 343 14 348 1ZM222 101C225 101 227 100 230 100C231 100 232 100 233 100C232 102 231 104 230 106C230 106 229 106 229 107C223 136 241 167 258 189C264 196 270 202 277 208C276 208 275 209 274 209L273 209C272 210 270 210 269 211C266 212 263 214 262 218C261 224 265 231 272 231C275 231 278 229 280 227C281 226 282 225 283 224L284 222C285 221 285 220 286 219C286 218 286 217 287 216C301 227 317 235 334 241C366 253 401 255 435 250C468 244 502 231 527 207C550 185 566 154 569 122C574 127 579 132 585 136C594 142 605 146 615 151C624 156 634 161 643 168C647 171 651 175 655 179C658 181 660 184 662 187C653 186 644 186 634 186C632 185 630 185 628 185C622 185 616 185 610 185C602 186 597 190 593 196C584 211 577 227 569 242L567 248C564 253 562 258 560 262C559 261 557 260 555 259L554 259C551 257 547 257 544 257L543 257C539 256 538 261 540 263C542 266 544 268 546 270C549 273 551 276 554 277C551 286 548 295 546 304C543 305 539 305 535 306C522 310 508 314 495 318C491 319 486 320 482 322C483 320 484 319 484 317C484 313 482 309 480 305C479 304 478 302 477 300L477 299C475 294 473 289 470 284C469 282 465 282 465 285C464 291 463 297 465 304C465 310 466 318 471 323C472 324 473 324 474 324C469 327 464 329 460 332C450 340 442 350 434 360L430 365C424 373 418 381 412 389C408 389 405 390 401 392C400 391 399 390 397 390C391 391 387 393 382 396L377 399C373 401 369 403 366 405C356 410 345 416 335 421C315 432 294 443 273 453C244 468 213 480 181 490C182 485 182 480 182 475C183 462 183 450 184 437C184 425 184 413 183 400L183 399C182 388 182 376 177 366C177 365 175 365 175 366C171 377 170 388 168 400C168 404 167 408 167 412C166 412 166 412 165 412C163 411 160 411 157 411C154 412 152 417 156 417L157 418C160 419 163 421 166 422C165 427 165 432 164 436C163 448 163 460 162 472C162 478 161 483 161 489C161 492 161 494 162 496C156 498 151 499 145 501L144 501C129 505 114 510 101 519C97 522 98 527 102 525C114 518 127 513 140 510L149 509C154 508 159 507 164 506C164 507 165 509 166 510L170 517C173 521 178 522 181 519C185 516 185 511 182 508L178 503C188 500 199 498 209 494C228 489 246 481 264 473L274 469C295 460 316 450 336 439C347 433 359 427 370 421C375 417 381 414 387 411C388 410 390 409 391 409C390 415 390 421 390 427L390 431C391 439 391 447 393 456C396 469 401 482 410 493C410 494 411 495 411 495C409 497 407 499 405 500C399 504 394 508 388 512C378 520 367 527 357 535C336 549 314 563 292 577C259 599 225 619 190 638C189 637 189 636 189 635L189 634C188 629 181 626 178 632C175 636 174 641 175 646C169 649 164 652 159 655L158 655C146 661 134 668 121 673C115 675 111 676 98 676C86 676 75 671 72 668C68 665 65 662 61 658C55 651 50 642 46 633C38 614 32 595 28 575L27 572C23 556 20 541 18 525C21 525 24 525 27 525C30 525 33 524 36 523C45 521 41 507 33 510C30 510 27 511 24 512C21 513 19 514 17 514C14 489 13 464 15 439C16 409 21 379 27 350C28 351 29 351 30 350C37 348 44 346 51 344C54 344 56 340 56 338C56 336 56 335 55 334C54 332 50 330 47 331C41 333 35 336 30 341C33 330 36 319 39 308C53 265 73 223 99 187C115 166 133 149 155 136C167 129 178 124 190 118C201 113 211 107 222 101ZM211 148C213 146 218 146 219 150C220 156 221 161 220 167C219 170 219 173 218 176C217 179 215 181 212 183C208 187 198 186 197 179L197 178C197 178 197 178 197 178C196 174 196 171 197 168C197 166 199 163 200 161L200 161C203 156 207 152 211 148ZM574 159L573 159C569 159 569 164 572 166C575 167 578 169 580 171C580 171 580 171 581 171C584 174 586 176 590 175C592 174 594 172 594 170C594 161 581 159 574 159ZM609 194C601 196 598 205 594 212C586 227 579 243 572 259C569 263 567 268 565 273C565 273 564 274 564 274C560 284 555 294 549 303C554 302 560 302 565 301C564 297 567 292 568 288C569 287 569 286 569 286L569 285C571 280 574 272 579 269C581 268 582 269 583 271C583 276 580 281 577 285C576 286 575 287 575 288C573 291 571 294 570 297C569 298 569 300 568 301C571 300 573 300 576 300L578 300C588 299 598 299 607 304C615 308 619 318 615 326C609 337 597 339 586 340C572 341 559 343 545 345C531 347 518 352 504 354C503 355 502 353 503 352C514 346 527 342 540 338L540 338C547 336 554 334 560 333C567 331 574 331 580 330L581 330C582 330 583 330 584 330C592 329 607 328 606 319C606 311 594 310 589 310C564 310 540 316 516 323L511 325C502 328 492 330 483 334C472 338 464 344 456 352C447 361 439 370 430 379C425 384 419 389 413 395C412 396 411 398 410 401C409 405 409 408 410 412C411 423 411 433 413 443C414 453 416 463 420 472C421 475 423 479 426 482L428 484C428 485 429 486 430 488C432 486 434 485 436 485C441 486 445 485 450 484C454 483 458 482 462 481C469 479 477 478 484 476L485 475C491 473 496 471 501 468C506 464 508 458 512 452C520 441 538 442 551 439C561 436 571 432 579 424L579 424C579 423 579 421 581 420L581 420C581 420 582 420 582 420C583 419 584 418 584 417C585 416 586 417 586 417C586 418 586 418 585 419C592 417 598 417 604 418C605 418 606 418 607 418L617 417C618 417 621 417 621 417L621 417C621 417 621 417 621 417L621 417C621 417 621 417 621 417C621 417 621 417 621 417C621 417 621 417 621 417C622 416 622 416 623 415C624 413 626 411 627 408C611 412 595 415 579 417C562 419 545 421 528 421C523 421 523 414 528 413C546 413 564 412 582 409C592 408 601 407 610 405C614 404 617 403 621 403L624 402C625 402 630 401 632 400C633 399 633 398 634 397C633 395 628 395 625 395L625 395L625 395C625 395 625 395 625 395C622 395 619 395 616 395L616 395L616 395L616 395L616 395L616 395L616 395L616 395L616 395L616 395C614 395 613 395 611 395C602 395 594 395 585 395L585 395L583 395C579 395 574 395 569 395C556 395 542 394 528 395C524 395 521 388 526 386C545 378 567 376 588 373C599 372 610 370 620 368L623 367C630 365 637 363 643 359C634 356 624 356 615 356L614 356C602 355 589 354 577 354C552 354 526 355 501 356C501 357 500 356 501 355C527 350 553 347 580 347C592 346 605 347 617 347L622 347C632 348 644 348 653 354C654 355 655 356 655 358C667 334 678 310 689 286C697 268 705 249 714 230L717 224C721 216 725 208 729 201C713 199 696 197 680 196C665 195 616 193 609 194ZM616 246C623 237 627 227 628 217C630 206 615 203 613 215L613 215C611 218 608 222 607 224L606 226C602 232 600 240 604 246C607 251 613 250 616 246ZM110 251C111 251 113 251 115 251C116 251 117 251 118 251L120 252C126 252 132 253 138 255C148 260 142 276 132 276C124 276 118 272 111 269C106 265 102 261 98 256C97 254 99 252 100 252C103 252 107 251 110 251ZM406 285C395 285 385 284 375 283L374 283C371 283 371 288 374 289C384 293 394 297 404 300C414 304 418 286 406 285ZM253 299C254 299 255 298 257 298C262 296 267 294 273 295C275 295 277 297 276 299C272 305 267 308 261 312L261 312C255 317 248 321 242 324C231 331 221 313 232 307C239 304 246 301 253 299ZM627 376C636 373 646 370 652 363C647 372 642 382 637 391C636 390 635 390 634 389C630 387 624 387 619 388C617 388 616 388 614 388C605 387 596 387 587 387C580 387 572 387 564 387C574 385 585 384 595 382C606 381 617 379 627 376ZM318 388C318 385 321 383 323 385C328 389 332 393 337 397L337 397C340 400 344 406 340 410C335 415 328 408 326 404C322 399 320 394 318 388ZM71 413C69 413 68 414 69 416C71 418 72 421 75 424C77 426 80 428 83 430L84 430C90 435 97 440 104 442C108 443 112 441 114 437C115 436 115 435 116 434L116 433C116 430 114 426 111 425C105 422 97 421 91 419C87 418 84 416 81 415C78 414 74 414 71 413ZM208 442C212 434 222 427 231 428C245 429 248 447 234 451C227 454 216 451 209 447C207 446 207 444 208 442ZM607 452C607 449 604 449 602 450C594 454 589 462 586 469C585 472 587 476 589 478C590 480 592 480 595 480C598 481 601 479 602 476C605 472 606 468 607 463C607 461 608 459 608 457C608 455 607 453 607 452ZM641 463C641 462 643 462 643 463C645 472 645 482 646 492L646 493C647 503 647 514 648 524C649 545 650 566 651 587C652 597 652 607 653 618C655 616 657 615 660 614C663 613 666 613 670 613C675 613 678 617 678 621C677 626 673 628 668 627C663 627 658 626 654 625C654 633 655 641 655 649C656 659 657 670 658 680C658 681 658 682 658 684C661 682 664 681 668 680L669 680C669 680 669 680 670 680C675 678 680 677 684 680C687 682 688 686 685 689C682 693 676 693 671 693C671 693 670 693 670 693L667 693C664 692 661 692 659 692C659 698 659 705 659 712C658 716 653 717 652 713C649 703 648 693 647 682C646 673 645 663 644 654L644 651C642 630 641 609 640 588C639 567 638 545 638 524C638 515 638 505 639 496L639 493C639 483 639 472 641 463ZM680 495C676 493 671 496 673 500C674 504 675 507 677 510C679 514 682 517 684 520L685 520C689 525 697 532 704 526C711 521 703 511 698 508L697 507C694 505 692 502 689 500C686 498 683 497 680 495ZM480 508C480 507 480 506 481 506C488 507 494 510 499 514C502 516 505 518 508 520C512 522 513 524 514 529C514 532 511 534 509 535C502 537 494 530 490 525L490 525C485 520 481 515 480 508ZM262 511C259 510 256 513 257 516C263 526 270 533 280 538C285 540 289 539 292 535C293 534 293 532 293 531L293 530C293 527 290 523 287 522C278 520 269 516 262 511ZM129 574C130 571 125 569 123 572C119 577 114 580 110 584L109 585C105 589 99 592 97 598C95 602 95 607 98 610C101 613 107 614 111 612C123 604 124 587 129 574ZM603 586C607 585 617 582 619 585C619 585 620 585 620 586C620 587 620 588 620 590C616 595 613 598 608 602L608 602C603 606 598 610 592 612C583 614 577 604 583 597C588 592 595 590 602 587L603 586ZM413 604C417 602 420 607 418 610L413 614C409 618 406 622 402 626L401 628C397 634 392 641 385 643C376 646 367 635 372 627C377 620 385 617 393 615C400 612 407 608 413 604ZM475 656C481 655 487 657 493 660C493 660 494 660 494 660L495 660C501 662 511 664 514 671C516 675 515 680 510 681C503 683 498 679 492 676C491 675 490 675 489 674L489 674C483 670 476 667 473 661C472 660 472 657 475 656ZM204 681C203 681 202 682 202 684C202 684 202 684 202 684C201 686 201 688 202 689C202 691 204 693 205 694L206 695C208 699 212 702 216 704C221 706 227 705 230 699C232 694 229 688 223 686C220 685 217 685 214 683C212 683 211 682 209 681C207 681 206 681 204 681ZM621 685C620 682 616 680 614 682C606 688 601 699 601 708C602 717 613 719 618 712C622 705 624 693 621 685Z" transform="translate(48 -20)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-head" transform="translate(225 0)"><g class="pk-hair"><g ><path d="M171 0C322 5 331 76 331 196C331 316 253 392 224 405C195 418 120 475 51 449C-17 422 3 312 3 265C3 217 21 -5 171 0Z" transform="translate(89 105)" fill="#FFFFFF" stroke="none"/><path d="M283 3C319 10 353 30 378 56C420 103 437 168 441 229C443 269 440 309 429 348C418 385 401 420 380 451C381 453 382 455 383 457C389 464 394 472 399 480C408 494 416 509 418 526C419 528 419 531 419 534C418 542 409 549 402 544C393 537 382 538 372 542C367 548 362 555 356 561C342 578 328 594 311 608C296 619 279 627 260 627C240 627 220 619 202 611C163 592 125 572 86 552C67 542 48 532 29 521C27 520 25 519 23 518C22 518 22 518 21 518C20 518 19 518 17 518C12 519 6 519 2 515C-1 510 0 504 3 499C6 493 12 488 17 484C23 479 28 475 34 471C41 466 48 461 54 457C54 456 55 455 55 455C62 444 66 433 67 420C64 417 62 414 60 411C37 376 25 333 20 291C16 249 21 206 35 166C60 99 114 40 181 14C214 1 249 -4 283 3ZM235 114C217 125 201 139 185 152C156 179 131 211 122 249C122 250 121 251 121 251C149 224 178 197 207 171C223 157 238 144 253 130C261 124 269 117 277 110C281 107 285 103 288 100C290 99 291 97 293 96C272 96 253 103 235 114ZM306 98C306 98 306 97 306 97C346 102 380 132 391 171C390 172 389 173 390 175C390 176 390 177 390 178C389 176 387 175 386 174C382 170 378 166 374 162C365 154 356 147 347 140C330 128 313 117 293 112C294 111 296 109 297 108C301 105 304 103 306 98ZM318 434C291 449 259 450 229 440C211 434 195 425 180 414C167 405 155 395 143 384C133 362 125 341 121 318C117 297 116 275 121 254C152 229 183 203 213 177C229 164 245 151 261 138C269 132 277 125 285 118C286 117 288 116 289 115C306 127 323 138 340 150C349 157 357 163 365 171C369 175 373 178 377 182C381 186 384 191 390 193C390 193 391 193 392 193C399 254 404 319 374 375C361 399 342 420 318 434ZM144 450C140 447 135 452 139 456C163 479 196 491 228 497C233 498 236 490 231 489C199 484 168 472 144 450ZM110 489C105 487 109 480 114 482C133 492 153 498 174 501C179 502 176 510 171 509C150 505 129 500 110 489Z" transform="translate(3 37)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-gaze"><g class="pk-f pk-f-open" transform="translate(159 186)"><g ><path d="M141 0L139 0C138 0 136 0 134 1C133 1 132 2 131 4C129 6 129 7 130 10C130 11 131 13 132 14C134 14 135 15 137 15C145 16 153 18 160 20C163 21 167 23 170 25L173 26C175 27 178 28 182 29C182 29 182 30 182 30C183 29 183 29 184 29L184 29C184 28 184 28 184 26C177 10 156 4 141 0ZM44 5L45 5C51 3 58 3 63 7C65 10 66 14 63 17C59 20 55 20 50 20C49 20 47 19 46 20C40 20 36 21 31 22C20 25 11 31 2 37C1 38 0 36 0 35C5 25 16 16 26 11C32 8 38 6 44 5ZM30 50C31 40 47 37 48 48C50 57 48 65 44 74C40 81 30 78 29 71C28 63 29 59 29 55C30 53 30 52 30 50ZM159 42C155 41 152 43 150 46C150 46 150 46 149 47C143 53 145 66 151 72C154 76 161 75 163 70C168 62 171 45 159 42ZM129 119C137 108 125 97 118 92C116 91 117 86 122 87C160 94 140 160 91 123C85 119 92 108 99 112C99 113 99 113 100 113C107 119 120 129 129 119ZM94 189C87 186 81 182 76 176C75 174 75 172 75 170C75 167 77 165 78 164C80 163 82 162 85 162C86 163 88 164 90 166L90 166C93 170 96 173 100 175C104 176 108 177 112 177C120 176 126 171 132 165C133 165 134 164 134 163C135 162 135 162 136 162C137 161 138 161 139 162C140 162 140 162 141 163C141 164 141 165 141 166C141 172 138 177 133 182C128 187 121 190 114 191C107 193 100 192 94 189Z" transform="translate(53 52)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-f pk-f-closed" transform="translate(159 186)" opacity="0"><g ><path d="M180 14C189 14 189 0 180 0C150 1 120 2 90 4C61 5 31 6 2 11C0 10 -1 14 2 14C28 16 54 16 80 16C82 16 84 16 86 16L91 16C121 16 151 15 180 14ZM169 33L169 33C164 21 182 16 183 27L184 27C185 39 182 54 168 55C153 56 146 39 147 26C148 24 150 24 151 26L152 26C152 27 152 28 153 30C155 36 158 45 165 45C171 45 171 37 169 33ZM38 28C38 27 36 23 34 24C29 26 30 37 32 41L32 42C34 49 40 55 48 57C63 60 79 41 69 28C64 22 56 28 56 33C55 34 55 35 55 36C56 38 56 40 54 42C51 45 47 43 45 40C42 38 40 34 39 30L38 28ZM149 93C146 96 142 98 138 99C128 102 115 101 107 98C106 97 104 96 103 94C102 93 102 91 103 89C103 89 103 88 103 88C104 86 105 85 106 85C108 84 110 84 111 84C111 84 111 85 112 85L112 85C117 86 125 89 132 88C137 88 140 87 142 83C143 81 143 79 142 77C141 74 138 72 136 70C133 68 129 67 126 66C124 65 123 65 121 64C121 64 121 64 120 64C120 63 120 63 120 62C120 62 120 61 120 61C120 61 121 60 121 60C128 57 137 59 144 64C147 66 150 69 152 73C153 76 154 80 154 84C153 88 151 91 149 93ZM140 145L139 145C134 146 129 147 124 149C124 149 123 149 123 149C118 150 105 153 107 157C109 159 111 160 114 161L116 161C120 162 125 162 129 163C133 163 138 163 143 163L143 163C143 163 144 163 144 163C149 163 154 163 158 159C162 154 161 148 156 145C151 142 146 143 141 144C141 145 140 145 140 145Z" transform="translate(43 81)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g><g class="pk-f pk-f-happy" transform="translate(159 186)" opacity="0"><g ><path d="M57 7C60 11 57 17 52 18C47 19 42 18 36 20C32 21 27 24 23 27C18 30 14 34 10 38C8 40 5 46 1 46C-2 46 2 35 3 34C3 34 3 34 3 34C6 27 10 20 15 15C25 4 45 -8 57 7ZM169 5L166 4C160 2 155 1 149 4C145 6 144 11 145 15L145 15L145 16C146 22 153 23 158 21C164 21 172 23 178 26L180 26C186 28 191 34 197 36C197 36 198 36 198 36C203 27 194 18 187 13L187 12L186 12C181 8 175 6 169 5ZM139 51C147 44 157 49 163 56L164 57C165 59 167 60 168 62C174 56 183 52 192 55C200 58 205 66 204 74C202 84 195 90 187 95L184 97C175 103 166 109 158 118C157 119 154 119 153 117L153 115L152 114C146 102 140 90 135 78C132 69 131 58 139 51ZM47 56L46 57C44 58 43 60 42 62C36 56 27 52 18 55C10 57 5 66 6 74C8 84 16 91 24 96L26 98C36 103 44 109 52 118C53 119 56 119 57 117C57 116 58 115 58 114L59 112C64 101 70 90 74 79C78 70 80 58 71 51C63 44 53 49 47 56ZM117 95C112 95 111 99 113 101C120 105 132 116 124 127C115 136 103 128 96 122L94 121C87 117 80 127 86 132C135 168 155 102 117 95ZM57 164C48 162 38 164 38 175C38 185 46 194 53 201C58 205 63 208 69 210C86 218 108 220 126 218C135 218 143 215 150 211C151 211 152 211 153 210C154 209 156 208 157 207C165 201 175 192 176 182C177 171 167 167 158 166L157 166C152 165 146 166 141 166C139 166 136 166 134 166C126 166 117 166 108 167C107 167 106 168 106 168L103 168C88 168 72 166 57 164ZM110 197C103 197 96 198 89 200C84 202 80 205 75 207C90 212 108 214 124 213C131 212 137 211 144 208C143 207 142 206 141 206C138 204 134 202 131 201C124 199 117 197 110 197Z" transform="translate(58 44)" fill="#1E1C2B" fill-rule="evenodd" stroke="none"/></g></g></g></g></g></svg>
+    <label class="mp" title="Pause the animation"><input type="checkbox" aria-label="Pause the animation"><svg class="i-pause" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2" fill="#1E1C2B"></rect><rect x="14" y="5" width="4" height="14" rx="1.2" fill="#1E1C2B"></rect></svg><svg class="i-play" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="#1E1C2B"></path></svg></label>
+  </aside>
+</div>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('auth');
+  document.querySelectorAll('.eye').forEach((b) => b.addEventListener('click', () => {
+    const i = document.getElementById(b.dataset.for); const show = i.type === 'password';
+    i.type = show ? 'text' : 'password'; b.setAttribute('aria-pressed', String(show));
+    b.setAttribute('aria-label', show ? 'Hide password' : 'Show password'); i.focus();
+  }));
+  const pw = document.getElementById('password'), meter = document.querySelector('.meter'), hint = document.getElementById('pw-hint');
+  if (meter && pw) pw.addEventListener('input', () => {
+    const v = pw.value; let s = 0;
+    if (v.length >= 8) s++; if (/[0-9]/.test(v)) s++; if (/[^A-Za-z0-9]/.test(v)) s++; if (v.length >= 12) s++;
+    if (v.length < 8) s = Math.min(s, 1); if (!v) s = 0;
+    meter.dataset.s = String(s);
+    hint.textContent = !v || v.length < 8 ? '8 or more characters. A number or a symbol makes it stronger.' : s < 3 ? 'Good start. Add a number or a symbol to make it stronger.' : 'Strong password.';
+  });
+  const name = document.getElementById('name'), av = document.getElementById('av');
+  if (name && av) { const icon = av.innerHTML; name.addEventListener('input', () => {
+    const ini = name.value.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+    if (ini) { av.textContent = ini; av.classList.add('has'); } else { av.innerHTML = icon; av.classList.remove('has'); }
+  }); }
+  const form = document.getElementById('authform'), go = form.querySelector('.go');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); if (go.dataset.state !== 'idle') return;
+    go.dataset.state = 'wait';
+    setTimeout(() => { go.dataset.state = 'ok'; root.classList.add('done'); document.getElementById('demo-note').hidden = false; if (document.getElementById('name')) setTimeout(() => { location.href = 'dashboard.html'; }, 1500); }, 1300);
+  });
+  form.addEventListener('invalid', () => { go.classList.remove('shake'); void go.offsetWidth; go.classList.add('shake'); }, true);
+})();
+</script>
+<script>/*audit-polish*/(() => { const a = document.querySelector('a[href="#forgot"]'); if (!a) return; const f = a.closest('.fld'); const m = document.createElement('p'); m.className = 'fp-msg'; m.setAttribute('role', 'status'); f.append(m);
+  a.addEventListener('click', (e) => { e.preventDefault(); const em = document.getElementById('email'); if (!em.value || !em.checkValidity()) { m.className = 'fp-msg bad'; m.textContent = 'Type your email above first, then press Forgot password again.'; em.focus(); return; } m.className = 'fp-msg'; m.textContent = 'We sent a reset link to ' + em.value + '. Check your inbox.'; }); })();</script>
+<script>/*audit-polish*/(() => { if (!('IntersectionObserver' in window)) return; const io = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('zz', !e.isIntersecting)), { rootMargin: '120px' }); document.querySelectorAll('body section, body aside.host, .hero, .stage').forEach((s) => io.observe(s)); })();</script>
+</body>
+</html>

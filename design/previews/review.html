@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JobMatcher Check Your Details</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Outfit:wght@400;500;600;700&amp;display=swap">
+<style>
+/* JobMatcher auth pages v2. Sign in: the form beside a CV being read by a magnifying glass. Sign up: the form is the top of your CV.
+   Performance rule: only whole elements move (transform/opacity on composited boxes). Nothing animates inside the character drawings. */
+:root{--ink:#1E1C2B;--muted:#5E5C6E;--line:#DAD6EA;--field:#CFCADF;--page:#F6F5FB;--tint:#E9E5FF;--lav:#CDBFFF;--accent:#FF7F45;--peach:#FFE3D3;--white:#FFFFFF;--out:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.45,.64,1);--L:8s}
+body{margin:0;background:var(--page);color:var(--ink);font-family:Outfit,"Noto Sans Arabic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--ink)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.display{margin:0;font-family:Anton,"Arial Narrow",Impact,sans-serif;font-weight:400;letter-spacing:0;text-wrap:balance}
+p{text-wrap:pretty}
+.page{position:relative;isolation:isolate;min-height:100vh;background:var(--page);overflow-x:clip}
+.page::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse 60% 70% at 0% 0%,rgba(184,166,255,.38),transparent 70%),radial-gradient(ellipse 50% 60% at 10% 100%,rgba(255,170,128,.22),transparent 70%)}
+.page::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .12 0 0 0 0 .11 0 0 0 0 .17 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* Frame */
+.auth{max-width:1680px;margin:0 auto;display:grid;min-height:100vh;grid-template-rows:auto 1fr auto}
+.signin{grid-template-columns:minmax(420px,.7fr) minmax(0,1.3fr);grid-template-areas:"hdr stage" "form stage" "foot stage"}
+.ahdr{grid-area:hdr;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 40px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo img{width:40px;height:40px}.logo span{font-size:30px;line-height:1}
+.lang{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border:0;border-radius:999px;background:var(--white);color:var(--ink);font:500 15px/1 Outfit,system-ui,sans-serif;cursor:pointer}
+.lang:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.afoot{grid-area:foot;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;padding:0 40px 24px;font-size:14px;color:var(--muted)}
+.afoot a{color:var(--muted);text-decoration:none}.afoot a:hover{color:var(--ink)}
+.aform{grid-area:form;align-self:center;justify-self:center;width:100%;max-width:440px;box-sizing:border-box;padding:24px;display:flex;flex-direction:column;gap:24px}
+.atitle{font-size:clamp(50px,4.6vw,72px);line-height:.94}
+.asub{margin:0;font-size:18px;line-height:28px;color:var(--muted)}
+.head{display:flex;flex-direction:column;gap:14px}
+form{display:flex;flex-direction:column;gap:16px}
+
+/* Fields */
+.fld{display:flex;flex-direction:column;gap:8px}
+.lbl{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px;font-weight:600}
+.lbl a{font-weight:500;font-size:14px;color:var(--muted);text-underline-offset:3px}.lbl a:hover{color:var(--ink)}
+.ctl{position:relative;display:block}
+.ctl>.ic{position:absolute;left:16px;top:50%;translate:0 -50%;color:#8B89A0;transition:color .2s ease;pointer-events:none}
+.ctl input{width:100%;height:56px;box-sizing:border-box;padding:0 54px 0 48px;border:1.5px solid var(--field);border-radius:16px;background:var(--white);color:var(--ink);font:400 17px/24px Outfit,system-ui,sans-serif;transition:border-color .2s ease,box-shadow .3s var(--out)}
+.ctl input::placeholder{color:#9A98AA}
+.ctl input:hover{border-color:#B3AECB}
+.ctl input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 5px rgba(141,112,255,.2)}
+.ctl:focus-within>.ic{color:var(--ink)}
+.eye{position:absolute;right:8px;top:50%;translate:0 -50%;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer}
+.eye:hover{background:var(--page);color:var(--ink)}
+.eye svg{grid-area:1/1;transition:opacity .2s ease,scale .3s var(--out)}
+.eye .e-off{opacity:0;scale:.6}
+.eye[aria-pressed="true"] .e-on{opacity:0;scale:.6}.eye[aria-pressed="true"] .e-off{opacity:1;scale:1}
+.hint{margin:0;font-size:14px;line-height:20px;color:var(--muted)}
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.meter i{height:6px;border-radius:999px;background:var(--line);overflow:clip}
+.meter i::after{content:"";display:block;height:100%;border-radius:inherit;background:var(--accent);scale:0 1;transform-origin:0 50%;transition:scale .45s var(--out),background-color .3s ease}
+.meter[data-s="1"] i:nth-child(-n+1)::after,.meter[data-s="2"] i:nth-child(-n+2)::after,.meter[data-s="3"] i:nth-child(-n+3)::after,.meter[data-s="4"] i::after{scale:1 1}
+.meter[data-s="3"] i::after,.meter[data-s="4"] i::after{background:var(--ink)}
+.chk{position:relative;display:flex;align-items:center;gap:12px;font-size:15px;cursor:pointer;user-select:none}
+.chk input{position:absolute;opacity:0;width:24px;height:24px;margin:0}
+.box{flex:none;display:grid;place-items:center;width:24px;height:24px;box-sizing:border-box;border-radius:8px;border:1.5px solid var(--field);background:var(--white);transition:background-color .2s ease,border-color .2s ease}
+.box path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .4s var(--out)}
+.chk input:checked+.box{background:var(--ink);border-color:var(--ink)}
+.chk input:checked+.box path{stroke-dashoffset:0}
+.chk input:focus-visible+.box{outline:2px solid var(--ink);outline-offset:3px}
+.go{position:relative;display:grid;place-items:center;width:100%;height:58px;margin-top:4px;border:0;border-radius:999px;background:var(--ink);color:var(--white);font:600 17px/1 Outfit,system-ui,sans-serif;cursor:pointer;overflow:clip;transition:background-color .2s ease,box-shadow .45s var(--out),translate .35s var(--out)}
+.go:hover{background:#34314A}
+.go>span{grid-area:1/1;display:inline-flex;align-items:center;gap:10px;transition:opacity .25s ease,translate .45s var(--out)}
+.go .s-wait,.go .s-ok{opacity:0;translate:0 120%}
+.go[data-state="wait"] .s-go,.go[data-state="ok"] .s-go{opacity:0;translate:0 -120%}
+.go[data-state="wait"] .s-wait,.go[data-state="ok"] .s-ok{opacity:1;translate:0 0}
+form:valid .go{box-shadow:0 0 0 6px rgba(141,112,255,.24)}
+.spin{width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:var(--white);animation:spin .8s linear infinite}
+.switch{margin:0;text-align:center;font-size:15px;color:var(--muted)}
+.switch a{font-weight:600;text-underline-offset:3px}
+.note{margin:-8px 0 0;text-align:center;font-size:13px;color:var(--muted)}
+
+/* Stage (sign in) */
+.stage{grid-area:stage;position:sticky;top:16px;align-self:start;height:calc(100vh - 32px);min-height:680px;margin:16px 16px 16px 0;border-radius:40px;background:var(--tint);overflow:clip;isolation:isolate;contain:layout paint}
+.st-in{position:absolute;z-index:4;left:48px;top:44px;right:48px;display:flex;flex-direction:column;align-items:flex-start;gap:16px;pointer-events:none}
+.st-chip{display:inline-flex;align-items:center;gap:10px;height:36px;padding:0 16px 0 14px;border-radius:999px;background:var(--white);font-size:14px;font-weight:500;white-space:nowrap}
+.live{position:relative;flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.live::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:0}
+.st-title{font-size:clamp(38px,3.2vw,54px);line-height:.98;max-width:520px}
+.aura{position:absolute;z-index:0;width:520px;height:520px;border-radius:50%;pointer-events:none}
+.a1{right:-180px;top:-160px;background:radial-gradient(closest-side,rgba(255,127,69,.38),rgba(255,127,69,0))}
+.a2{left:-200px;bottom:-200px;background:radial-gradient(closest-side,rgba(141,112,255,.34),rgba(141,112,255,0))}
+
+/* The character: mirrored so she faces the form; she reacts with face and head only on interaction */
+.host{position:absolute;z-index:5;height:auto;overflow:visible;scale:-1 1;will-change:transform}
+.signin .host{left:-6px;bottom:-2px;width:min(30%,340px)}
+.pk-head{transform-box:fill-box;transform-origin:50% 92%;transition:rotate .6s var(--out)}
+.pk-gaze{transition:translate .5s var(--out)}
+.pk-f{transition:opacity .2s ease}
+/* She follows the field you are filling in (the drawing is mirrored, so negative turns look up toward the form) */
+.signin:has(#email:focus) .pk-head{rotate:-9deg}.signin:has(#email:focus) .pk-gaze{translate:16px -8px}
+.signin:has(#password:focus) .pk-head{rotate:-4deg}.signin:has(#password:focus) .pk-gaze{translate:16px -2px}
+.signin:has(.go:focus-visible) .pk-head{rotate:2deg}
+.signup:has(#name:focus) .pk-head{rotate:-13deg}.signup:has(#name:focus) .pk-gaze{translate:16px -12px}
+.signup:has(#email:focus) .pk-head{rotate:-8deg}.signup:has(#email:focus) .pk-gaze{translate:16px -7px}
+.signup:has(#password:focus) .pk-head{rotate:-3deg}.signup:has(#password:focus) .pk-gaze{translate:16px -2px}
+/* Everything filled in: she is delighted */
+.auth:has(form:valid) .pk-f-open{opacity:0}
+.auth:has(form:valid) .pk-f-happy{opacity:1}
+/* Password shown: she closes her eyes and looks up, so she never sees it */
+.auth:has(#password[type="text"]) :is(.pk-f-open,.pk-f-happy){opacity:0}
+.auth:has(#password[type="text"]) .pk-f-closed{opacity:1}
+.auth:has(#password[type="text"]) .pk-head{rotate:-16deg}
+.auth:has(#password[type="text"]) .pk-gaze{translate:0 0}
+.auth.done .pk-f-open,.auth.done .pk-f-closed{opacity:0}
+.auth.done .pk-f-happy{opacity:1}
+
+/* Scan scene: a CV, a magnifying glass, and the jobs it finds */
+.scan{position:absolute;z-index:2;left:56%;top:59%;width:620px;height:520px;translate:-36% -50%;scale:var(--sc,1);transform-origin:50% 50%}
+.cv{position:absolute;left:0;top:0;width:340px;height:500px;box-sizing:border-box;padding:28px 28px 24px;border-radius:12px;background:var(--white);box-shadow:0 40px 80px -42px rgba(30,28,43,.5),0 0 0 1px rgba(218,214,234,.9);rotate:-2.5deg;display:flex;flex-direction:column;gap:10px}
+.cv::before{content:"";position:absolute;inset:12px -12px -12px 12px;z-index:-1;border-radius:12px;background:#F1EEFC;box-shadow:0 0 0 1px var(--line);rotate:4deg}
+.cv-top{display:flex;align-items:center;gap:14px;padding-bottom:16px;border-bottom:1.5px solid var(--line)}
+.cv-av{flex:none;width:58px;height:58px;border-radius:50%;background:var(--tint);overflow:clip}
+.cv-av img{width:100%;height:100%;object-fit:cover;object-position:50% 6%}
+.cv-name{display:block;font:400 24px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.cv-role{display:block;margin-top:4px;font-size:13px;color:var(--muted)}
+.cv-sec{margin-top:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ln{display:block;height:8px;width:var(--w);border-radius:999px;background:#E4E1F0}
+.gpill{display:inline-block;height:24px;border-radius:999px;background:#E4E1F0}
+.cv-skills{display:flex;flex-wrap:wrap;gap:6px}
+.sk{position:relative;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:999px;background:var(--page);font-size:13px;font-weight:600;isolation:isolate}
+.sk::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--peach);box-shadow:inset 0 0 0 1.5px var(--accent);opacity:0}
+.sk::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);order:-1;scale:0}
+.loupe{position:absolute;z-index:3;left:0;top:0;width:112px;height:112px;margin:-56px 0 0 -56px;pointer-events:none;translate:var(--x0) var(--y0);will-change:transform}
+.lens{position:absolute;inset:0;box-sizing:border-box;border-radius:50%;border:7px solid var(--ink);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),rgba(255,255,255,.18) 55%,rgba(205,191,255,.25));box-shadow:0 18px 30px -16px rgba(30,28,43,.45)}
+.lens::after{content:"";position:absolute;left:18px;top:14px;width:22px;height:10px;border-radius:50%;background:rgba(255,255,255,.9);rotate:-35deg}
+.handle{position:absolute;left:90px;top:88px;width:18px;height:62px;border-radius:9px;background:var(--ink);rotate:-45deg;transform-origin:50% 0}
+.finds{position:absolute;left:300px;top:150px;display:flex;flex-direction:column;gap:12px;width:300px}
+.find{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;background:var(--white);box-shadow:0 26px 54px -30px rgba(30,28,43,.45),0 0 0 1px rgba(218,214,234,.9)}
+.find .pct{flex:none;display:flex;align-items:baseline;justify-content:center;padding-top:14px;box-sizing:border-box;width:56px;height:52px;border-radius:16px;background:var(--tint);font:400 22px/1 Anton,"Arial Narrow",Impact,sans-serif}
+.find .pct small{font:600 11px/1 Outfit,sans-serif}
+.find.top .pct{background:var(--accent);color:var(--ink)}
+.t1{display:block;font-size:16px;line-height:21px;font-weight:600}
+.t2{display:block;font-size:13px;line-height:18px;color:var(--muted)}
+.mp{display:none}
+
+/* Sign up: the form is the top of a CV */
+.signup{grid-template-columns:minmax(320px,.72fr) minmax(0,1.28fr);grid-template-areas:"hdr stage" "intro stage" "foot stage"}
+.intro{grid-area:intro;align-self:center;padding:24px 40px;display:flex;flex-direction:column;gap:24px;max-width:460px}
+.steps{display:flex;align-items:center;gap:8px;margin:0;padding:0;list-style:none;font-size:14px;font-weight:600;color:var(--muted)}
+.steps .st{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px 0 6px;border-radius:999px;background:var(--white);white-space:nowrap}
+.steps .st b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--page);font-size:13px}
+.steps .st.on{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.steps .st.on b{background:var(--ink);color:var(--white)}
+.steps .bar{flex:1;min-width:10px;max-width:40px;height:2px;border-radius:2px;background:var(--line)}
+.next{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.next li{display:flex;align-items:center;gap:12px;font-size:16px;line-height:22px}
+.next .ni{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:var(--white);box-shadow:0 0 0 1px var(--line)}
+.desk{grid-area:stage;position:sticky;top:16px;align-self:start;height:calc(100vh - 32px);display:flex;align-items:center;justify-content:center;margin:16px 16px 16px 0;padding:24px 0 0 24px;border-radius:40px;background:var(--tint);overflow:clip;isolation:isolate;min-height:calc(100vh - 32px);box-sizing:border-box}
+.sheet{position:relative;z-index:2;flex:0 1 560px;min-width:0;width:min(560px,100%);box-sizing:border-box;padding:26px 36px 24px;border-radius:12px;background:var(--white);box-shadow:0 50px 90px -50px rgba(30,28,43,.55),0 0 0 1px rgba(218,214,234,.9)}
+.sheet::before{content:"";position:absolute;inset:14px -14px -14px 14px;z-index:-1;border-radius:12px;background:#F1EEFC;box-shadow:0 0 0 1px var(--line);rotate:2.4deg}
+.sheet .kicker{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.s-head{display:flex;align-items:center;gap:16px;padding-right:96px;padding-bottom:14px;border-bottom:1.5px solid var(--line)}
+.s-av{flex:none;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:var(--tint);color:var(--ink);font:400 26px/1 Anton,"Arial Narrow",Impact,sans-serif;transition:background-color .3s ease}
+.s-av svg{color:#8B89A0}
+.s-av.has{background:var(--accent)}
+.s-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.s-name label{font-size:12px;font-weight:600;color:var(--muted)}
+.s-name input{width:100%;box-sizing:border-box;padding:2px 0 6px;border:0;border-bottom:2px dashed var(--field);border-radius:0;background:transparent;color:var(--ink);font:400 36px/1.1 Anton,"Arial Narrow",Impact,sans-serif;transition:border-color .2s ease}
+.s-name input::placeholder{color:#C5C1D6}
+.s-name input:focus{outline:none;border-bottom-style:solid;border-bottom-color:var(--ink)}
+.s-sec{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 20px;padding:13px 0;border-bottom:1.5px solid var(--line)}
+.s-sec>.sl{padding-top:6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ghost{opacity:.9}
+.ghost .ln{height:8px}
+.ghost .gnote{margin-top:4px;font-size:13px;color:var(--muted)}
+.s-foot{display:flex;flex-direction:column;gap:12px;padding-top:16px}
+.stamp{position:absolute;z-index:3;right:24px;top:40px;display:grid;place-items:center;width:96px;height:96px;border-radius:50%;border:3px solid var(--accent);color:var(--accent);font:600 11px/1.25 Outfit,sans-serif;letter-spacing:.14em;text-transform:uppercase;text-align:center;rotate:-14deg;opacity:0;scale:1.6;pointer-events:none;transition:opacity .25s ease,scale .5s var(--spring)}
+.stamp::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.5px dashed var(--accent)}
+form:valid .stamp,.auth.done .stamp{opacity:1;scale:1}
+.signup .host{position:relative;flex:none;align-self:flex-end;width:auto;height:min(62vh,calc((64vw - 600px)*1.2));margin:0 0 -2px -28px}
+
+/* Phones and narrow windows */
+.host-m,.mchip,.next-m{display:none}
+.signup .fwrap{position:relative;z-index:2;flex:0 1 560px;min-width:0}
+.signup .fwrap .sheet{width:100%}
+@media (max-width:1100px){.signup .host:not(.host-m){display:none}}
+@media (min-width:1500px) and (min-height:820px){.scan{--sc:1.12}}
+@media (min-width:1700px) and (min-height:860px){.scan{--sc:1.2}}
+@media (max-height:760px) and (min-width:901px){.scan{--sc:.86}}
+@media (max-width:900px){
+.signin{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"hdr" "stage" "form" "foot"}
+.signup{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"hdr" "intro" "stage" "foot"}
+.ahdr{padding:16px 20px 0}.afoot{padding:0 20px 24px}
+.stage{position:relative;top:auto;height:260px;min-height:0;margin:16px 16px 0;border-radius:32px}
+.st-in{left:20px;top:18px;right:20px}
+.st-title{display:none}
+.scan{--sc:.5;left:58%;top:64%}
+.signin .host{width:150px;left:-4px}
+.aform{padding:24px 20px 32px;gap:22px}
+.atitle{font-size:50px}.asub{font-size:17px;line-height:26px}
+.intro{padding:20px 20px 8px;gap:18px;max-width:none}
+.next{display:none}
+.desk{position:relative;top:auto;height:auto;min-height:0;margin:8px 0 0;padding:20px 12px 28px;border-radius:32px 32px 0 0}
+.sheet{padding:26px 20px 24px}
+.sheet::before{inset:10px -6px -10px 6px}
+.s-name input{font-size:32px}
+.s-sec{grid-template-columns:1fr;gap:10px;padding:16px 0}
+.s-av{width:56px;height:56px;font-size:22px}
+.stamp{width:78px;height:78px;font-size:9px;right:14px;top:auto;bottom:118px}
+.s-head{padding-right:0}
+}
+
+/* ---------- Phones: a layout made for the phone, not a shrunken desktop ---------- */
+@media (max-width:900px){
+.signin{grid-template-areas:"hdr" "form" "foot";grid-template-rows:auto 1fr auto}
+.signin .stage{display:none}
+.aform{padding:12px 16px 28px;gap:20px}
+.fwrap{position:relative;padding-top:116px}
+.auth .fwrap>.host-m{display:block;position:absolute;z-index:0;top:4px;right:2px;left:auto;bottom:auto;width:132px;height:auto;margin:0;flex:none;align-self:auto;animation:none !important}
+.mchip{display:flex;align-items:center;gap:8px;position:absolute;left:0;top:58px;max-width:calc(100% - 150px);margin:0;padding:8px 12px 8px 8px;border-radius:999px;background:var(--white);box-shadow:0 0 0 1px var(--line);font-size:13px;white-space:nowrap;overflow:hidden}
+.mc-ic{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--white)}
+.mc-sk{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;background:var(--peach);box-shadow:inset 0 0 0 1.5px var(--accent);font-weight:600}
+.mc-ar{color:var(--muted)}
+.signin form{position:relative;z-index:1;padding:22px 18px 20px;border-radius:28px;background:var(--white);box-shadow:0 30px 60px -36px rgba(30,28,43,.4),0 0 0 1px rgba(218,214,234,.9)}
+.signin .switch{margin-top:4px}
+.signup{grid-template-areas:"hdr" "intro" "stage" "foot"}
+.desk{background:transparent;margin:0;padding:0 16px 28px !important;border-radius:0;display:block;animation:none !important}
+.desk .aura,.desk .mp{display:none}
+.signup .fwrap{padding-top:112px}
+.sheet{position:relative;z-index:1;padding:22px 18px 20px;border-radius:24px;box-shadow:0 30px 60px -36px rgba(30,28,43,.4),0 0 0 1px rgba(218,214,234,.9)}
+.sheet::before{display:none}
+.sheet .kicker{margin-bottom:8px}
+.s-sec{padding:12px 0}
+.s-sec>.sl,.ghost{display:none}
+.next-m{display:block;margin:0;padding:14px 0 2px;font-size:14px;line-height:20px;color:var(--muted)}
+.s-foot{padding-top:16px}
+.stamp{width:76px;height:76px;font-size:9px;right:12px;top:auto;bottom:122px}
+.intro{padding:16px 16px 0}
+/* she looks down at the field you are in */
+.signin:has(#email:focus) .pk-head,.signup:has(#name:focus) .pk-head{rotate:4deg}
+.signin:has(#password:focus) .pk-head,.signup:has(#email:focus) .pk-head{rotate:9deg}
+.signup:has(#password:focus) .pk-head{rotate:13deg}
+.auth:has(form input:focus) .pk-gaze{translate:16px 8px}
+.auth:has(#password[type="text"]) .pk-head{rotate:-16deg}
+.auth:has(#password[type="text"]) .pk-gaze{translate:0 0}
+}
+@media (max-width:420px){.st-chip .hide-sm{display:none}.steps{gap:6px;font-size:13px}.steps .st{padding:0 11px 0 5px;gap:6px}.steps .bar{min-width:6px}}
+
+@media (prefers-reduced-motion:no-preference){
+.wd{display:inline-block;animation:focusin 1.05s var(--out) both;animation-delay:calc(120ms + var(--w)*80ms)}
+.rise{animation:focusin .95s var(--out) both;animation-delay:calc(320ms + var(--d,0)*70ms)}
+.stage,.desk{animation:stagein 1.1s var(--out) .05s both}
+.st-in{animation:focusin 1s var(--out) .4s both}
+.cv{animation:cvin 1.1s var(--out) .45s both}
+.finds{animation:fadein .6s ease .9s both}
+.sheet{animation:sheetin 1.15s var(--out) .3s both}
+.host{animation:hostin .9s var(--spring) .9s both,bob 4s ease-in-out 1.9s infinite}
+.a1{animation:orb1 16s ease-in-out infinite}
+.a2{animation:orb2 19s ease-in-out infinite}
+.live::after{animation:ping 2.2s var(--out) infinite}
+/* the scan loop: glass glides to a skill, the skill lights up, a job card appears */
+.loupe{animation:glide var(--L) var(--out) 1.2s infinite both}
+.sk[data-k]::before{animation:var(--hit) var(--L) var(--out) 1.2s infinite both}
+.sk[data-k]::after{animation:var(--dot) var(--L) var(--spring) 1.2s infinite both}
+.find{animation:var(--pop) var(--L) var(--spring) 1.2s infinite both}
+.mp{position:absolute;z-index:6;right:22px;bottom:22px;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.88);box-shadow:0 0 0 1px rgba(218,214,234,.9);cursor:pointer}
+.mp input{position:absolute;inset:0;margin:0;border-radius:50%;opacity:0;cursor:pointer}
+.mp svg{grid-area:1/1}.mp .i-play{display:none}
+.mp:has(input:checked) .i-play{display:block}.mp:has(input:checked) .i-pause{display:none}
+.mp:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:3px}
+:is(.stage,.desk):has(.mp input:checked) :is(.loupe,.find,.aura,.host,.live){animation-play-state:paused}
+.stage:has(.mp input:checked) .sk::before,.stage:has(.mp input:checked) .sk::after,.stage:has(.mp input:checked) .live::after{animation-play-state:paused}
+.shake{animation:shake .45s ease both}
+.desk .mp{right:auto;left:22px}
+@media (max-width:900px){.mp{width:34px;height:34px;right:14px;bottom:14px}.desk .mp{display:none}}
+@media (hover:hover){.go:hover{translate:0 -2px}.go .arr{transition:translate .35s var(--out)}.go:hover .arr{translate:4px 0}}
+}
+@keyframes focusin{from{opacity:0;translate:0 .45em;filter:blur(12px)}}
+@keyframes fadein{from{opacity:0}}
+@keyframes stagein{from{opacity:0;scale:.97}}
+@keyframes cvin{from{opacity:0;translate:0 60px;rotate:-8deg}}
+@keyframes sheetin{from{opacity:0;translate:0 70px;rotate:-3deg}}
+@keyframes hostin{from{opacity:0;translate:0 40%}}
+@keyframes bob{50%{translate:0 -6px}}
+@keyframes orb1{50%{translate:-120px 220px}}
+@keyframes orb2{50%{translate:120px -200px}}
+@keyframes ping{0%{opacity:.6;scale:1}80%,100%{opacity:0;scale:3}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes shake{20%,60%{translate:-6px 0}40%,80%{translate:6px 0}}
+
+@media (max-width:900px) and (prefers-reduced-motion:no-preference){.host-m{animation:hostin .9s var(--spring) .7s both !important}.mchip{animation:focusin .9s var(--out) .9s both}}
+/* Step 2: add your CV. The sheet from step 1 continues; its empty lower half is where the CV goes. States live on .auth[data-state]: empty, drag, file, reading, done, error. */
+.steps .st.ok b{background:var(--accent);color:var(--ink)}
+.steps .st.ok{color:var(--ink)}
+.steps .bar.ok{background:var(--ink)}
+.s-me{display:block;margin-top:4px;font-size:14px;color:var(--muted)}
+.s-nm{display:block;font:400 34px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.s-av.done{background:var(--accent)}
+.up .s-head{padding-right:0}
+.zone{position:relative;margin-top:16px;min-height:388px}
+.zone>[data-z]{display:none}
+.up[data-state="empty"] [data-z~="empty"],.up[data-state="drag"] [data-z~="empty"],.up[data-state="file"] [data-z~="file"],.up[data-state="reading"] [data-z~="read"],.up[data-state="done"] [data-z~="read"],.up[data-state="done"] [data-z~="done"],.up[data-state="error"] [data-z~="error"]{display:flex}
+/* Drop zone */
+.drop{position:relative;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:388px;box-sizing:border-box;padding:28px 24px;border-radius:22px;background:var(--page);text-align:center;cursor:pointer;transition:background-color .25s ease}
+.drop::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px dashed var(--field);transition:border-color .2s ease}
+.drop:hover::before{border-color:#9E99B8}
+.up[data-state="drag"] .drop{background:var(--tint)}
+.up[data-state="drag"] .drop::before{border-color:var(--ink)}
+.drop-ic{position:relative;display:grid;place-items:center;width:84px;height:84px;border-radius:26px;background:var(--white);box-shadow:0 18px 36px -22px rgba(30,28,43,.45),0 0 0 1px var(--line);transition:translate .4s var(--out),scale .4s var(--spring)}
+.up[data-state="drag"] .drop-ic{translate:0 -6px;scale:1.08}
+.drop-t{margin:0;font:400 30px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.drop-s{margin:0;font-size:15px;color:var(--muted)}
+.drop-b{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border:0;border-radius:999px;font:600 16px/1 Outfit,system-ui,sans-serif;cursor:pointer;text-decoration:none}
+.pill.ink{background:var(--ink);color:var(--white)}
+.pill.ink:hover{background:#34314A}
+.pill.line{background:var(--white);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--field)}
+.pill.line:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.cam{display:none}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.drop .sample{font-size:14px;color:var(--muted);text-underline-offset:3px;background:none;border:0;cursor:pointer;font-family:inherit}
+/* File chosen */
+.picked{flex-direction:column;justify-content:center;gap:18px;min-height:388px}
+.fchip{display:flex;align-items:center;gap:14px;padding:16px;border-radius:20px;background:var(--page);box-shadow:inset 0 0 0 1px var(--line)}
+.fdoc{flex:none;display:grid;place-items:center;width:52px;height:60px;border-radius:10px;background:var(--white);box-shadow:0 0 0 1.5px var(--ink);font:700 11px/1 Outfit,sans-serif;letter-spacing:.06em}
+.fdoc b{display:block;margin-top:4px;padding:2px 5px;border-radius:5px;background:var(--accent);font-size:10px}
+.fname{display:block;font-size:17px;font-weight:600;word-break:break-all}
+.fsize{display:block;font-size:14px;color:var(--muted)}
+.fx{margin-left:auto;flex:none;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer}
+.fx:hover{background:var(--white);color:var(--ink)}
+.picked .go{margin-top:0}
+.picked .alt{margin:0;text-align:center;font-size:14px;color:var(--muted)}
+.picked .alt button{border:0;background:none;padding:0;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+/* Reading and done: the sheet fills in section by section */
+.cvbody{position:relative;flex-direction:column;gap:6px;min-height:388px;overflow:clip}
+.sec{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 20px;padding:10px 0;border-bottom:1.5px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.sec>.sl{padding-top:3px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sec .cell{position:relative;display:flex;flex-direction:column;gap:8px;min-height:44px}
+.job{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.job b{font-weight:600}.job span{color:var(--muted);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips .c{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:999px;background:var(--page);font-size:13px;font-weight:600}
+.chips .c::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.edu{font-size:15px}.edu b{font-weight:600}.edu span{display:block;color:var(--muted);font-size:14px}
+.ph{position:absolute;inset:0;display:flex;flex-direction:column;gap:9px;padding-top:4px;overflow:clip}
+.ph i{display:block;height:10px;border-radius:999px;background:#E9E6F3}
+.ph::after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);translate:-100% 0}
+.up[data-state="done"] .ph{display:none}
+.scanl{position:absolute;z-index:3;left:-36px;right:-36px;top:0;height:70px;pointer-events:none;background:linear-gradient(180deg,rgba(141,112,255,0),rgba(141,112,255,.16) 85%,rgba(141,112,255,.0));translate:0 -80px}
+.scanl::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:2.5px;border-radius:2px;background:var(--ink);box-shadow:0 0 0 4px rgba(141,112,255,.18)}
+.up[data-state="done"] .scanl{display:none}
+.status{position:absolute;z-index:4;left:50%;bottom:6px;translate:-50% 0;display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 18px 0 14px;border-radius:999px;background:var(--ink);color:var(--white);font-size:14px;font-weight:600;white-space:nowrap;box-shadow:0 20px 40px -20px rgba(30,28,43,.6)}
+.status .spin{width:16px;height:16px}
+.status .sw{display:inline-grid;overflow:clip}.status .sw>span{grid-area:1/1}
+.status .sw>span:not(:first-child){opacity:0}
+.up[data-state="done"] .status{display:none}
+.donebar{flex-direction:column;gap:12px;padding-top:14px}
+.found{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:15px}
+.found .ok{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink)}
+.donebar .alt{margin:0;text-align:center;font-size:14px;color:var(--muted)}
+.donebar .alt button{border:0;background:none;padding:0;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.up[data-state="done"] .zone{min-height:0}
+.up[data-state="done"] .cvbody{min-height:0}
+/* Error */
+.oops{flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:388px;padding:24px;box-sizing:border-box;border-radius:22px;background:#FFF1EA;text-align:center}
+.oops-ic{display:grid;place-items:center;width:64px;height:64px;border-radius:20px;background:var(--white);box-shadow:0 0 0 1.5px var(--accent);color:var(--ink)}
+.oops h3{margin:0;font:400 28px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.oops p{margin:0;max-width:340px;font-size:15px;line-height:22px;color:var(--muted)}
+.stamp.read{opacity:0;scale:1.6}
+.up[data-state="done"] .stamp.read{opacity:1;scale:1}
+/* The guide reacts to each state */
+.up[data-state="drag"] .pk-f-open,.up[data-state="done"] .pk-f-open,.up[data-state="error"] .pk-f-open{opacity:0}
+.up[data-state="drag"] .pk-f-happy,.up[data-state="done"] .pk-f-happy{opacity:1}
+.up[data-state="error"] .pk-f-sad{opacity:1}
+.up[data-state="empty"] .pk-head,.up[data-state="file"] .pk-head{rotate:-4deg}
+.up[data-state="drag"] .pk-head{rotate:-10deg}
+.up[data-state="reading"] .pk-head{rotate:5deg}
+.up[data-state="reading"] .pk-gaze,.up[data-state="file"] .pk-gaze{translate:16px 6px}
+.up[data-state="error"] .pk-head{rotate:4deg}
+.up .host{transition:scale .45s var(--spring)}
+.up[data-state="drag"] .host{scale:-1.05 1.05}
+@media (max-width:900px){
+.cam{display:inline-flex}
+.zone,.drop,.picked,.oops,.cvbody{min-height:300px}
+.drop{padding:22px 16px}
+.drop-t{font-size:26px}
+.sec{grid-template-columns:1fr;gap:6px;padding:10px 0}
+.s-nm{font-size:28px}
+.up .fwrap{padding-top:112px}
+.up[data-state="empty"] .pk-head,.up[data-state="file"] .pk-head,.up[data-state="reading"] .pk-head{rotate:8deg}
+}
+@media (prefers-reduced-motion:no-preference){
+.up[data-state="reading"] .scanl{animation:sweep 2.2s ease-in-out infinite alternate}
+.up[data-state="reading"] .ph::after{animation:shimmer 1.3s ease-in-out infinite}
+.up[data-state="reading"] .ph{animation:phout .4s ease both;animation-delay:calc(var(--t)*1s + .1s)}
+.up[data-state="reading"] .rv-i{animation:focusin .7s var(--out) both;animation-delay:calc(var(--t)*1s + var(--k,0)*.09s)}
+.up[data-state="reading"] .status .sw>span{animation:st4 4.4s steps(1,end) both}
+.up[data-state="reading"] .status .sw>span:nth-child(2){animation-name:st4b}
+.up[data-state="reading"] .status .sw>span:nth-child(3){animation-name:st4c}
+.up[data-state="reading"] .status .sw>span:nth-child(4){animation-name:st4d}
+.up[data-state="done"] .donebar{animation:focusin .7s var(--out) both}
+.up[data-state="file"] .picked>*,.up[data-state="error"] .oops>*{animation:focusin .6s var(--out) both;animation-delay:calc(var(--k,0)*.07s)}
+.up .stamp.read{transition:opacity .25s ease,scale .55s var(--spring)}
+.up[data-state="empty"] .drop-ic{animation:nudgeup 2.8s ease-in-out 1.6s 3}
+}
+@media (prefers-reduced-motion:reduce){.up[data-state="reading"] .ph{display:none}.up[data-state="reading"] .status .sw>span:last-child{opacity:1}}
+@keyframes sweep{from{translate:0 -60px}to{translate:0 330px}}
+@keyframes shimmer{to{translate:260% 0}}
+@keyframes phout{to{opacity:0;visibility:hidden}}
+@keyframes st4{0%,24%{opacity:1}25%,100%{opacity:0}}
+@keyframes st4b{0%,24%{opacity:0}25%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes st4c{0%,49%{opacity:0}50%,74%{opacity:1}75%,100%{opacity:0}}
+@keyframes st4d{0%,74%{opacity:0}75%,100%{opacity:1}}
+@keyframes nudgeup{0%,60%,100%{translate:0 0}30%{translate:0 -6px}}
+a.go{text-decoration:none;color:var(--white)}a.go:hover{color:var(--white)}
+.d-phone{display:none}
+@media (max-width:900px){.d-desk{display:none}.d-phone{display:inline}}
+@media (max-width:900px){.up .fwrap{padding-top:0}}
+/* Check your details: the CV as one drawn page, edited in place. A short "to check" list points at the few fields that need the person. */
+.review{grid-template-columns:minmax(320px,.62fr) minmax(0,1.38fr);grid-template-areas:"hdr stage" "intro stage" "foot stage";counter-reset:todo}
+.review .intro{align-self:start;position:sticky;top:24px;padding-top:56px}
+.review .desk{position:relative;top:auto;align-self:stretch;height:auto;min-height:calc(100vh - 32px);display:flex;align-items:flex-start;justify-content:center;padding:12px 32px 28px;animation:none}
+.review .fwrap{position:relative;flex:0 1 780px;min-width:0;padding-top:118px}
+.review .host-m{display:block;position:absolute;z-index:0;top:0;right:28px;width:140px;height:auto}
+.cvdoc{position:relative;z-index:1;width:100%;padding:26px 30px 26px}
+.cvdoc .kicker{display:flex;justify-content:space-between;gap:12px}
+.cvdoc .kicker em{font-style:normal;letter-spacing:0;text-transform:none;font-weight:500;font-size:12px}
+/* editable text: looks like print until you touch it */
+.e{display:block;width:100%;min-width:0;box-sizing:border-box;margin:-3px -7px;padding:3px 7px;border:0;border-radius:8px;background:transparent;color:inherit;font:inherit;line-height:inherit;resize:none;transition:background-color .2s ease,box-shadow .25s var(--out)}
+.e:hover{background:rgba(141,112,255,.09)}
+.e:focus{outline:none;background:var(--white);box-shadow:0 0 0 2px var(--ink),0 0 0 6px rgba(141,112,255,.2)}
+.e::placeholder{color:#B4AFC8}
+textarea.e{field-sizing:content;min-height:3lh}
+.cv-h{display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:1.5px solid var(--line)}
+.cv-h .s-av{width:64px;height:64px;font-size:26px}
+.cv-nm{flex:1;min-width:0}
+.cv-nm .e.big{font:400 40px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.cv-nm .loc{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:15px;color:var(--muted)}
+.cv-cols{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0 26px}
+.cv-side{display:flex;flex-direction:column;gap:2px;padding:14px 22px 6px 0;border-right:1.5px solid var(--line)}
+.cv-main{display:flex;flex-direction:column;gap:2px;padding:14px 0 6px}
+.blk{display:flex;flex-direction:column;gap:8px;padding:6px 0 10px}
+.blk h3{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.f{position:relative;display:flex;align-items:center;gap:8px;font-size:14.5px;border-radius:12px;scroll-margin-top:110px;transition:background-color .3s ease,box-shadow .3s ease}
+.f>svg{flex:none;color:#8B89A0}
+.need-tag{display:none;flex:none;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--accent);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.02em;text-transform:none;white-space:nowrap}
+.req:has(input:placeholder-shown),.lvl:not(:has(input:checked)){background:#FFF1EA;box-shadow:0 0 0 1.5px rgba(255,127,69,.55),0 0 0 6px #FFF1EA}
+.req:has(input:placeholder-shown) .need-tag,.lvl:not(:has(input:checked)) .need-tag{display:inline-flex}
+.ti{counter-increment:todo}
+.auth:has(#phone:not(:placeholder-shown)) .ti-phone,.auth:has(#lvl input:checked) .ti-lvl,.auth:has(#end2:not(:placeholder-shown)) .ti-end{counter-increment:none}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg label{position:relative;display:grid;place-items:center;height:36px;border-radius:999px;background:var(--page);font-size:13.5px;font-weight:600;cursor:pointer;transition:background-color .2s ease,color .2s ease}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label:has(input:checked){background:var(--ink);color:var(--white)}
+.seg label:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+.lvl{padding:8px;margin:0 -8px}
+.lvl .hintx{margin:0;font-size:12.5px;color:var(--muted)}
+.lvl .hintx b{color:var(--ink)}
+.step{display:flex;align-items:center;gap:10px}
+.step button{display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:50%;background:var(--page);color:var(--ink);font:600 18px/1 Outfit,sans-serif;cursor:pointer}
+.step button:hover{background:var(--tint)}
+.step output{font:400 28px/1 Anton,"Arial Narrow",Impact,sans-serif;min-width:1.4ch;text-align:center}
+.step span{font-size:14px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 4px 0 11px;border-radius:999px;background:var(--page);font-size:13.5px;font-weight:600;transition:opacity .25s ease,scale .3s var(--out)}
+.chip.hit::before{content:"";width:6px;height:6px;margin-right:2px;border-radius:50%;background:var(--accent)}
+.chip button{display:grid;place-items:center;width:22px;height:22px;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;font-size:15px;line-height:1}
+.chip button:hover{background:var(--white);color:var(--ink)}
+.chip.out{opacity:0;scale:.6}
+.addchip{display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 10px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--field);color:var(--muted);font-size:13.5px}
+.addchip input{width:86px;border:0;background:transparent;font:inherit;color:var(--ink)}
+.addchip input:focus{outline:none}
+.addchip:focus-within{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.job{position:relative;display:flex;flex-direction:column;gap:4px;padding:6px 0 8px}
+.job+.job{border-top:1px dashed var(--line);padding-top:10px}
+.jrow{display:flex;align-items:baseline;gap:10px}
+.jrow .e.t{font-size:16px;font-weight:700}
+.jmeta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:14px;color:var(--muted)}
+.jmeta>.e:first-child{flex:1 1 140px;width:auto}
+.jmeta .d{flex:none;width:76px;text-align:center}
+.jmeta .f.req{flex:none}
+.bul{margin:2px 0 0;padding:0 0 0 16px;font-size:13.5px;line-height:20px;color:#3A3848}
+.bul li::marker{color:var(--accent)}
+.bul .e{margin:-2px -6px;padding:2px 6px}
+.rm{position:absolute;right:-6px;top:4px;display:grid;place-items:center;width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;opacity:0;transition:opacity .2s ease}
+.job:hover .rm,.job:focus-within .rm,.edu:hover .rm,.edu:focus-within .rm{opacity:1}
+.rm:hover{background:var(--page);color:var(--ink)}
+.add{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:0;border-radius:999px;background:transparent;box-shadow:inset 0 0 0 1.5px var(--field);color:var(--muted);font:600 13.5px/1 Outfit,sans-serif;cursor:pointer}
+.add:hover{box-shadow:inset 0 0 0 1.5px var(--ink);color:var(--ink)}
+.edu{position:relative;display:flex;flex-direction:column;gap:2px;padding:4px 0 6px;font-size:14.5px}
+.edu .e.t{font-weight:700}
+.edu .sub{display:flex;gap:6px;color:var(--muted);font-size:14px}
+.edu .sub .e{flex:1 1 0;width:auto}
+.edu .sub .e.d{flex:none;width:100px}
+.cvdoc .stamp{top:auto;bottom:22px;right:26px;opacity:0;scale:1.6}
+/* the to-check list */
+.todo{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:24px;background:var(--white);box-shadow:0 0 0 1px var(--line)}
+.todo-h{order:-1;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;font-weight:700}
+.todo-h .sw{display:inline-grid}.todo-h .sw>span{grid-area:1/1;transition:opacity .3s ease,translate .4s var(--out)}
+.todo-h .sb{opacity:0;translate:0 60%}
+.todo-n{display:grid;place-items:center;min-width:28px;height:28px;padding:0 8px;box-sizing:border-box;border-radius:999px;background:var(--accent);font-size:14px}
+.todo-n::before{content:counter(todo)}
+.ti{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--page);color:var(--ink);text-decoration:none;font-size:14.5px;transition:background-color .2s ease,opacity .3s ease}
+.ti:hover{background:var(--tint)}
+.ti .tb{position:relative;flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--accent);background:#FFF1EA}
+.ti .tb svg{opacity:0}
+.ti .tb path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .45s var(--out)}
+.ti .tx{flex:1;min-width:0}
+.ti .tx small{display:block;color:var(--muted);font-size:13px}
+.ti .go-ic{color:var(--muted);transition:translate .3s var(--out)}
+.ti:hover .go-ic{translate:3px 0}
+.done-ti{opacity:.55}
+.done-ti .tb{background:var(--ink);box-shadow:none}
+.done-ti .tb svg{opacity:1}
+.done-ti .tb path{stroke-dashoffset:0}
+.done-ti .tx b{text-decoration:line-through;text-decoration-color:rgba(30,28,43,.5)}
+.done-ti .go-ic{opacity:0}
+.auth:has(#phone:not(:placeholder-shown)) .ti-phone,.auth:has(#lvl input:checked) .ti-lvl,.auth:has(#end2:not(:placeholder-shown)) .ti-end{opacity:.55}
+.auth:has(#phone:not(:placeholder-shown)) .ti-phone .tb,.auth:has(#lvl input:checked) .ti-lvl .tb,.auth:has(#end2:not(:placeholder-shown)) .ti-end .tb{background:var(--ink);box-shadow:none}
+.auth:has(#phone:not(:placeholder-shown)) .ti-phone .tb svg,.auth:has(#lvl input:checked) .ti-lvl .tb svg,.auth:has(#end2:not(:placeholder-shown)) .ti-end .tb svg{opacity:1}
+.auth:has(#phone:not(:placeholder-shown)) .ti-phone .tb path,.auth:has(#lvl input:checked) .ti-lvl .tb path,.auth:has(#end2:not(:placeholder-shown)) .ti-end .tb path{stroke-dashoffset:0}
+.auth:has(#phone:not(:placeholder-shown)) .ti-phone .tx b,.auth:has(#lvl input:checked) .ti-lvl .tx b,.auth:has(#end2:not(:placeholder-shown)) .ti-end .tx b{text-decoration:line-through;text-decoration-color:rgba(30,28,43,.5)}
+.save{display:flex;flex-direction:column;gap:10px}
+.save .back{text-align:center;font-size:14px;color:var(--muted)}
+.save .back a{color:var(--ink);font-weight:600;text-underline-offset:3px}
+/* all set: every check resolved */
+.allset .todo-h .sa{opacity:0;translate:0 -60%}
+.allset .todo-h .sb{opacity:1;translate:0 0}
+.allset .todo-n{background:var(--ink);color:var(--white)}
+.allset .todo-n::before{content:"✓"}
+.allset .cvdoc .stamp{opacity:1;scale:1}
+.allset .go{box-shadow:0 0 0 6px rgba(141,112,255,.24)}
+.allset .pk-f-open{opacity:0}.allset .pk-f-happy{opacity:1}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .todo-h .sa{opacity:0;translate:0 -60%}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .todo-h .sb{opacity:1;translate:0 0}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .todo-n{background:var(--ink);color:var(--white)}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .todo-n::before{content:"✓"}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .cvdoc .stamp{opacity:1;scale:1}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .go{box-shadow:0 0 0 6px rgba(141,112,255,.24)}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .pk-f-open{opacity:0}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .pk-f-happy{opacity:1}
+/* she watches what you edit */
+.review:has(.cvdoc :focus) .pk-head{rotate:7deg}
+.review:has(.cvdoc :focus) .pk-gaze{translate:16px 8px}
+.mbar{display:none}
+@media (max-width:1100px){.cv-cols{grid-template-columns:200px minmax(0,1fr);gap:0 18px}.cv-side{padding-right:16px}}
+@media (max-width:900px){
+.review{grid-template-columns:1fr;grid-template-areas:"hdr" "intro" "stage" "foot"}
+.review .intro{position:static;padding:14px 16px 0}
+.review .intro .save{display:none}
+.review .intro .todo{position:absolute;visibility:hidden;pointer-events:none;height:0;overflow:hidden;padding:0}
+.review .desk{min-height:0;padding:0 12px 16px !important;background:transparent;margin:0}
+.review .desk .aura,.review .desk .mp{display:none}
+.review .fwrap{padding-top:118px}
+.review .host-m{width:136px;right:10px}
+.cvdoc{padding:20px 16px 18px;border-radius:22px}
+.cvdoc .kicker em{display:none}
+.cv-h .s-av{width:52px;height:52px;font-size:21px}
+.cv-nm .e.big{font-size:30px}
+.cv-cols{grid-template-columns:1fr}
+.cv-side{border-right:0;padding:8px 0 0;display:grid;grid-template-columns:1fr;gap:0}
+.cv-main{padding-top:0}
+.blk{padding:10px 0;border-top:1px solid var(--line)}
+.mbar{position:sticky;bottom:0;z-index:20;display:flex;align-items:center;gap:12px;margin:0 -16px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:rgba(246,245,251,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 -1px 0 var(--line)}
+.mbar .mleft{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;white-space:nowrap}
+.mbar .go{flex:1;height:52px;margin:0}
+.review .afoot{padding-bottom:12px}
+}
+@media (prefers-reduced-motion:no-preference){
+.cvdoc{animation:sheetin 1.1s var(--out) .25s both}
+.cvdoc .blk,.cv-h{animation:focusin .8s var(--out) both;animation-delay:calc(.5s + var(--t,0)*.08s)}
+.todo,.save{animation:focusin .9s var(--out) both;animation-delay:calc(.45s + var(--d,0)*.08s)}
+.f:target,.lvl:target{animation:flash 1.4s var(--out)}
+.cvdoc .stamp{transition:opacity .25s ease,scale .55s var(--spring)}
+}
+@keyframes flash{0%,40%{box-shadow:0 0 0 2px var(--ink),0 0 0 10px rgba(141,112,255,.35)}}
+.mbar .sw{display:inline-grid}.mbar .sw>span{grid-area:1/1;transition:opacity .3s ease}
+.mbar .sb{opacity:0}
+.mbar .mleft{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .mbar .sa{opacity:0}
+.review:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .mbar .sb{opacity:1}
+textarea.e.b1{min-height:1lh}
+/* Check your details v2: compare your file (left) with what was read (right). One screen on desktop; each pane scrolls on its own. */
+.rv2{counter-reset:todo;display:grid;grid-template-rows:auto minmax(0,1fr);height:100vh;min-height:680px}
+.rbar{display:flex;align-items:center;gap:18px;padding:14px 24px}
+.rbar .logo span{font-size:28px}
+.rbar .steps{margin:0 auto}
+.rbar .lang{flex:none}
+.cnt{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 8px;border:0;border-radius:999px;background:var(--white);box-shadow:0 0 0 1px var(--line);font:600 14.5px/1 Outfit,sans-serif;color:var(--ink);white-space:nowrap;cursor:pointer}
+.cnt .todo-n{display:grid;place-items:center;min-width:28px;height:28px;padding:0 8px;box-sizing:border-box;border-radius:999px;background:var(--accent);font-size:14px}
+.todo-n::before{content:counter(todo)}
+.cnt .sw,.mbar .sw{display:inline-grid}.cnt .sw>span,.mbar .sw>span{grid-area:1/1;transition:opacity .3s ease}
+.cnt .sb,.mbar .sb{opacity:0}
+.rbar .go{width:auto;height:48px;margin:0;padding:0 26px;font-size:16px}
+.tk{position:absolute;width:0;height:0;overflow:hidden}
+.tk{counter-increment:todo}
+.rv2:has(#phone:not(:placeholder-shown)) .tk-phone,.rv2:has(#lvl input:checked) .tk-lvl,.rv2:has(#end2:not(:placeholder-shown)) .tk-end{counter-increment:none}
+.rmain{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:16px;padding:0 16px 16px;min-height:0}
+/* Source: the person's own file */
+.src{position:relative;display:flex;flex-direction:column;min-height:0;border-radius:32px;background:var(--tint);overflow:hidden;isolation:isolate}
+.src-h{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px 14px}
+.src-h b{display:block;font-size:15px}
+.src-h small{display:block;font-size:13px;color:var(--muted)}
+.src-h a{font-size:14px;font-weight:600;color:var(--ink);text-underline-offset:3px;white-space:nowrap}
+.doc-wrap{position:relative;z-index:1;flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center;padding:0 22px 22px}
+.doc{position:relative;height:100%;max-width:100%;aspect-ratio:1/1.414;box-sizing:border-box;border-radius:6px;background:var(--white);box-shadow:0 30px 60px -36px rgba(30,28,43,.45),0 0 0 1px rgba(218,214,234,.9);container-type:size;overflow:hidden;color:#2A2838;font-family:Georgia,"Times New Roman",serif}
+.db{position:absolute;left:7%;right:7%}
+.d-name{top:5%;font:700 6.4cqw/1.1 Georgia,serif;letter-spacing:.01em}
+.d-role{top:11.6%;font-size:2.9cqw;color:#5A5868}
+.d-contact{top:15.6%;font-size:2.5cqw;color:#5A5868}
+.d-rule{top:19.6%;height:.25cqw;background:#2A2838}
+.d-h{font:700 2.6cqw/1 Georgia,serif;letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.6cqw}
+.d-p{font-size:2.35cqw;line-height:1.45}
+.d-sum{top:22%}
+.d-exp{top:33.5%}
+.d-edu{top:58%}
+.d-skl{top:70.5%}
+.d-lng{top:79.5%}
+.d-crt{top:88.5%}
+.d-job{display:flex;justify-content:space-between;font-size:2.5cqw;font-weight:700}
+.d-job span{font-weight:400;color:#5A5868}
+.d-li{font-size:2.25cqw;line-height:1.5;color:#3A3848;padding-left:2.4cqw;position:relative}
+.d-li::before{content:"";position:absolute;left:.6cqw;top:1.4cqw;width:.8cqw;height:.8cqw;border-radius:50%;background:#2A2838}
+.d-gap{height:2cqw}
+.hl{position:absolute;z-index:3;left:4.5%;width:91%;top:var(--ht,4%);height:var(--hh,29%);border-radius:1.6cqw;background:rgba(255,127,69,.07);box-shadow:0 0 0 .5cqw var(--accent);pointer-events:none;transition:top .55s var(--out),height .55s var(--out)}
+.hl::after{content:"From your file";position:absolute;right:0;top:-5.2cqw;padding:.8cqw 2cqw;border-radius:999px;background:var(--accent);font:700 2.2cqw/1 Outfit,sans-serif;color:var(--ink);white-space:nowrap}
+.rv2:has(#s-profile:hover,#s-profile:focus-within){--ht:4%;--hh:29%}
+.rv2:has(#s-contact:hover,#s-contact:focus-within){--ht:14.2%;--hh:4.6%}
+.rv2:has(#s-exp:hover,#s-exp:focus-within){--ht:32%;--hh:23.8%}
+.rv2:has(#s-edu:hover,#s-edu:focus-within){--ht:56.6%;--hh:12.4%}
+.rv2:has(#s-skills:hover,#s-skills:focus-within){--ht:69.2%;--hh:8.6%}
+.rv2:has(#s-lang:hover,#s-lang:focus-within){--ht:78.2%;--hh:8.6%}
+.rv2:has(#s-cert:hover,#s-cert:focus-within){--ht:87.2%;--hh:8.6%}
+.src .host{position:absolute;z-index:4;right:-4px;bottom:-2px;width:118px;height:auto}
+.rv2 .src .aura{z-index:0}
+/* Data: what JobMatcher read */
+.data{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:0;border-radius:32px;background:var(--white);box-shadow:0 0 0 1px var(--line);overflow:hidden}
+.rail{display:flex;flex-direction:column;gap:4px;padding:22px 12px;border-right:1px solid var(--line);overflow:auto}
+.rail .rl{margin:0 0 8px 12px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.rail a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:600;transition:background-color .2s ease}
+.rail a:hover{background:var(--page)}
+.rail a .c{margin-left:auto;font-size:13px;font-weight:500;color:var(--muted)}
+.rail a .st{flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink)}
+.rail a .st svg{opacity:1}
+.rail a.need .st{background:var(--accent);box-shadow:none}
+.rail a.need .st svg{opacity:0}
+.rail a.need .st::after{content:"!";font:800 12px/1 Outfit,sans-serif}
+.rail a .st::after{content:""}
+.rv2:has(#phone:not(:placeholder-shown)) .rl-contact.need .st,.rv2:has(#lvl input:checked):has(#phone) .rl-profile.need .st,.rv2:has(#end2:not(:placeholder-shown)) .rl-exp.need .st{background:var(--ink)}
+.rv2:has(#phone:not(:placeholder-shown)) .rl-contact.need .st::after,.rv2:has(#lvl input:checked) .rl-profile.need .st::after,.rv2:has(#end2:not(:placeholder-shown)) .rl-exp.need .st::after{content:""}
+.rv2:has(#phone:not(:placeholder-shown)) .rl-contact.need .st svg,.rv2:has(#lvl input:checked) .rl-profile.need .st svg,.rv2:has(#end2:not(:placeholder-shown)) .rl-exp.need .st svg{opacity:1}
+.rv2:has(#lvl input:checked) .rl-profile.need .st{background:var(--ink)}
+.rv2:has(#s-profile:focus-within) .rl-profile,.rv2:has(#s-contact:focus-within) .rl-contact,.rv2:has(#s-exp:focus-within) .rl-exp,.rv2:has(#s-edu:focus-within) .rl-edu,.rv2:has(#s-skills:focus-within) .rl-skills,.rv2:has(#s-lang:focus-within) .rl-lang,.rv2:has(#s-cert:focus-within) .rl-cert{background:var(--tint)}
+.rail .tip{margin:auto 4px 0;padding:14px;border-radius:18px;background:var(--page);font-size:13px;line-height:19px;color:var(--muted)}
+.rail .tip b{color:var(--ink)}
+.scroll{position:relative;overflow:auto;scroll-behavior:smooth;padding:0 30px 40px;min-height:0;overscroll-behavior:contain}
+.dhead{display:flex;flex-direction:column;gap:8px;padding:26px 0 6px}
+.dhead h1{font-size:44px;line-height:1}
+.dhead p{margin:0;font-size:16px;line-height:24px;color:var(--muted);max-width:560px}
+.rs{padding:24px 0;border-bottom:1px solid var(--line);scroll-margin-top:8px}
+.rs:last-child{border-bottom:0}
+.rs-h{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+.rs-h h2{margin:0;font:400 26px/1 Anton,"Arial Narrow",Impact,sans-serif}
+.rs-h .c{font-size:14px;color:var(--muted)}
+.rs-h .add{margin-left:auto}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 16px}
+.full{grid-column:1/-1}
+.fl{position:relative;display:flex;flex-direction:column;gap:6px;min-width:0;scroll-margin-top:24px}
+.fl>label,.fl>.lb{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.in{width:100%;min-width:0;box-sizing:border-box;height:46px;padding:0 14px;border:0;border-radius:14px;background:var(--page);color:var(--ink);font:400 15.5px/1.4 Outfit,system-ui,sans-serif;box-shadow:inset 0 0 0 1.5px transparent;transition:box-shadow .25s var(--out),background-color .2s ease}
+textarea.in{height:auto;min-height:3lh;padding:11px 14px;resize:vertical;field-sizing:content}
+.in:hover{box-shadow:inset 0 0 0 1.5px var(--field)}
+.in:focus{outline:none;background:var(--white);box-shadow:inset 0 0 0 1.5px var(--ink),0 0 0 5px rgba(141,112,255,.18)}
+.in::placeholder{color:#A19DB6}
+.in.big{height:56px;font:400 30px/1 Anton,"Arial Narrow",Impact,sans-serif}
+.pre{display:flex;align-items:center;border-radius:14px;background:var(--page);box-shadow:inset 0 0 0 1.5px transparent;transition:box-shadow .25s var(--out),background-color .2s ease}
+.pre>span{flex:none;padding-left:14px;font-size:14.5px;color:var(--muted)}
+.pre .in{background:transparent;box-shadow:none;padding-left:4px}
+.pre:hover{box-shadow:inset 0 0 0 1.5px var(--field)}
+.pre:focus-within{background:var(--white);box-shadow:inset 0 0 0 1.5px var(--ink),0 0 0 5px rgba(141,112,255,.18)}
+.opt{font-weight:500;color:#A19DB6}
+.help{display:none;margin:0;font-size:13px;color:#B4501F}
+.need-tag{display:none;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:var(--accent);color:var(--ink);font-size:11px;font-weight:700}
+.fl.req:has(.in:placeholder-shown) .in,.fl.req:has(.in:placeholder-shown) .pre{background:#FFF1EA;box-shadow:inset 0 0 0 1.5px rgba(255,127,69,.75)}
+.fl.req:has(.in:placeholder-shown) .help,.fl.req:has(.in:placeholder-shown) .need-tag{display:inline-flex}
+.fl.req:has(.in:placeholder-shown) .in:focus{background:var(--white);box-shadow:inset 0 0 0 1.5px var(--ink),0 0 0 5px rgba(141,112,255,.18)}
+.seg4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:4px;border-radius:16px;background:var(--page)}
+.seg4 label{position:relative;display:grid;place-items:center;height:38px;border-radius:12px;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;transition:background-color .2s ease,color .2s ease}
+.seg4 label:hover{background:var(--white)}
+.seg4 input{position:absolute;opacity:0;width:1px;height:1px}
+.seg4 label:has(input:checked){background:var(--ink);color:var(--white)}
+.seg4 label:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+.seg4 .sug::after{content:"Suggested";position:absolute;top:-9px;right:6px;padding:2px 6px;border-radius:999px;background:var(--accent);font-size:9.5px;font-weight:700;color:var(--ink)}
+.seg4:has(input:checked) .sug::after{display:none}
+.fl.lv:not(:has(input:checked)) .seg4{background:#FFF1EA;box-shadow:inset 0 0 0 1.5px rgba(255,127,69,.75)}
+.fl.lv:not(:has(input:checked)) .need-tag,.fl.lv:not(:has(input:checked)) .help{display:inline-flex}
+.stepper{display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 6px;border-radius:14px;background:var(--page)}
+.stepper button{display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:10px;background:var(--white);color:var(--ink);font:600 18px/1 Outfit,sans-serif;cursor:pointer;box-shadow:0 0 0 1px var(--line)}
+.stepper output{font-size:15.5px;font-weight:600}
+.jc{position:relative;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:20px;box-shadow:0 0 0 1px var(--line);background:var(--white)}
+.jc+.jc{margin-top:12px}
+.jc .rm{position:absolute;right:10px;top:10px;opacity:1}
+.jc .g4{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding-right:28px}
+.jc .g4 .dd{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.now{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);cursor:pointer;user-select:none}
+.now input{width:16px;height:16px;accent-color:var(--ink)}
+.duties{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.duties li{display:flex;align-items:flex-start;gap:8px}
+.duties li::before{content:"";flex:none;width:7px;height:7px;margin-top:19px;border-radius:50%;background:var(--accent)}
+.duties .in{min-height:0;padding:9px 12px;font-size:14.5px;resize:none}
+.lnk{align-self:flex-start;border:0;background:none;padding:2px 0;font:600 13.5px/1 Outfit,sans-serif;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.edu2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 40px;gap:12px;align-items:end}
+.edu2+.edu2{margin-top:12px}
+.edu2 .rm{position:static;opacity:1;width:40px;height:46px;border-radius:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:36px;padding:0 6px 0 14px;font-size:14px}
+.addchip{height:36px}
+.addchip input{width:120px}
+.rv2 .stamp{position:absolute;top:22px;right:26px;opacity:0;scale:1.6;width:92px;height:92px;font-size:10px}
+.allset-on .stamp{opacity:1;scale:1}
+/* everything resolved */
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) :is(.cnt,.mbar) .sa{opacity:0}
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) :is(.cnt,.mbar) .sb{opacity:1}
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .todo-n{background:var(--ink);color:var(--white)}
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .todo-n::before{content:"✓"}
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .go{box-shadow:0 0 0 6px rgba(141,112,255,.26)}
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .stamp{opacity:1;scale:1}
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .pk-f-open{opacity:0}
+.rv2:has(#phone:not(:placeholder-shown)):has(#lvl input:checked):has(#end2:not(:placeholder-shown)) .pk-f-happy{opacity:1}
+.rv2:has(.data :focus) .pk-head{rotate:-6deg}
+.rv2:has(.data :focus) .pk-gaze{translate:16px -4px}
+.mbar,.mfile{display:none}
+@media (max-width:1180px){.data{grid-template-columns:minmax(0,1fr)}.rail{display:none}.rbar .steps{display:none}}
+@media (max-width:900px){
+.rv2{display:block;height:auto}
+.rbar{padding:14px 16px;gap:10px}
+.rbar .cnt,.rbar .go,.rbar .lang{display:none}
+.rmain{display:block;padding:0 12px 0}
+.src{display:none}
+.data{display:block;border-radius:24px}
+.scroll{overflow:visible;padding:0 16px 24px}
+.dhead{padding-top:20px}
+.dhead h1{font-size:40px}
+.mfile{display:block;margin:14px 0 4px;border-radius:18px;background:var(--tint)}
+.mfile summary{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:14.5px;font-weight:600;cursor:pointer;list-style:none}
+.mfile summary::-webkit-details-marker{display:none}
+.mfile summary small{display:block;font-weight:400;color:var(--muted)}
+.mfile summary .chev{margin-left:auto;transition:rotate .3s var(--out)}
+.mfile[open] summary .chev{rotate:90deg}
+.mfile .doc{height:auto;width:100%;margin:0 0 12px}
+.mfile .mdoc{padding:0 12px 4px}
+.jump{position:sticky;top:0;z-index:15;display:flex;gap:8px;margin:0 -16px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--line)}
+.jump::-webkit-scrollbar{display:none}
+.jump a{flex:none;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:999px;background:var(--page);font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:none}
+.jump a.need::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.rv2:has(#phone:not(:placeholder-shown)) .jump .j-contact::after,.rv2:has(#lvl input:checked) .jump .j-profile::after,.rv2:has(#end2:not(:placeholder-shown)) .jump .j-exp::after{display:none}
+.g2,.g3,.jc .g4{grid-template-columns:1fr}
+.jc .g4 .dd{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.edu2{grid-template-columns:1fr 40px}
+.edu2 .fl:first-child{grid-column:1/-1}
+.seg4{grid-template-columns:1fr 1fr}
+.rv2 .stamp{display:none}
+.mbar{position:sticky;bottom:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:rgba(246,245,251,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 -1px 0 var(--line)}
+.mbar .mleft{display:flex;align-items:center;gap:8px;border:0;background:none;padding:0;font:600 14px/1 Outfit,sans-serif;color:var(--ink);white-space:nowrap;cursor:pointer}
+.mbar .todo-n{display:grid;place-items:center;min-width:26px;height:26px;padding:0 7px;box-sizing:border-box;border-radius:999px;background:var(--accent);font-size:13px}
+.mbar .go{flex:1;height:52px;margin:0}
+}
+.jump{display:none}
+@media (max-width:900px){.jump{display:flex}}
+
+@media (prefers-reduced-motion:no-preference){
+.src{animation:stagein 1s var(--out) .05s both}
+.doc{animation:cvin 1.1s var(--out) .25s both}
+.data{animation:sheetin 1.1s var(--out) .15s both}
+.rs{animation:focusin .8s var(--out) both;animation-delay:calc(.35s + var(--t,0)*.07s)}
+.rail a{animation:focusin .7s var(--out) both;animation-delay:calc(.3s + var(--t,0)*.05s)}
+.rv2 .stamp{transition:opacity .25s ease,scale .55s var(--spring)}
+.chip.in-new{animation:pop .45s var(--spring) both}
+}
+@keyframes pop{from{opacity:0;scale:.5}}
+.rv2 .req:has(input:placeholder-shown){background:none;box-shadow:none}
+/* sections and jobs collapse on phones; on wider screens they always show */
+details.rs>summary{list-style:none;cursor:default}
+details.rs>summary::-webkit-details-marker,details.jc>summary::-webkit-details-marker{display:none}
+.rs-h .pv,.rs-h .chev2{display:none}
+.addrow{margin-top:12px}
+.jsum{display:none}
+details.jc{padding:0}
+.jc-b{position:relative;display:flex;flex-direction:column;gap:12px;padding:16px}
+.jc .rm{z-index:2}
+@media (min-width:901px){
+details.rs::details-content,details.jc::details-content{content-visibility:visible;block-size:auto}
+details.rs>summary{pointer-events:none}
+}
+@media (max-width:900px){
+details.rs>summary{cursor:pointer;flex-wrap:wrap;row-gap:4px;margin:0}
+details.rs[open]>summary{margin-bottom:16px}
+details.rs:not([open])>summary .pv{display:block;flex-basis:100%;order:3;font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs-h .chev2{display:block;margin-left:auto;color:var(--muted);transition:rotate .3s var(--out)}
+details.rs[open]>summary .chev2{rotate:180deg}
+.rs{padding:18px 0}
+.jsum{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;padding:14px 16px;cursor:pointer;list-style:none}
+.jsum b{font-size:15.5px}
+.jsum span{flex-basis:100%;order:3;font-size:13.5px;color:var(--muted)}
+.jsum .chev2{display:block;margin-left:auto;color:var(--muted);transition:rotate .3s var(--out)}
+details.jc[open]>.jsum{border-bottom:1px solid var(--line)}
+details.jc[open]>.jsum .chev2{rotate:180deg}
+.jc .g4{padding-right:0}
+.jc-b .rm{top:8px;right:8px}
+}
+@media (prefers-reduced-motion:no-preference){details.rs::details-content,details.jc::details-content{transition:block-size .4s var(--out),content-visibility .4s;transition-behavior:allow-discrete}}
+@media (max-width:900px){details.rs::details-content,details.jc::details-content{interpolate-size:allow-keywords;overflow:clip}details.rs:not([open])::details-content,details.jc:not([open])::details-content{block-size:0}}
+/*audit-polish*/
+.get li i{font-size:11px !important}
+:focus-visible{outline:2px solid #1E1C2B;outline-offset:3px}
+.zz,.zz *{animation-play-state:paused !important}
+.mtop a{text-decoration:none}
+.chip button{position:relative}
+.chip button::after{content:"";position:absolute;inset:-7px}
+.card :is(h2,h3) a{padding:8px 2px;margin:-8px -2px}
+.rm{width:36px !important;height:36px !important;right:-10px !important;top:0 !important}
+.need-tag{font-size:11.5px !important}
+.fp-msg{margin:6px 0 0;font-size:13.5px;line-height:19px;color:#5E5C6E}
+.fp-msg.bad{color:#C2410C;font-weight:600}
+.fp-msg:empty{display:none}
+@media (max-width:900px){
+.mtop{margin-bottom:20px !important}
+.tt-n{font-size:11.5px !important}
+.ditem .di,.ditem .di i{font-size:11px !important}
+.fnav a{display:inline-block;padding:10px 0}
+.lkd,.editl{min-height:32px}
+.lbl a{display:inline-block;padding:6px 0}
+}
+</style>
+</head>
+<body>
+<div role="main" class="page">
+<div class="auth rv2" id="auth">
+  <div class="rbar">
+    <a class="logo" href="index.html"><img src="assets/nabta-mark.svg" alt="" width="40" height="40"><span class="display">JobMatcher</span></a>
+    <ol class="steps" aria-label="Getting started">
+      <li class="st ok"><b>✓</b>Account</li><li class="bar ok" aria-hidden="true"></li><li class="st on" aria-current="step"><b>2</b>Your CV</li><li class="bar" aria-hidden="true"></li><li class="st"><b>3</b>Matches</li>
+    </ol>
+    <i class="tk tk-phone"></i><i class="tk tk-lvl"></i><i class="tk tk-end"></i><button class="cnt nextcheck" type="button"><span class="todo-n" aria-hidden="true"></span><span class="sw"><span class="sa">to check</span><span class="sb">All set</span></span></button>
+    <button class="go save-go" type="button" data-state="idle"><span class="s-go">Save and find my jobs<svg class="arr" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span><span class="s-wait"><i class="spin"></i>Saving…</span><span class="s-ok"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Saved</span></button>
+  </div>
+  <div class="rmain">
+    <section class="src" aria-label="Your file">
+      <div class="aura a1" aria-hidden="true"></div><div class="aura a2" aria-hidden="true"></div>
+      <div class="src-h"><span><b>Your file</b><small>CV_Salma_El_Idrissi.pdf · page 1 of 1</small></span><a href="upload.html">Replace file</a></div>
+      <div class="doc-wrap">
+        <div class="doc" aria-hidden="true">
+          <div class="db d-name">SALMA EL IDRISSI</div>
+          <div class="db d-role">Data Analyst</div>
+          <div class="db d-contact">salma@example.com · Casablanca, Morocco · linkedin.com/in/salma-elidrissi</div>
+          <div class="db d-rule"></div>
+          <div class="db d-sum"><div class="d-h">Profile</div><div class="d-p">Data analyst with two internships, in banking and in industry. I build Power BI dashboards and data pipelines in Python and SQL.</div></div>
+          <div class="db d-exp"><div class="d-h">Experience</div>
+            <div class="d-job">Data Analyst Intern, Attijariwafa bank<span>Feb 2025 to Jul 2025</span></div>
+            <div class="d-li">Built Power BI dashboards for the retail credit team</div><div class="d-li">Automated the weekly SQL reports</div><div class="d-gap"></div>
+            <div class="d-job">BI Assistant, OCP Group<span>Jul 2024 to</span></div>
+            <div class="d-li">Cleaned and modelled production data in Python</div></div>
+          <div class="db d-edu"><div class="d-h">Education</div><div class="d-p"><b>Master, Big Data and IoT</b>, ENSAM Casablanca<br><b>Licence, Mathematics and Computer Science</b>, FST Mohammedia</div></div>
+          <div class="db d-skl"><div class="d-h">Skills</div><div class="d-p">Python, SQL, Power BI, Excel, Tableau, Spark, Pandas, Git</div></div>
+          <div class="db d-lng"><div class="d-h">Languages</div><div class="d-p">Arabic (native), French (fluent), English (professional)</div></div>
+          <div class="db d-crt"><div class="d-h">Certifications</div><div class="d-p">Microsoft Certified: Power BI Data Analyst Associate</div></div>
+          <div class="hl"></div>
+        </div>
+      </div>
+    </section>
+    <section class="data" aria-label="What JobMatcher read">
+      <nav class="rail" aria-label="Sections"><p class="rl">Sections</p><a class="rl-profile need" href="#s-profile" style="--t: 0;"><span class="st"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Profile<span class="c"></span></a><a class="rl-contact need" href="#s-contact" style="--t: 1;"><span class="st"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Contact and links<span class="c"></span></a><a class="rl-exp need" href="#s-exp" style="--t: 2;"><span class="st"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Experience<span class="c">2</span></a><a class="rl-edu" href="#s-edu" style="--t: 3;"><span class="st"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Education<span class="c">2</span></a><a class="rl-skills" href="#s-skills" style="--t: 4;"><span class="st"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Skills<span class="c">8</span></a><a class="rl-lang" href="#s-lang" style="--t: 5;"><span class="st"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Languages<span class="c">3</span></a><a class="rl-cert" href="#s-cert" style="--t: 6;"><span class="st"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Certifications<span class="c">1</span></a><p class="tip"><b>Point at a section</b> to see where it came from in your file.</p></nav>
+      <div class="scroll" id="scroll">
+        <div class="stamp" aria-hidden="true">Ready<br>for<br>matches</div>
+        <div class="dhead">
+          <h1 class="display"><span class="wd" style="--w: 0;">Check</span> <span class="wd" style="--w: 1;">your</span> <span class="wd" style="--w: 2;">details.</span></h1>
+          <p>This is everything JobMatcher read from your CV. Compare it with your file, fix anything that is off, then save. Your matches are built from this.</p>
+        </div>
+        <details class="mfile"><summary><svg class="" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v4h4"></path></svg><span>Compare with your file<small>CV_Salma_El_Idrissi.pdf</small></span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></summary><div class="mdoc"><div class="doc" aria-hidden="true">
+          <div class="db d-name">SALMA EL IDRISSI</div>
+          <div class="db d-role">Data Analyst</div>
+          <div class="db d-contact">salma@example.com · Casablanca, Morocco · linkedin.com/in/salma-elidrissi</div>
+          <div class="db d-rule"></div>
+          <div class="db d-sum"><div class="d-h">Profile</div><div class="d-p">Data analyst with two internships, in banking and in industry. I build Power BI dashboards and data pipelines in Python and SQL.</div></div>
+          <div class="db d-exp"><div class="d-h">Experience</div>
+            <div class="d-job">Data Analyst Intern, Attijariwafa bank<span>Feb 2025 to Jul 2025</span></div>
+            <div class="d-li">Built Power BI dashboards for the retail credit team</div><div class="d-li">Automated the weekly SQL reports</div><div class="d-gap"></div>
+            <div class="d-job">BI Assistant, OCP Group<span>Jul 2024 to</span></div>
+            <div class="d-li">Cleaned and modelled production data in Python</div></div>
+          <div class="db d-edu"><div class="d-h">Education</div><div class="d-p"><b>Master, Big Data and IoT</b>, ENSAM Casablanca<br><b>Licence, Mathematics and Computer Science</b>, FST Mohammedia</div></div>
+          <div class="db d-skl"><div class="d-h">Skills</div><div class="d-p">Python, SQL, Power BI, Excel, Tableau, Spark, Pandas, Git</div></div>
+          <div class="db d-lng"><div class="d-h">Languages</div><div class="d-p">Arabic (native), French (fluent), English (professional)</div></div>
+          <div class="db d-crt"><div class="d-h">Certifications</div><div class="d-p">Microsoft Certified: Power BI Data Analyst Associate</div></div>
+          <div class="hl"></div>
+        </div></div></details>
+        <nav class="jump" aria-label="Sections"><a class="j-profile need" href="#s-profile">Profile</a><a class="j-contact need" href="#s-contact">Contact and links</a><a class="j-exp need" href="#s-exp">Experience</a><a class="j-edu" href="#s-edu">Education</a><a class="j-skills" href="#s-skills">Skills</a><a class="j-lang" href="#s-lang">Languages</a><a class="j-cert" href="#s-cert">Certifications</a></nav>
+        <details class="rs" id="s-profile" style="--t: 1;" open><summary class="rs-h"><h2>Profile</h2><span class="pv"></span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="rs-b">
+          <div class="g2">
+            <div class="fl full"><label for="fn">Full name</label><input class="in big" id="fn" value="Salma El Idrissi"></div>
+            <div class="fl"><label for="loc">Location</label><input class="in" id="loc" value="Casablanca, Morocco"></div>
+            <div class="fl"><span class="lb">Years of experience</span><div class="stepper"><button type="button" data-step="-1" aria-label="One year less">−</button><output id="yrs" aria-live="polite">1 year</output><button type="button" data-step="1" aria-label="One year more">+</button></div></div>
+            <div class="fl full lv" id="lvl"><span class="lb"><span>Level</span><span class="need-tag">Check</span></span>
+              <div class="seg4" role="radiogroup" aria-label="Level"><label class="sug"><input type="radio" name="lvl" value="junior">Junior</label><label><input type="radio" name="lvl" value="mid">Mid-level</label><label><input type="radio" name="lvl" value="senior">Senior</label><label><input type="radio" name="lvl" value="lead">Lead</label></div>
+              <p class="help">JobMatcher suggests Junior from your CV. Pick the level you want to be matched at.</p></div>
+            <div class="fl full"><label for="sum">Summary</label><textarea class="in" id="sum" rows="3">Data analyst with two internships, in banking and in industry. I build Power BI dashboards and data pipelines in Python and SQL.</textarea></div>
+          </div>
+        </div></details>
+        <details class="rs" id="s-contact" style="--t: 2;" open><summary class="rs-h"><h2>Contact and links</h2><span class="pv"></span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="rs-b">
+          <div class="g2">
+            <div class="fl"><label for="em">Email</label><input class="in" id="em" type="email" value="salma@example.com"></div>
+            <div class="fl req" id="f-phone"><label for="phone"><span>Phone</span><span class="need-tag">Check</span></label><input class="in" id="phone" type="tel" placeholder="+212 6 00 00 00 00"><p class="help">Not found in your CV. Recruiters use it to reach you.</p></div>
+            <div class="fl"><label for="li">LinkedIn</label><div class="pre"><span>linkedin.com/in/</span><input class="in" id="li" value="salma-elidrissi"></div></div>
+            <div class="fl"><label for="gh">GitHub <span class="opt">optional</span></label><div class="pre"><span>github.com/</span><input class="in" id="gh" placeholder="username"></div></div>
+            <div class="fl full"><label for="pf">Portfolio or website <span class="opt">optional</span></label><input class="in" id="pf" type="url" placeholder="https://"></div>
+          </div>
+        </div></details>
+        <details class="rs" id="s-exp" style="--t: 3;" open><summary class="rs-h"><h2>Experience</h2><span class="c">2 jobs</span><span class="pv"></span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="rs-b">
+              <details class="jc"><summary class="jsum"><b>Data Analyst Intern</b><span>Attijariwafa bank · Feb 2025 to Jul 2025</span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="jc-b">
+                <button class="rm" type="button" aria-label="Remove this job">×</button>
+                <div class="g4">
+                  <div class="fl"><label for="jt1">Job title</label><input class="in" id="jt1" value="Data Analyst Intern"></div>
+                  <div class="fl"><label for="jco1">Company</label><input class="in" id="jco1" value="Attijariwafa bank"></div>
+                  <div class="dd">
+                    <div class="fl"><label for="js1">Start</label><input class="in" id="js1" value="Feb 2025"></div>
+                    <div class="fl" id="f-end1"><label for="end1"><span>End</span></label><input class="in" id="end1" aria-label="End date" placeholder="Month year" value="Jul 2025"></div>
+                  </div>
+                </div>
+                
+                <label class="now"><input type="checkbox" class="nowbox">I still work here</label>
+                <div class="fl"><span class="lb">What you did</span><ul class="duties"><li><textarea class="in" rows="1" aria-label="Duty">Built Power BI dashboards for the retail credit team</textarea></li><li><textarea class="in" rows="1" aria-label="Duty">Automated the weekly SQL reports</textarea></li></ul><button class="lnk addduty" type="button">Add a line</button></div>
+              </div></details>
+              <details class="jc" open><summary class="jsum"><b>BI Assistant</b><span>OCP Group · Jul 2024 to …</span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="jc-b">
+                <button class="rm" type="button" aria-label="Remove this job">×</button>
+                <div class="g4">
+                  <div class="fl"><label for="jt2">Job title</label><input class="in" id="jt2" value="BI Assistant"></div>
+                  <div class="fl"><label for="jco2">Company</label><input class="in" id="jco2" value="OCP Group"></div>
+                  <div class="dd">
+                    <div class="fl"><label for="js2">Start</label><input class="in" id="js2" value="Jul 2024"></div>
+                    <div class="fl req" id="f-end2"><label for="end2"><span>End</span><span class="need-tag">Check</span></label><input class="in" id="end2" aria-label="End date" placeholder="Month year"></div>
+                  </div>
+                </div>
+                <p class="help" style="margin-top:-6px;">The end date is missing from your CV.</p>
+                <label class="now"><input type="checkbox" class="nowbox">I still work here</label>
+                <div class="fl"><span class="lb">What you did</span><ul class="duties"><li><textarea class="in" rows="1" aria-label="Duty">Cleaned and modelled production data in Python</textarea></li></ul><button class="lnk addduty" type="button">Add a line</button></div>
+              </div></details>
+        <div class="addrow"><button class="add" type="button" id="addjob"><svg class="" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add a job</button></div></div></details>
+        <details class="rs" id="s-edu" style="--t: 4;"><summary class="rs-h"><h2>Education</h2><span class="c">2</span><span class="pv">Master, Big Data and IoT · Licence, Mathematics and Computer Science</span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="rs-b">
+          <div class="edu2"><div class="fl"><label for="dg1">Degree</label><input class="in" id="dg1" value="Master, Big Data and IoT"></div><div class="fl"><label for="sc1">School</label><input class="in" id="sc1" value="ENSAM Casablanca"></div><button class="rm" type="button" aria-label="Remove this degree">×</button></div>
+          <div class="edu2"><div class="fl"><label for="dg2">Degree</label><input class="in" id="dg2" value="Licence, Mathematics and Computer Science"></div><div class="fl"><label for="sc2">School</label><input class="in" id="sc2" value="FST Mohammedia"></div><button class="rm" type="button" aria-label="Remove this degree">×</button></div>
+        <div class="addrow"><button class="add" type="button" id="addedu"><svg class="" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add</button></div></div></details>
+        <details class="rs" id="s-skills" style="--t: 5;"><summary class="rs-h"><h2>Skills</h2><span class="c">8</span><span class="pv">Python, SQL, Power BI +5</span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="rs-b">
+          <div class="chips"><span class="chip">Python<button type="button" aria-label="Remove Python">×</button></span><span class="chip">SQL<button type="button" aria-label="Remove SQL">×</button></span><span class="chip">Power BI<button type="button" aria-label="Remove Power BI">×</button></span><span class="chip">Excel<button type="button" aria-label="Remove Excel">×</button></span><span class="chip">Tableau<button type="button" aria-label="Remove Tableau">×</button></span><span class="chip">Spark<button type="button" aria-label="Remove Spark">×</button></span><span class="chip">Pandas<button type="button" aria-label="Remove Pandas">×</button></span><span class="chip">Git<button type="button" aria-label="Remove Git">×</button></span><span class="addchip"><svg class="" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><input aria-label="Add a skill" placeholder="Add a skill"></span></div>
+        </div></details>
+        <details class="rs" id="s-lang" style="--t: 6;"><summary class="rs-h"><h2>Languages</h2><span class="c">3</span><span class="pv">Arabic, French, English</span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="rs-b">
+          <div class="chips"><span class="chip">Arabic · Native<button type="button" aria-label="Remove Arabic · Native">×</button></span><span class="chip">French · Fluent<button type="button" aria-label="Remove French · Fluent">×</button></span><span class="chip">English · Professional<button type="button" aria-label="Remove English · Professional">×</button></span><span class="addchip"><svg class="" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><input aria-label="Add a language" placeholder="Add a language"></span></div>
+        </div></details>
+        <details class="rs" id="s-cert" style="--t: 7;"><summary class="rs-h"><h2>Certifications</h2><span class="c">1</span><span class="pv">Power BI Data Analyst Associate</span><svg class="chev2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary><div class="rs-b">
+          <div class="chips"><span class="chip">Microsoft Certified: Power BI Data Analyst Associate<button type="button" aria-label="Remove Microsoft Certified: Power BI Data Analyst Associate">×</button></span><span class="addchip"><svg class="" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><input aria-label="Add a certification" placeholder="Add a certification"></span></div>
+        </div></details>
+      </div>
+    </section>
+  </div>
+  <div class="mbar"><button class="mleft nextcheck" type="button"><span class="todo-n" aria-hidden="true"></span><span class="sw"><span class="sa">to check</span><span class="sb">All set</span></span></button><button class="go save-go" type="button" data-state="idle"><span class="s-go">Find my jobs<svg class="arr" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span><span class="s-wait"><i class="spin"></i>Saving…</span><span class="s-ok"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Saved</span></button></div>
+</div>
+</div>
+<script>
+(() => {
+  const yrs = document.getElementById('yrs'); let y = 1;
+  document.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => { y = Math.max(0, Math.min(40, y + +b.dataset.step)); yrs.textContent = y + (y === 1 ? ' year' : ' years'); }));
+  const wire = (c) => { const b = c.querySelector('button'); if (b) b.addEventListener('click', () => { c.classList.add('out'); setTimeout(() => c.remove(), 260); }); };
+  document.querySelectorAll('.chip').forEach(wire);
+  document.querySelectorAll('.addchip input').forEach((i) => i.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || !i.value.trim()) return; e.preventDefault();
+    const c = document.createElement('span'); c.className = 'chip in-new'; c.textContent = i.value.trim();
+    const x = document.createElement('button'); x.type = 'button'; x.textContent = '×'; x.setAttribute('aria-label', 'Remove ' + i.value.trim()); c.append(x);
+    i.parentElement.before(c); wire(c); i.value = '';
+  }));
+  const rmw = (b) => b.addEventListener('click', () => { const r = b.closest('.jc, .edu2'); r.style.transition = 'opacity .25s'; r.style.opacity = '0'; setTimeout(() => r.remove(), 260); });
+  document.querySelectorAll('.rm').forEach(rmw);
+  const dutyw = (b) => b.addEventListener('click', () => { const ul = b.previousElementSibling; const li = document.createElement('li'); li.innerHTML = '<textarea class="in" rows="1" aria-label="Duty" placeholder="What you did"></textarea>'; ul.append(li); li.firstChild.focus(); });
+  document.querySelectorAll('.addduty').forEach(dutyw);
+  const noww = (c) => c.addEventListener('change', () => { const e = c.closest('.jc').querySelector('[aria-label="End date"]'); if (c.checked) { e.dataset.prev = e.value; e.value = 'Present'; e.disabled = true; } else { e.disabled = false; e.value = e.dataset.prev || ''; } e.dispatchEvent(new Event('input')); });
+  document.querySelectorAll('.nowbox').forEach(noww);
+  let n = 10;
+  document.getElementById('addjob').addEventListener('click', () => {
+    const j = document.querySelector('.jc').cloneNode(true); n++;
+    j.querySelectorAll('input:not([type=checkbox]), textarea').forEach((i) => { i.value = ''; if (i.id) i.id = i.id.replace(/\d+$/, n); });
+    j.querySelectorAll('label[for]').forEach((l) => { l.htmlFor = l.htmlFor.replace(/\d+$/, n); });
+    j.querySelectorAll('.duties li:not(:first-child)').forEach((l) => l.remove()); j.querySelector('.nowbox').checked = false;
+    document.querySelector('#s-exp .addrow').before(j); j.open = true; rmw(j.querySelector('.rm')); dutyw(j.querySelector('.addduty')); noww(j.querySelector('.nowbox')); j.querySelector('input').focus();
+  });
+  document.getElementById('addedu').addEventListener('click', () => {
+    const r = document.querySelector('.edu2').cloneNode(true); n++;
+    r.querySelectorAll('input').forEach((i) => { i.value = ''; i.id = i.id.replace(/\d+$/, n); }); r.querySelectorAll('label[for]').forEach((l) => { l.htmlFor = l.htmlFor.replace(/\d+$/, n); });
+    document.querySelector('#s-edu .addrow').before(r); rmw(r.querySelector('.rm')); r.querySelector('input').focus();
+  });
+  const sc = document.getElementById('scroll');
+  if (matchMedia('(min-width: 901px)').matches) document.querySelectorAll('details.rs, details.jc').forEach((d) => { d.open = true; });
+  document.querySelectorAll('.rail a, .jump a').forEach((a) => a.addEventListener('click', (e) => {
+    const t = document.querySelector(a.getAttribute('href')); if (!t) return; e.preventDefault(); if (t.tagName === 'DETAILS') t.open = true;
+    t.scrollIntoView({ behavior: 'smooth', block: 'start' }); const f = t.querySelector('input, textarea'); setTimeout(() => f && f.focus({ preventScroll: true }), 450);
+  }));
+  document.querySelectorAll('.nextcheck').forEach((b) => b.addEventListener('click', () => {
+    const f = [...document.querySelectorAll('.fl.req, .fl.lv')].find((x) => x.matches('.req:has(.in:placeholder-shown), .lv:not(:has(input:checked))'));
+    if (f) { f.closest('details.rs') && (f.closest('details.rs').open = true); f.closest('details.jc') && (f.closest('details.jc').open = true); f.scrollIntoView({ behavior: 'smooth', block: 'center' }); const i = f.querySelector('.in, input'); setTimeout(() => i && i.focus({ preventScroll: true }), 450); }
+  }));
+  document.querySelectorAll('.save-go').forEach((g) => g.addEventListener('click', () => {
+    if (g.dataset.state !== 'idle') return; document.querySelectorAll('.save-go').forEach((x) => { x.dataset.state = 'wait'; });
+    setTimeout(() => { document.querySelectorAll('.save-go').forEach((x) => { x.dataset.state = 'ok'; }); if (location.pathname.endsWith('review.html')) setTimeout(() => { location.href = 'dashboard.html'; }, 1100); }, 1300);
+  }));
+})();
+</script>
+</body>
+</html>
