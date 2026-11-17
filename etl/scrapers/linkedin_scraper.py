@@ -20,6 +20,8 @@ class LinkedInScraper:
             "location": location,
             "geoId": geoId,
             'trk': 'public_jobs_jobs-search-bar_search-submit',
+            "sortBy": "DD",          # newest first
+            "f_TPR": "r604800",      # posted in the past 7 days (the DAG runs daily)
             "start": str(start)
         }
         print(f"Scraping with params: {params}")

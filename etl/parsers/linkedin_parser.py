@@ -56,22 +56,25 @@ class LinkedInJobParser:
         return None
     
     def _get_posted_date(self) -> Optional[str]:
+        """Turn LinkedIn's "posted ... ago" text (French or English) into a dd-mm-YYYY date."""
         date = self.tree.css_first('span.posted-time-ago__text')
-        if date:
-            ago = date.text(strip=True)
-            if 'day' in ago or 'days' in ago:
-                days = int(ago.split()[0])
-                return (datetime.now() - timedelta(days=days)).strftime('%d-%m-%Y')
-            elif 'week' in ago or 'weeks' in ago:
-                weeks = int(ago.split()[0])
-                return (datetime.now() - timedelta(weeks=weeks)).strftime('%d-%m-%Y')
-            elif 'month' in ago or 'months' in ago:
-                months = int(ago.split()[0])
-                return (datetime.now() - timedelta(days=months*30)).strftime('%d-%m-%Y')
-            else:
-                return datetime.now().strftime('%d-%m-%Y')
-        return None
-    
+        if not date:
+            return None
+        ago = date.text(strip=True).lower()
+        number = re.search(r'(\d+)', ago)
+        n = int(number.group(1)) if number else 1
+        units = [  # (words, days per unit); checked in this order
+            (('minute', 'heure', 'hour'), 0),
+            (('jour', 'day'), 1),
+            (('semaine', 'week'), 7),
+            (('mois', 'month'), 30),
+            (('an', 'year'), 365),
+        ]
+        for words, days in units:
+            if any(re.search(rf'\b{w}s?\b', ago) for w in words):
+                return (datetime.now() - timedelta(days=n * days)).strftime('%d-%m-%Y')
+        return datetime.now().strftime('%d-%m-%Y')
+
     def _get_num_applicants(self) -> Optional[str]:
         applicants = self.tree.css_first('span.num-applicants__caption')
         if applicants:
