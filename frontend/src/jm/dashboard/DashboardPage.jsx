@@ -40,7 +40,7 @@ function Row({ job, saved, onOpen, onSave, k, savedRow }) {
       {!savedRow && <span className="r-sk"><span className={`k${n >= 3 ? ' full' : ''}`}>{n}</span><span className="names">{n ? job.hits.slice(0, 3).join(', ') : 'No skill named'}</span></span>}
       <span className={`r-d${!savedRow && /Today|1 day/.test(ago(job.posted)) ? ' new' : ''}`}>{savedRow ? `Saved ${ago(job.savedAt).toLowerCase()}` : ago(job.posted)}</span>
       <span className="r-sc">{job.score != null ? <><Cup p={job.score} /><b>{job.score}<small>%</small></b></> : null}</span>
-      {savedRow && <Link className="mini-go" to={`/apply/${job.id}`}>Prepare</Link>}
+      {savedRow && <Link className="mini-go" to={`/apply/${job.id}`} state={{ score: job.score }}>Prepare</Link>}
       <button className="save" type="button" aria-pressed={saved} aria-label={`${saved ? 'Remove' : 'Save'} ${job.title}${savedRow ? ' from saved' : ` at ${job.company}`}`} onClick={() => onSave(job)}><IcBook /></button>
     </article>
   );
@@ -72,7 +72,7 @@ function Drawer({ job, list, saved, onClose, onSave, onNav, dref }) {
           </section>
         </div>
         <footer className="dw-foot">
-          <Link className="go" to={`/apply/${job.id}`}><span className="s-go">Prepare application<IcArrow /></span></Link>
+          <Link className="go" to={`/apply/${job.id}`} state={{ score: job.score }}><span className="s-go">Prepare application<IcArrow /></span></Link>
           <button className="dw-save" type="button" aria-pressed={saved} aria-label={saved ? 'Remove from saved' : 'Save this offer'} onClick={() => onSave(job)}><IcBook /></button>
           {job.url && <a className="dw-ext" href={job.url} target="_blank" rel="noopener noreferrer"><IcExtLg /><span>Original post</span></a>}
         </footer>
@@ -190,7 +190,7 @@ export default function DashboardPage({ view = 'matches' }) {
                   <span className="co" style={{ '--d': '2' }}>{[best.company, best.city].filter(Boolean).join(' · ')}</span>
                   <div className="facts" style={{ '--d': '3' }}>{best.hits.length > 0 && <span className="fact"><i className="ok"><IcTick /></i>{best.hits.length} of your skills</span>}{best.level && <span className="fact"><i className="ok"><IcTick /></i>{best.level}</span>}{best.city && <span className="fact"><i className="ok"><IcTick /></i>{best.city}</span>}</div>
                 </div>
-                <div className="b-r" style={{ '--d': '4' }}><Link className="go" to={`/apply/${best.id}`}><span className="s-go">Prepare application<IcArrow /></span></Link>
+                <div className="b-r" style={{ '--d': '4' }}><Link className="go" to={`/apply/${best.id}`} state={{ score: best.score }}><span className="s-go">Prepare application<IcArrow /></span></Link>
                   <div className="sub"><button className="ghost2 bsave" type="button" aria-pressed={savedIds.has(best.id)} aria-label={`Save ${best.title} at ${best.company}`} onClick={() => toggleSave(best)}><IcBook />{savedIds.has(best.id) ? 'Saved' : 'Save'}</button><a className="ghost2" href={`#job-${best.id}`} onClick={(e) => { e.preventDefault(); openJob(best); }}>View offer</a></div></div>
               </article>}
               {rest.length > 0 && <div className="lh"><h3>Next best matches</h3><span>Sorted by match</span></div>}

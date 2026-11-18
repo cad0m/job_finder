@@ -11,7 +11,7 @@ import ProfileReview from './jm/review/ReviewPage';
 import DashboardPage from './jm/dashboard/DashboardPage';
 import JobDetails from './pages/JobDetails';
 import ApplicationPack from './pages/ApplicationPack';
-import Apply from './pages/Apply';
+import Apply from './jm/apply/ApplyPage';
 import Profile from './pages/Profile';
 
 import Search from './pages/Search';
