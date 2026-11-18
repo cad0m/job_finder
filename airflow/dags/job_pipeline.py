@@ -24,6 +24,7 @@ from etl.parsers.linkedin_parser_main import parse_all_jobs as parse_linkedin_jo
 
 from etl.normalizer import Transformer
 from etl.load import LoadingPipeline
+from etl.embed import embed_pending_jobs, embed_pending_candidates
 
 
 default_args = {
@@ -90,6 +91,16 @@ def load_to_database_task():
     
     pipeline = LoadingPipeline()
     pipeline.run(clean_data)
+
+
+def embed_jobs_task():
+    """Embed jobs that have no vector yet (Voyage AI). Safe to re-run."""
+    embed_pending_jobs()
+
+
+def embed_candidates_task():
+    """Embed CVs that have no vector yet (Voyage AI). Safe to re-run."""
+    embed_pending_candidates()
 
 
 # ============================================================================
@@ -160,6 +171,20 @@ load_to_database = PythonOperator(
 )
 
 
+embed_jobs = PythonOperator(
+    task_id='embed_jobs',
+    python_callable=embed_jobs_task,
+    execution_timeout=timedelta(hours=2),
+    dag=dag,
+)
+
+embed_candidates = PythonOperator(
+    task_id='embed_candidates',
+    python_callable=embed_candidates_task,
+    dag=dag,
+)
+
+
 # ============================================================================
 # PIPELINE FLOW
 # ============================================================================
@@ -175,3 +200,6 @@ scrape_linkedin >> [parse_anapec, parse_jobzyn, parse_linkedin]
 
 # Load to database
 normalize_data >> load_to_database
+
+# Embed what has no vector yet (new jobs, and CVs after a model switch)
+load_to_database >> embed_jobs >> embed_candidates
