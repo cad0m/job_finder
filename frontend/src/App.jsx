@@ -5,7 +5,7 @@ import SignIn from './jm/signin/SignInPage';
 import SignUp from './jm/signup/SignUpPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import UploadResume from './pages/UploadResume';
+import UploadResume from './jm/upload/UploadPage';
 
 import ProfileReview from './pages/ProfileReview';
 import Dashboard from './pages/Dashboard';

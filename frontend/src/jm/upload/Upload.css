@@ -1,0 +1,425 @@
+.jm-upload{--ink:#1E1C2B;--muted:#5E5C6E;--line:#DAD6EA;--field:#CFCADF;--page:#F6F5FB;--tint:#E9E5FF;--lav:#CDBFFF;--accent:#FF7F45;--peach:#FFE3D3;--white:#FFFFFF;--out:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.45,.64,1);--L:8s}
+.jm-upload{margin:0;background:var(--page);color:var(--ink);font-family:Outfit,"Noto Sans Arabic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.jm-upload a{color:var(--ink)}
+.jm-upload a:focus-visible,.jm-upload button:focus-visible,.jm-upload input:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.jm-upload .display{margin:0;font-family:Anton,"Arial Narrow",Impact,sans-serif;font-weight:400;letter-spacing:0;text-wrap:balance}
+.jm-upload p{text-wrap:pretty}
+.jm-upload .page{position:relative;isolation:isolate;min-height:100vh;background:var(--page);overflow-x:clip}
+.jm-upload .page::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse 60% 70% at 0% 0%,rgba(184,166,255,.38),transparent 70%),radial-gradient(ellipse 50% 60% at 10% 100%,rgba(255,170,128,.22),transparent 70%)}
+.jm-upload .page::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .12 0 0 0 0 .11 0 0 0 0 .17 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.jm-upload .auth{max-width:1680px;margin:0 auto;display:grid;min-height:100vh;grid-template-rows:auto 1fr auto}
+.jm-upload .signin{grid-template-columns:minmax(420px,.7fr) minmax(0,1.3fr);grid-template-areas:"hdr stage" "form stage" "foot stage"}
+.jm-upload .ahdr{grid-area:hdr;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 40px 0}
+.jm-upload .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.jm-upload .logo img{width:40px;height:40px}
+.jm-upload .logo span{font-size:30px;line-height:1}
+.jm-upload .lang{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border:0;border-radius:999px;background:var(--white);color:var(--ink);font:500 15px/1 Outfit,system-ui,sans-serif;cursor:pointer}
+.jm-upload .lang:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.jm-upload .afoot{grid-area:foot;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;padding:0 40px 24px;font-size:14px;color:var(--muted)}
+.jm-upload .afoot a{color:var(--muted);text-decoration:none}
+.jm-upload .afoot a:hover{color:var(--ink)}
+.jm-upload .aform{grid-area:form;align-self:center;justify-self:center;width:100%;max-width:440px;box-sizing:border-box;padding:24px;display:flex;flex-direction:column;gap:24px}
+.jm-upload .atitle{font-size:clamp(50px,4.6vw,72px);line-height:.94}
+.jm-upload .asub{margin:0;font-size:18px;line-height:28px;color:var(--muted)}
+.jm-upload .head{display:flex;flex-direction:column;gap:14px}
+.jm-upload form{display:flex;flex-direction:column;gap:16px}
+.jm-upload .fld{display:flex;flex-direction:column;gap:8px}
+.jm-upload .lbl{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px;font-weight:600}
+.jm-upload .lbl a{font-weight:500;font-size:14px;color:var(--muted);text-underline-offset:3px}
+.jm-upload .lbl a:hover{color:var(--ink)}
+.jm-upload .ctl{position:relative;display:block}
+.jm-upload .ctl>.ic{position:absolute;left:16px;top:50%;translate:0 -50%;color:#8B89A0;transition:color .2s ease;pointer-events:none}
+.jm-upload .ctl input{width:100%;height:56px;box-sizing:border-box;padding:0 54px 0 48px;border:1.5px solid var(--field);border-radius:16px;background:var(--white);color:var(--ink);font:400 17px/24px Outfit,system-ui,sans-serif;transition:border-color .2s ease,box-shadow .3s var(--out)}
+.jm-upload .ctl input::placeholder{color:#9A98AA}
+.jm-upload .ctl input:hover{border-color:#B3AECB}
+.jm-upload .ctl input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 5px rgba(141,112,255,.2)}
+.jm-upload .ctl:focus-within>.ic{color:var(--ink)}
+.jm-upload .eye{position:absolute;right:8px;top:50%;translate:0 -50%;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer}
+.jm-upload .eye:hover{background:var(--page);color:var(--ink)}
+.jm-upload .eye svg{grid-area:1/1;transition:opacity .2s ease,scale .3s var(--out)}
+.jm-upload .eye .e-off{opacity:0;scale:.6}
+.jm-upload .eye[aria-pressed="true"] .e-on{opacity:0;scale:.6}
+.jm-upload .eye[aria-pressed="true"] .e-off{opacity:1;scale:1}
+.jm-upload .hint{margin:0;font-size:14px;line-height:20px;color:var(--muted)}
+.jm-upload .meter{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.jm-upload .meter i{height:6px;border-radius:999px;background:var(--line);overflow:clip}
+.jm-upload .meter i::after{content:"";display:block;height:100%;border-radius:inherit;background:var(--accent);scale:0 1;transform-origin:0 50%;transition:scale .45s var(--out),background-color .3s ease}
+.jm-upload .meter[data-s="1"] i:nth-child(-n+1)::after,.jm-upload .meter[data-s="2"] i:nth-child(-n+2)::after,.jm-upload .meter[data-s="3"] i:nth-child(-n+3)::after,.jm-upload .meter[data-s="4"] i::after{scale:1 1}
+.jm-upload .meter[data-s="3"] i::after,.jm-upload .meter[data-s="4"] i::after{background:var(--ink)}
+.jm-upload .chk{position:relative;display:flex;align-items:center;gap:12px;font-size:15px;cursor:pointer;user-select:none}
+.jm-upload .chk input{position:absolute;opacity:0;width:24px;height:24px;margin:0}
+.jm-upload .box{flex:none;display:grid;place-items:center;width:24px;height:24px;box-sizing:border-box;border-radius:8px;border:1.5px solid var(--field);background:var(--white);transition:background-color .2s ease,border-color .2s ease}
+.jm-upload .box path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .4s var(--out)}
+.jm-upload .chk input:checked+.box{background:var(--ink);border-color:var(--ink)}
+.jm-upload .chk input:checked+.box path{stroke-dashoffset:0}
+.jm-upload .chk input:focus-visible+.box{outline:2px solid var(--ink);outline-offset:3px}
+.jm-upload .go{position:relative;display:grid;place-items:center;width:100%;height:58px;margin-top:4px;border:0;border-radius:999px;background:var(--ink);color:var(--white);font:600 17px/1 Outfit,system-ui,sans-serif;cursor:pointer;overflow:clip;transition:background-color .2s ease,box-shadow .45s var(--out),translate .35s var(--out)}
+.jm-upload .go:hover{background:#34314A}
+.jm-upload .go>span{grid-area:1/1;display:inline-flex;align-items:center;gap:10px;transition:opacity .25s ease,translate .45s var(--out)}
+.jm-upload .go .s-wait,.jm-upload .go .s-ok{opacity:0;translate:0 120%}
+.jm-upload .go[data-state="wait"] .s-go,.jm-upload .go[data-state="ok"] .s-go{opacity:0;translate:0 -120%}
+.jm-upload .go[data-state="wait"] .s-wait,.jm-upload .go[data-state="ok"] .s-ok{opacity:1;translate:0 0}
+.jm-upload form:valid .go{box-shadow:0 0 0 6px rgba(141,112,255,.24)}
+.jm-upload .spin{width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:var(--white);animation:spin .8s linear infinite}
+.jm-upload .switch{margin:0;text-align:center;font-size:15px;color:var(--muted)}
+.jm-upload .switch a{font-weight:600;text-underline-offset:3px}
+.jm-upload .note{margin:-8px 0 0;text-align:center;font-size:13px;color:var(--muted)}
+.jm-upload .stage{grid-area:stage;position:sticky;top:16px;align-self:start;height:calc(100vh - 32px);min-height:680px;margin:16px 16px 16px 0;border-radius:40px;background:var(--tint);overflow:clip;isolation:isolate;contain:layout paint}
+.jm-upload .st-in{position:absolute;z-index:4;left:48px;top:44px;right:48px;display:flex;flex-direction:column;align-items:flex-start;gap:16px;pointer-events:none}
+.jm-upload .st-chip{display:inline-flex;align-items:center;gap:10px;height:36px;padding:0 16px 0 14px;border-radius:999px;background:var(--white);font-size:14px;font-weight:500;white-space:nowrap}
+.jm-upload .live{position:relative;flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.jm-upload .live::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);opacity:0}
+.jm-upload .st-title{font-size:clamp(38px,3.2vw,54px);line-height:.98;max-width:520px}
+.jm-upload .aura{position:absolute;z-index:0;width:520px;height:520px;border-radius:50%;pointer-events:none}
+.jm-upload .a1{right:-180px;top:-160px;background:radial-gradient(closest-side,rgba(255,127,69,.38),rgba(255,127,69,0))}
+.jm-upload .a2{left:-200px;bottom:-200px;background:radial-gradient(closest-side,rgba(141,112,255,.34),rgba(141,112,255,0))}
+.jm-upload .host{position:absolute;z-index:5;height:auto;overflow:visible;scale:-1 1;will-change:transform}
+.jm-upload .signin .host{left:-6px;bottom:-2px;width:min(30%,340px)}
+.jm-upload .pk-head{transform-box:fill-box;transform-origin:50% 92%;transition:rotate .6s var(--out)}
+.jm-upload .pk-gaze{transition:translate .5s var(--out)}
+.jm-upload .pk-f{transition:opacity .2s ease}
+.jm-upload .signin:has(#email:focus) .pk-head{rotate:-9deg}
+.jm-upload .signin:has(#email:focus) .pk-gaze{translate:16px -8px}
+.jm-upload .signin:has(#password:focus) .pk-head{rotate:-4deg}
+.jm-upload .signin:has(#password:focus) .pk-gaze{translate:16px -2px}
+.jm-upload .signin:has(.go:focus-visible) .pk-head{rotate:2deg}
+.jm-upload .signup:has(#name:focus) .pk-head{rotate:-13deg}
+.jm-upload .signup:has(#name:focus) .pk-gaze{translate:16px -12px}
+.jm-upload .signup:has(#email:focus) .pk-head{rotate:-8deg}
+.jm-upload .signup:has(#email:focus) .pk-gaze{translate:16px -7px}
+.jm-upload .signup:has(#password:focus) .pk-head{rotate:-3deg}
+.jm-upload .signup:has(#password:focus) .pk-gaze{translate:16px -2px}
+.jm-upload .auth:has(form:valid) .pk-f-open{opacity:0}
+.jm-upload .auth:has(form:valid) .pk-f-happy{opacity:1}
+.jm-upload .auth:has(#password[type="text"]) :is(.pk-f-open,.jm-upload .pk-f-happy){opacity:0}
+.jm-upload .auth:has(#password[type="text"]) .pk-f-closed{opacity:1}
+.jm-upload .auth:has(#password[type="text"]) .pk-head{rotate:-16deg}
+.jm-upload .auth:has(#password[type="text"]) .pk-gaze{translate:0 0}
+.jm-upload .auth.done .pk-f-open,.jm-upload .auth.done .pk-f-closed{opacity:0}
+.jm-upload .auth.done .pk-f-happy{opacity:1}
+.jm-upload .scan{position:absolute;z-index:2;left:56%;top:59%;width:620px;height:520px;translate:-36% -50%;scale:var(--sc,1);transform-origin:50% 50%}
+.jm-upload .cv{position:absolute;left:0;top:0;width:340px;height:500px;box-sizing:border-box;padding:28px 28px 24px;border-radius:12px;background:var(--white);box-shadow:0 40px 80px -42px rgba(30,28,43,.5),0 0 0 1px rgba(218,214,234,.9);rotate:-2.5deg;display:flex;flex-direction:column;gap:10px}
+.jm-upload .cv::before{content:"";position:absolute;inset:12px -12px -12px 12px;z-index:-1;border-radius:12px;background:#F1EEFC;box-shadow:0 0 0 1px var(--line);rotate:4deg}
+.jm-upload .cv-top{display:flex;align-items:center;gap:14px;padding-bottom:16px;border-bottom:1.5px solid var(--line)}
+.jm-upload .cv-av{flex:none;width:58px;height:58px;border-radius:50%;background:var(--tint);overflow:clip}
+.jm-upload .cv-av img{width:100%;height:100%;object-fit:cover;object-position:50% 6%}
+.jm-upload .cv-name{display:block;font:400 24px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.jm-upload .cv-role{display:block;margin-top:4px;font-size:13px;color:var(--muted)}
+.jm-upload .cv-sec{margin-top:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.jm-upload .ln{display:block;height:8px;width:var(--w);border-radius:999px;background:#E4E1F0}
+.jm-upload .gpill{display:inline-block;height:24px;border-radius:999px;background:#E4E1F0}
+.jm-upload .cv-skills{display:flex;flex-wrap:wrap;gap:6px}
+.jm-upload .sk{position:relative;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:999px;background:var(--page);font-size:13px;font-weight:600;isolation:isolate}
+.jm-upload .sk::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--peach);box-shadow:inset 0 0 0 1.5px var(--accent);opacity:0}
+.jm-upload .sk::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);order:-1;scale:0}
+.jm-upload .loupe{position:absolute;z-index:3;left:0;top:0;width:112px;height:112px;margin:-56px 0 0 -56px;pointer-events:none;translate:var(--x0) var(--y0);will-change:transform}
+.jm-upload .lens{position:absolute;inset:0;box-sizing:border-box;border-radius:50%;border:7px solid var(--ink);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.75),rgba(255,255,255,.18) 55%,rgba(205,191,255,.25));box-shadow:0 18px 30px -16px rgba(30,28,43,.45)}
+.jm-upload .lens::after{content:"";position:absolute;left:18px;top:14px;width:22px;height:10px;border-radius:50%;background:rgba(255,255,255,.9);rotate:-35deg}
+.jm-upload .handle{position:absolute;left:90px;top:88px;width:18px;height:62px;border-radius:9px;background:var(--ink);rotate:-45deg;transform-origin:50% 0}
+.jm-upload .finds{position:absolute;left:300px;top:150px;display:flex;flex-direction:column;gap:12px;width:300px}
+.jm-upload .find{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;background:var(--white);box-shadow:0 26px 54px -30px rgba(30,28,43,.45),0 0 0 1px rgba(218,214,234,.9)}
+.jm-upload .find .pct{flex:none;display:flex;align-items:baseline;justify-content:center;padding-top:14px;box-sizing:border-box;width:56px;height:52px;border-radius:16px;background:var(--tint);font:400 22px/1 Anton,"Arial Narrow",Impact,sans-serif}
+.jm-upload .find .pct small{font:600 11px/1 Outfit,sans-serif}
+.jm-upload .find.top .pct{background:var(--accent);color:var(--ink)}
+.jm-upload .t1{display:block;font-size:16px;line-height:21px;font-weight:600}
+.jm-upload .t2{display:block;font-size:13px;line-height:18px;color:var(--muted)}
+.jm-upload .mp{display:none}
+.jm-upload .signup{grid-template-columns:minmax(320px,.72fr) minmax(0,1.28fr);grid-template-areas:"hdr stage" "intro stage" "foot stage"}
+.jm-upload .intro{grid-area:intro;align-self:center;padding:24px 40px;display:flex;flex-direction:column;gap:24px;max-width:460px}
+.jm-upload .steps{display:flex;align-items:center;gap:8px;margin:0;padding:0;list-style:none;font-size:14px;font-weight:600;color:var(--muted)}
+.jm-upload .steps .st{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px 0 6px;border-radius:999px;background:var(--white);white-space:nowrap}
+.jm-upload .steps .st b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--page);font-size:13px}
+.jm-upload .steps .st.on{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.jm-upload .steps .st.on b{background:var(--ink);color:var(--white)}
+.jm-upload .steps .bar{flex:1;min-width:10px;max-width:40px;height:2px;border-radius:2px;background:var(--line)}
+.jm-upload .next{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}
+.jm-upload .next li{display:flex;align-items:center;gap:12px;font-size:16px;line-height:22px}
+.jm-upload .next .ni{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:var(--white);box-shadow:0 0 0 1px var(--line)}
+.jm-upload .desk{grid-area:stage;position:sticky;top:16px;align-self:start;height:calc(100vh - 32px);display:flex;align-items:center;justify-content:center;margin:16px 16px 16px 0;padding:24px 0 0 24px;border-radius:40px;background:var(--tint);overflow:clip;isolation:isolate;min-height:calc(100vh - 32px);box-sizing:border-box}
+.jm-upload .sheet{position:relative;z-index:2;flex:0 1 560px;min-width:0;width:min(560px,100%);box-sizing:border-box;padding:26px 36px 24px;border-radius:12px;background:var(--white);box-shadow:0 50px 90px -50px rgba(30,28,43,.55),0 0 0 1px rgba(218,214,234,.9)}
+.jm-upload .sheet::before{content:"";position:absolute;inset:14px -14px -14px 14px;z-index:-1;border-radius:12px;background:#F1EEFC;box-shadow:0 0 0 1px var(--line);rotate:2.4deg}
+.jm-upload .sheet .kicker{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.jm-upload .s-head{display:flex;align-items:center;gap:16px;padding-right:96px;padding-bottom:14px;border-bottom:1.5px solid var(--line)}
+.jm-upload .s-av{flex:none;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:var(--tint);color:var(--ink);font:400 26px/1 Anton,"Arial Narrow",Impact,sans-serif;transition:background-color .3s ease}
+.jm-upload .s-av svg{color:#8B89A0}
+.jm-upload .s-av.has{background:var(--accent)}
+.jm-upload .s-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.jm-upload .s-name label{font-size:12px;font-weight:600;color:var(--muted)}
+.jm-upload .s-name input{width:100%;box-sizing:border-box;padding:2px 0 6px;border:0;border-bottom:2px dashed var(--field);border-radius:0;background:transparent;color:var(--ink);font:400 36px/1.1 Anton,"Arial Narrow",Impact,sans-serif;transition:border-color .2s ease}
+.jm-upload .s-name input::placeholder{color:#C5C1D6}
+.jm-upload .s-name input:focus{outline:none;border-bottom-style:solid;border-bottom-color:var(--ink)}
+.jm-upload .s-sec{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 20px;padding:13px 0;border-bottom:1.5px solid var(--line)}
+.jm-upload .s-sec>.sl{padding-top:6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.jm-upload .ghost{opacity:.9}
+.jm-upload .ghost .ln{height:8px}
+.jm-upload .ghost .gnote{margin-top:4px;font-size:13px;color:var(--muted)}
+.jm-upload .s-foot{display:flex;flex-direction:column;gap:12px;padding-top:16px}
+.jm-upload .stamp{position:absolute;z-index:3;right:24px;top:40px;display:grid;place-items:center;width:96px;height:96px;border-radius:50%;border:3px solid var(--accent);color:var(--accent);font:600 11px/1.25 Outfit,sans-serif;letter-spacing:.14em;text-transform:uppercase;text-align:center;rotate:-14deg;opacity:0;scale:1.6;pointer-events:none;transition:opacity .25s ease,scale .5s var(--spring)}
+.jm-upload .stamp::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.5px dashed var(--accent)}
+.jm-upload form:valid .stamp,.jm-upload .auth.done .stamp{opacity:1;scale:1}
+.jm-upload .signup .host{position:relative;flex:none;align-self:flex-end;width:auto;height:min(62vh,calc((64vw - 600px)*1.2));margin:0 0 -2px -28px}
+.jm-upload .host-m,.jm-upload .mchip,.jm-upload .next-m{display:none}
+.jm-upload .signup .fwrap{position:relative;z-index:2;flex:0 1 560px;min-width:0}
+.jm-upload .signup .fwrap .sheet{width:100%}
+@media (max-width:1100px){.jm-upload .signup .host:not(.host-m){display:none}}
+@media (min-width:1500px) and (min-height:820px){.jm-upload .scan{--sc:1.12}}
+@media (min-width:1700px) and (min-height:860px){.jm-upload .scan{--sc:1.2}}
+@media (max-height:760px) and (min-width:901px){.jm-upload .scan{--sc:.86}}
+@media (max-width:900px){.jm-upload .signin{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"hdr" "stage" "form" "foot"}
+.jm-upload .signup{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;grid-template-areas:"hdr" "intro" "stage" "foot"}
+.jm-upload .ahdr{padding:16px 20px 0}
+.jm-upload .afoot{padding:0 20px 24px}
+.jm-upload .stage{position:relative;top:auto;height:260px;min-height:0;margin:16px 16px 0;border-radius:32px}
+.jm-upload .st-in{left:20px;top:18px;right:20px}
+.jm-upload .st-title{display:none}
+.jm-upload .scan{--sc:.5;left:58%;top:64%}
+.jm-upload .signin .host{width:150px;left:-4px}
+.jm-upload .aform{padding:24px 20px 32px;gap:22px}
+.jm-upload .atitle{font-size:50px}
+.jm-upload .asub{font-size:17px;line-height:26px}
+.jm-upload .intro{padding:20px 20px 8px;gap:18px;max-width:none}
+.jm-upload .next{display:none}
+.jm-upload .desk{position:relative;top:auto;height:auto;min-height:0;margin:8px 0 0;padding:20px 12px 28px;border-radius:32px 32px 0 0}
+.jm-upload .sheet{padding:26px 20px 24px}
+.jm-upload .sheet::before{inset:10px -6px -10px 6px}
+.jm-upload .s-name input{font-size:32px}
+.jm-upload .s-sec{grid-template-columns:1fr;gap:10px;padding:16px 0}
+.jm-upload .s-av{width:56px;height:56px;font-size:22px}
+.jm-upload .stamp{width:78px;height:78px;font-size:9px;right:14px;top:auto;bottom:118px}
+.jm-upload .s-head{padding-right:0}}
+@media (max-width:900px){.jm-upload .signin{grid-template-areas:"hdr" "form" "foot";grid-template-rows:auto 1fr auto}
+.jm-upload .signin .stage{display:none}
+.jm-upload .aform{padding:12px 16px 28px;gap:20px}
+.jm-upload .fwrap{position:relative;padding-top:116px}
+.jm-upload .auth .fwrap>.host-m{display:block;position:absolute;z-index:0;top:4px;right:2px;left:auto;bottom:auto;width:132px;height:auto;margin:0;flex:none;align-self:auto;animation:none !important}
+.jm-upload .mchip{display:flex;align-items:center;gap:8px;position:absolute;left:0;top:58px;max-width:calc(100% - 150px);margin:0;padding:8px 12px 8px 8px;border-radius:999px;background:var(--white);box-shadow:0 0 0 1px var(--line);font-size:13px;white-space:nowrap;overflow:hidden}
+.jm-upload .mc-ic{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--white)}
+.jm-upload .mc-sk{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;background:var(--peach);box-shadow:inset 0 0 0 1.5px var(--accent);font-weight:600}
+.jm-upload .mc-ar{color:var(--muted)}
+.jm-upload .signin form{position:relative;z-index:1;padding:22px 18px 20px;border-radius:28px;background:var(--white);box-shadow:0 30px 60px -36px rgba(30,28,43,.4),0 0 0 1px rgba(218,214,234,.9)}
+.jm-upload .signin .switch{margin-top:4px}
+.jm-upload .signup{grid-template-areas:"hdr" "intro" "stage" "foot"}
+.jm-upload .desk{background:transparent;margin:0;padding:0 16px 28px !important;border-radius:0;display:block;animation:none !important}
+.jm-upload .desk .aura,.jm-upload .desk .mp{display:none}
+.jm-upload .signup .fwrap{padding-top:112px}
+.jm-upload .sheet{position:relative;z-index:1;padding:22px 18px 20px;border-radius:24px;box-shadow:0 30px 60px -36px rgba(30,28,43,.4),0 0 0 1px rgba(218,214,234,.9)}
+.jm-upload .sheet::before{display:none}
+.jm-upload .sheet .kicker{margin-bottom:8px}
+.jm-upload .s-sec{padding:12px 0}
+.jm-upload .s-sec>.sl,.jm-upload .ghost{display:none}
+.jm-upload .next-m{display:block;margin:0;padding:14px 0 2px;font-size:14px;line-height:20px;color:var(--muted)}
+.jm-upload .s-foot{padding-top:16px}
+.jm-upload .stamp{width:76px;height:76px;font-size:9px;right:12px;top:auto;bottom:122px}
+.jm-upload .intro{padding:16px 16px 0}
+.jm-upload .signin:has(#email:focus) .pk-head,.jm-upload .signup:has(#name:focus) .pk-head{rotate:4deg}
+.jm-upload .signin:has(#password:focus) .pk-head,.jm-upload .signup:has(#email:focus) .pk-head{rotate:9deg}
+.jm-upload .signup:has(#password:focus) .pk-head{rotate:13deg}
+.jm-upload .auth:has(form input:focus) .pk-gaze{translate:16px 8px}
+.jm-upload .auth:has(#password[type="text"]) .pk-head{rotate:-16deg}
+.jm-upload .auth:has(#password[type="text"]) .pk-gaze{translate:0 0}}
+@media (max-width:420px){.jm-upload .st-chip .hide-sm{display:none}
+.jm-upload .steps{gap:6px;font-size:13px}
+.jm-upload .steps .st{padding:0 11px 0 5px;gap:6px}
+.jm-upload .steps .bar{min-width:6px}}
+@media (prefers-reduced-motion:no-preference){.jm-upload .wd{display:inline-block;animation:focusin 1.05s var(--out) both;animation-delay:calc(120ms + var(--w)*80ms)}
+.jm-upload .rise{animation:focusin .95s var(--out) both;animation-delay:calc(320ms + var(--d,0)*70ms)}
+.jm-upload .stage,.jm-upload .desk{animation:stagein 1.1s var(--out) .05s both}
+.jm-upload .st-in{animation:focusin 1s var(--out) .4s both}
+.jm-upload .cv{animation:cvin 1.1s var(--out) .45s both}
+.jm-upload .finds{animation:fadein .6s ease .9s both}
+.jm-upload .sheet{animation:sheetin 1.15s var(--out) .3s both}
+.jm-upload .host{animation:hostin .9s var(--spring) .9s both,bob 4s ease-in-out 1.9s infinite}
+.jm-upload .a1{animation:orb1 16s ease-in-out infinite}
+.jm-upload .a2{animation:orb2 19s ease-in-out infinite}
+.jm-upload .live::after{animation:ping 2.2s var(--out) infinite}
+.jm-upload .loupe{animation:glide var(--L) var(--out) 1.2s infinite both}
+.jm-upload .sk[data-k]::before{animation:var(--hit) var(--L) var(--out) 1.2s infinite both}
+.jm-upload .sk[data-k]::after{animation:var(--dot) var(--L) var(--spring) 1.2s infinite both}
+.jm-upload .find{animation:var(--pop) var(--L) var(--spring) 1.2s infinite both}
+.jm-upload .mp{position:absolute;z-index:6;right:22px;bottom:22px;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.88);box-shadow:0 0 0 1px rgba(218,214,234,.9);cursor:pointer}
+.jm-upload .mp input{position:absolute;inset:0;margin:0;border-radius:50%;opacity:0;cursor:pointer}
+.jm-upload .mp svg{grid-area:1/1}
+.jm-upload .mp .i-play{display:none}
+.jm-upload .mp:has(input:checked) .i-play{display:block}
+.jm-upload .mp:has(input:checked) .i-pause{display:none}
+.jm-upload .mp:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:3px}
+.jm-upload :is(.stage,.jm-upload .desk):has(.mp input:checked) :is(.loupe,.jm-upload .find,.jm-upload .aura,.jm-upload .host,.jm-upload .live){animation-play-state:paused}
+.jm-upload .stage:has(.mp input:checked) .sk::before,.jm-upload .stage:has(.mp input:checked) .sk::after,.jm-upload .stage:has(.mp input:checked) .live::after{animation-play-state:paused}
+.jm-upload .shake{animation:shake .45s ease both}
+.jm-upload .desk .mp{right:auto;left:22px}
+@media (max-width:900px){.jm-upload .mp{width:34px;height:34px;right:14px;bottom:14px}
+.jm-upload .desk .mp{display:none}}
+@media (hover:hover){.jm-upload .go:hover{translate:0 -2px}
+.jm-upload .go .arr{transition:translate .35s var(--out)}
+.jm-upload .go:hover .arr{translate:4px 0}}}
+@keyframes focusin{from{opacity:0;translate:0 .45em;filter:blur(12px)}}
+@keyframes fadein{from{opacity:0}}
+@keyframes stagein{from{opacity:0;scale:.97}}
+@keyframes cvin{from{opacity:0;translate:0 60px;rotate:-8deg}}
+@keyframes sheetin{from{opacity:0;translate:0 70px;rotate:-3deg}}
+@keyframes hostin{from{opacity:0;translate:0 40%}}
+@keyframes bob{50%{translate:0 -6px}}
+@keyframes orb1{50%{translate:-120px 220px}}
+@keyframes orb2{50%{translate:120px -200px}}
+@keyframes ping{0%{opacity:.6;scale:1}80%,100%{opacity:0;scale:3}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes shake{20%,60%{translate:-6px 0}40%,80%{translate:6px 0}}
+@media (max-width:900px) and (prefers-reduced-motion:no-preference){.jm-upload .host-m{animation:hostin .9s var(--spring) .7s both !important}
+.jm-upload .mchip{animation:focusin .9s var(--out) .9s both}}
+.jm-upload .steps .st.ok b{background:var(--accent);color:var(--ink)}
+.jm-upload .steps .st.ok{color:var(--ink)}
+.jm-upload .steps .bar.ok{background:var(--ink)}
+.jm-upload .s-me{display:block;margin-top:4px;font-size:14px;color:var(--muted)}
+.jm-upload .s-nm{display:block;font:400 34px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.jm-upload .s-av.done{background:var(--accent)}
+.jm-upload .up .s-head{padding-right:0}
+.jm-upload .zone{position:relative;margin-top:16px;min-height:388px}
+.jm-upload .zone>[data-z]{display:none}
+.jm-upload .up[data-state="empty"] [data-z~="empty"],.jm-upload .up[data-state="drag"] [data-z~="empty"],.jm-upload .up[data-state="file"] [data-z~="file"],.jm-upload .up[data-state="reading"] [data-z~="read"],.jm-upload .up[data-state="done"] [data-z~="read"],.jm-upload .up[data-state="done"] [data-z~="done"],.jm-upload .up[data-state="error"] [data-z~="error"]{display:flex}
+.jm-upload .drop{position:relative;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:388px;box-sizing:border-box;padding:28px 24px;border-radius:22px;background:var(--page);text-align:center;cursor:pointer;transition:background-color .25s ease}
+.jm-upload .drop::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px dashed var(--field);transition:border-color .2s ease}
+.jm-upload .drop:hover::before{border-color:#9E99B8}
+.jm-upload .up[data-state="drag"] .drop{background:var(--tint)}
+.jm-upload .up[data-state="drag"] .drop::before{border-color:var(--ink)}
+.jm-upload .drop-ic{position:relative;display:grid;place-items:center;width:84px;height:84px;border-radius:26px;background:var(--white);box-shadow:0 18px 36px -22px rgba(30,28,43,.45),0 0 0 1px var(--line);transition:translate .4s var(--out),scale .4s var(--spring)}
+.jm-upload .up[data-state="drag"] .drop-ic{translate:0 -6px;scale:1.08}
+.jm-upload .drop-t{margin:0;font:400 30px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.jm-upload .drop-s{margin:0;font-size:15px;color:var(--muted)}
+.jm-upload .drop-b{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}
+.jm-upload .pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border:0;border-radius:999px;font:600 16px/1 Outfit,system-ui,sans-serif;cursor:pointer;text-decoration:none}
+.jm-upload .pill.ink{background:var(--ink);color:var(--white)}
+.jm-upload .pill.ink:hover{background:#34314A}
+.jm-upload .pill.line{background:var(--white);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--field)}
+.jm-upload .pill.line:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.jm-upload .cam{display:none}
+.jm-upload .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.jm-upload .drop .sample{font-size:14px;color:var(--muted);text-underline-offset:3px;background:none;border:0;cursor:pointer;font-family:inherit}
+.jm-upload .picked{flex-direction:column;justify-content:center;gap:18px;min-height:388px}
+.jm-upload .fchip{display:flex;align-items:center;gap:14px;padding:16px;border-radius:20px;background:var(--page);box-shadow:inset 0 0 0 1px var(--line)}
+.jm-upload .fdoc{flex:none;display:grid;place-items:center;width:52px;height:60px;border-radius:10px;background:var(--white);box-shadow:0 0 0 1.5px var(--ink);font:700 11px/1 Outfit,sans-serif;letter-spacing:.06em}
+.jm-upload .fdoc b{display:block;margin-top:4px;padding:2px 5px;border-radius:5px;background:var(--accent);font-size:10px}
+.jm-upload .fname{display:block;font-size:17px;font-weight:600;word-break:break-all}
+.jm-upload .fsize{display:block;font-size:14px;color:var(--muted)}
+.jm-upload .fx{margin-left:auto;flex:none;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer}
+.jm-upload .fx:hover{background:var(--white);color:var(--ink)}
+.jm-upload .picked .go{margin-top:0}
+.jm-upload .picked .alt{margin:0;text-align:center;font-size:14px;color:var(--muted)}
+.jm-upload .picked .alt button{border:0;background:none;padding:0;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.jm-upload .cvbody{position:relative;flex-direction:column;gap:6px;min-height:388px;overflow:clip}
+.jm-upload .sec{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 20px;padding:10px 0;border-bottom:1.5px solid var(--line)}
+.jm-upload .sec:last-of-type{border-bottom:0}
+.jm-upload .sec>.sl{padding-top:3px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.jm-upload .sec .cell{position:relative;display:flex;flex-direction:column;gap:8px;min-height:44px}
+.jm-upload .job{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.jm-upload .job b{font-weight:600}
+.jm-upload .job span{color:var(--muted);white-space:nowrap}
+.jm-upload .chips{display:flex;flex-wrap:wrap;gap:6px}
+.jm-upload .chips .c{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:999px;background:var(--page);font-size:13px;font-weight:600}
+.jm-upload .chips .c::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.jm-upload .edu{font-size:15px}
+.jm-upload .edu b{font-weight:600}
+.jm-upload .edu span{display:block;color:var(--muted);font-size:14px}
+.jm-upload .ph{position:absolute;inset:0;display:flex;flex-direction:column;gap:9px;padding-top:4px;overflow:clip}
+.jm-upload .ph i{display:block;height:10px;border-radius:999px;background:#E9E6F3}
+.jm-upload .ph::after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);translate:-100% 0}
+.jm-upload .up[data-state="done"] .ph{display:none}
+.jm-upload .scanl{position:absolute;z-index:3;left:-36px;right:-36px;top:0;height:70px;pointer-events:none;background:linear-gradient(180deg,rgba(141,112,255,0),rgba(141,112,255,.16) 85%,rgba(141,112,255,.0));translate:0 -80px}
+.jm-upload .scanl::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:2.5px;border-radius:2px;background:var(--ink);box-shadow:0 0 0 4px rgba(141,112,255,.18)}
+.jm-upload .up[data-state="done"] .scanl{display:none}
+.jm-upload .status{position:absolute;z-index:4;left:50%;bottom:6px;translate:-50% 0;display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 18px 0 14px;border-radius:999px;background:var(--ink);color:var(--white);font-size:14px;font-weight:600;white-space:nowrap;box-shadow:0 20px 40px -20px rgba(30,28,43,.6)}
+.jm-upload .status .spin{width:16px;height:16px}
+.jm-upload .status .sw{display:inline-grid;overflow:clip}
+.jm-upload .status .sw>span{grid-area:1/1}
+.jm-upload .status .sw>span:not(:first-child){opacity:0}
+.jm-upload .up[data-state="done"] .status{display:none}
+.jm-upload .donebar{flex-direction:column;gap:12px;padding-top:14px}
+.jm-upload .found{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:15px}
+.jm-upload .found .ok{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink)}
+.jm-upload .donebar .alt{margin:0;text-align:center;font-size:14px;color:var(--muted)}
+.jm-upload .donebar .alt button{border:0;background:none;padding:0;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.jm-upload .up[data-state="done"] .zone{min-height:0}
+.jm-upload .up[data-state="done"] .cvbody{min-height:0}
+.jm-upload .oops{flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:388px;padding:24px;box-sizing:border-box;border-radius:22px;background:#FFF1EA;text-align:center}
+.jm-upload .oops-ic{display:grid;place-items:center;width:64px;height:64px;border-radius:20px;background:var(--white);box-shadow:0 0 0 1.5px var(--accent);color:var(--ink)}
+.jm-upload .oops h3{margin:0;font:400 28px/1.05 Anton,"Arial Narrow",Impact,sans-serif}
+.jm-upload .oops p{margin:0;max-width:340px;font-size:15px;line-height:22px;color:var(--muted)}
+.jm-upload .stamp.read{opacity:0;scale:1.6}
+.jm-upload .up[data-state="done"] .stamp.read{opacity:1;scale:1}
+.jm-upload .up[data-state="drag"] .pk-f-open,.jm-upload .up[data-state="done"] .pk-f-open,.jm-upload .up[data-state="error"] .pk-f-open{opacity:0}
+.jm-upload .up[data-state="drag"] .pk-f-happy,.jm-upload .up[data-state="done"] .pk-f-happy{opacity:1}
+.jm-upload .up[data-state="error"] .pk-f-sad{opacity:1}
+.jm-upload .up[data-state="empty"] .pk-head,.jm-upload .up[data-state="file"] .pk-head{rotate:-4deg}
+.jm-upload .up[data-state="drag"] .pk-head{rotate:-10deg}
+.jm-upload .up[data-state="reading"] .pk-head{rotate:5deg}
+.jm-upload .up[data-state="reading"] .pk-gaze,.jm-upload .up[data-state="file"] .pk-gaze{translate:16px 6px}
+.jm-upload .up[data-state="error"] .pk-head{rotate:4deg}
+.jm-upload .up .host{transition:scale .45s var(--spring)}
+.jm-upload .up[data-state="drag"] .host{scale:-1.05 1.05}
+@media (max-width:900px){.jm-upload .cam{display:inline-flex}
+.jm-upload .zone,.jm-upload .drop,.jm-upload .picked,.jm-upload .oops,.jm-upload .cvbody{min-height:300px}
+.jm-upload .drop{padding:22px 16px}
+.jm-upload .drop-t{font-size:26px}
+.jm-upload .sec{grid-template-columns:1fr;gap:6px;padding:10px 0}
+.jm-upload .s-nm{font-size:28px}
+.jm-upload .up .fwrap{padding-top:112px}
+.jm-upload .up[data-state="empty"] .pk-head,.jm-upload .up[data-state="file"] .pk-head,.jm-upload .up[data-state="reading"] .pk-head{rotate:8deg}}
+@media (prefers-reduced-motion:no-preference){.jm-upload .up[data-state="reading"] .scanl{animation:sweep 2.2s ease-in-out infinite alternate}
+.jm-upload .up[data-state="reading"] .ph::after{animation:shimmer 1.3s ease-in-out infinite}
+.jm-upload .up[data-state="reading"] .ph{animation:phout .4s ease both;animation-delay:calc(var(--t)*1s + .1s)}
+.jm-upload .up[data-state="reading"] .rv-i{animation:focusin .7s var(--out) both;animation-delay:calc(var(--t)*1s + var(--k,0)*.09s)}
+.jm-upload .up[data-state="reading"] .status .sw>span{animation:st4 4.4s steps(1,end) both}
+.jm-upload .up[data-state="reading"] .status .sw>span:nth-child(2){animation-name:st4b}
+.jm-upload .up[data-state="reading"] .status .sw>span:nth-child(3){animation-name:st4c}
+.jm-upload .up[data-state="reading"] .status .sw>span:nth-child(4){animation-name:st4d}
+.jm-upload .up[data-state="done"] .donebar{animation:focusin .7s var(--out) both}
+.jm-upload .up[data-state="file"] .picked>*,.jm-upload .up[data-state="error"] .oops>*{animation:focusin .6s var(--out) both;animation-delay:calc(var(--k,0)*.07s)}
+.jm-upload .up .stamp.read{transition:opacity .25s ease,scale .55s var(--spring)}
+.jm-upload .up[data-state="empty"] .drop-ic{animation:nudgeup 2.8s ease-in-out 1.6s 3}}
+@media (prefers-reduced-motion:reduce){.jm-upload .up[data-state="reading"] .ph{display:none}
+.jm-upload .up[data-state="reading"] .status .sw>span:last-child{opacity:1}}
+@keyframes sweep{from{translate:0 -60px}to{translate:0 330px}}
+@keyframes shimmer{to{translate:260% 0}}
+@keyframes phout{to{opacity:0;visibility:hidden}}
+@keyframes st4{0%,24%{opacity:1}25%,100%{opacity:0}}
+@keyframes st4b{0%,24%{opacity:0}25%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes st4c{0%,49%{opacity:0}50%,74%{opacity:1}75%,100%{opacity:0}}
+@keyframes st4d{0%,74%{opacity:0}75%,100%{opacity:1}}
+@keyframes nudgeup{0%,60%,100%{translate:0 0}30%{translate:0 -6px}}
+.jm-upload a.go{text-decoration:none;color:var(--white)}
+.jm-upload a.go:hover{color:var(--white)}
+.jm-upload .d-phone{display:none}
+@media (max-width:900px){.jm-upload .d-desk{display:none}
+.jm-upload .d-phone{display:inline}}
+@media (max-width:900px){.jm-upload .up .fwrap{padding-top:0}}
+.jm-upload .get li i{font-size:11px !important}
+.jm-upload :focus-visible{outline:2px solid #1E1C2B;outline-offset:3px}
+.jm-upload .zz,.jm-upload .zz *{animation-play-state:paused !important}
+.jm-upload .mtop a{text-decoration:none}
+.jm-upload .chip button{position:relative}
+.jm-upload .chip button::after{content:"";position:absolute;inset:-7px}
+.jm-upload .card :is(h2,.jm-upload h3) a{padding:8px 2px;margin:-8px -2px}
+.jm-upload .rm{width:36px !important;height:36px !important;right:-10px !important;top:0 !important}
+.jm-upload .need-tag{font-size:11.5px !important}
+.jm-upload .fp-msg{margin:6px 0 0;font-size:13.5px;line-height:19px;color:#5E5C6E}
+.jm-upload .fp-msg.bad{color:#C2410C;font-weight:600}
+.jm-upload .fp-msg:empty{display:none}
+@media (max-width:900px){.jm-upload .mtop{margin-bottom:20px !important}
+.jm-upload .tt-n{font-size:11.5px !important}
+.jm-upload .ditem .di,.jm-upload .ditem .di i{font-size:11px !important}
+.jm-upload .fnav a{display:inline-block;padding:10px 0}
+.jm-upload .lkd,.jm-upload .editl{min-height:32px}
+.jm-upload .lbl a{display:inline-block;padding:6px 0}}
+/* React: "loading" = waiting for cv-ocr. Same look as reading, but the placeholders stay until the data arrives. */
+.jm-upload .up[data-state="loading"] [data-z~="read"]{display:flex}
+.jm-upload .up[data-state="loading"] .rv-i{display:none}
+.jm-upload .up[data-state="loading"] .pk-head{rotate:5deg}
+.jm-upload .up[data-state="loading"] .pk-gaze{translate:16px 6px}
+@media (prefers-reduced-motion:no-preference){
+.jm-upload .up[data-state="loading"] .scanl{animation:sweep 2.2s ease-in-out infinite alternate}
+.jm-upload .up[data-state="loading"] .ph::after{animation:shimmer 1.3s ease-in-out infinite}
+.jm-upload .up[data-state="loading"] .status .sw>span{animation:st4 4.4s steps(1,end) infinite}
+.jm-upload .up[data-state="loading"] .status .sw>span:nth-child(2){animation-name:st4b}
+.jm-upload .up[data-state="loading"] .status .sw>span:nth-child(3){animation-name:st4c}
+.jm-upload .up[data-state="loading"] .status .sw>span:nth-child(4){animation-name:st4d}
+.jm-upload .up[data-state="reading"] .ph{animation-duration:.25s}
+}
