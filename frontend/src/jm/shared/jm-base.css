@@ -1,0 +1,9 @@
+/* Shared by every redesigned page */
+.zz, .zz * { animation-play-state: paused !important; }
+/* Auth messages under the forms */
+.jm-msg { margin: 10px 0 0 !important; padding: 10px 14px; border-radius: 14px; background: #fff; box-shadow: 0 0 0 1px #DAD6EA; color: #1E1C2B !important; text-align: left !important; font-size: 14px !important; line-height: 20px; }
+.jm-msg.bad { background: #FFF1EC; box-shadow: 0 0 0 1px #FFC9B3; color: #8A2E0B !important; }
+.jm-msg a, .jm-linkbtn { color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+/* The app's CSS reset removes link underlines; the designs rely on the browser default.
+   Zero specificity, so every design rule still wins. */
+:where([class^="jm-"], [class*=" jm-"]) a { text-decoration: underline; color: inherit; }

@@ -11,6 +11,16 @@ export const AuthProvider = ({ children }) => {
   const [recovering, setRecovering] = useState(false);
 
   useEffect(() => {
+    // "Keep me signed in" was off: a new browser session starts signed out
+    try {
+      if (localStorage.getItem('jm-session-only') && !sessionStorage.getItem('jm-alive')) {
+        localStorage.removeItem('jm-session-only');
+        supabase.auth.signOut({ scope: 'local' });
+      } else if (localStorage.getItem('jm-session-only')) {
+        sessionStorage.setItem('jm-alive', '1');
+      }
+    } catch { /* storage blocked */ }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);

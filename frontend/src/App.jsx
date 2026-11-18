@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import LandingPage from './jm/landing/LandingPage';
+import SignIn from './jm/signin/SignInPage';
+import SignUp from './jm/signup/SignUpPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import UploadResume from './pages/UploadResume';
