@@ -44,11 +44,8 @@ export const supabaseDB = {
         skills: candidateInfo.skills,
         education: candidateInfo.education,
         languages: candidateInfo.languages,
-        ...(candidateInfo.cv_url && { cv_url: candidateInfo.cv_url }),
-        ...(candidateInfo.cv_path && { cv_path: candidateInfo.cv_path }),
-        ...(candidateInfo.linkedin_url && { linkedin_url: candidateInfo.linkedin_url }),
-        ...(candidateInfo.github_url && { github_url: candidateInfo.github_url }),
-        ...(candidateInfo.portfolio_url && { portfolio_url: candidateInfo.portfolio_url })
+        certifications: candidateInfo.certifications,
+        // Links (LinkedIn, GitHub, portfolio) live in the user's account metadata: candidates has no columns for them
       };
 
       // Remove undefined values so Supabase doesn't complain or overwrite with nulls

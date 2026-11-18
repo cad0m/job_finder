@@ -7,7 +7,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import UploadResume from './jm/upload/UploadPage';
 
-import ProfileReview from './pages/ProfileReview';
+import ProfileReview from './jm/review/ReviewPage';
 import Dashboard from './pages/Dashboard';
 import JobDetails from './pages/JobDetails';
 import ApplicationPack from './pages/ApplicationPack';
