@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { edgeFunctions } from '../../services/edgeFunctions';
 import usePauseOffscreen from '../shared/usePauseOffscreen';
@@ -23,7 +23,6 @@ const toBase64 = (file) => new Promise((resolve, reject) => {
    States: empty, drag, file, loading (waiting for cv-ocr), reading (reveal), done, error. */
 export default function UploadPage() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const rootRef = useRef(null);
   const fileRef = useRef(null);
   const camRef = useRef(null);

@@ -140,12 +140,12 @@ export default function ReviewPage() {
     }
   };
 
-  const Counter = ({ cls }) => (
+  const counter = (cls) => (
     <button className={`${cls} nextcheck${todo === 0 ? ' allset' : ''}`} type="button" onClick={nextCheck}>
       <span className="todo-n" aria-hidden="true" data-n={todo} /><span className="sw"><span className="sa">to check</span><span className="sb">All set</span></span>
     </button>
   );
-  const SaveBtn = ({ label }) => (
+  const saveBtn = (label) => (
     <button className="go save-go" type="button" data-state={save} onClick={onSave}>
       <span className="s-go">{label}<Arrow /></span><span className="s-wait"><i className="spin" />Saving…</span><span className="s-ok"><Ok />Saved</span>
     </button>
@@ -162,8 +162,8 @@ export default function ReviewPage() {
           <ol className="steps" aria-label="Getting started">
             <li className="st ok"><b>✓</b>Account</li><li className="bar ok" aria-hidden="true" /><li className="st on" aria-current="step"><b>2</b>Your CV</li><li className="bar" aria-hidden="true" /><li className="st"><b>3</b>Matches</li>
           </ol>
-          <Counter cls="cnt" />
-          <SaveBtn label="Save and find my jobs" />
+          {counter('cnt')}
+          {saveBtn('Save and find my jobs')}
         </div>
         <div className="rmain">
           <section className="src" aria-label="Your file">
@@ -271,7 +271,7 @@ export default function ReviewPage() {
             </div>
           </section>
         </div>
-        <div className="mbar"><Counter cls="mleft" /><SaveBtn label="Find my jobs" /></div>
+        <div className="mbar">{counter('mleft')}{saveBtn('Find my jobs')}</div>
       </div>
     </div></div>
   );
