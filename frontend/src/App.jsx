@@ -12,7 +12,7 @@ import DashboardPage from './jm/dashboard/DashboardPage';
 import JobDetails from './pages/JobDetails';
 import ApplicationPack from './pages/ApplicationPack';
 import Apply from './jm/apply/ApplyPage';
-import Profile from './pages/Profile';
+import Profile from './jm/profile/ProfilePage';
 
 import Search from './pages/Search';
 
